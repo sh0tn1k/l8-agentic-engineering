@@ -53,7 +53,7 @@ main{max-width:840px;padding:0 0 140px;min-width:0;}
 /* masthead */
 header.masthead{padding:54px 0 34px;border-bottom:1.5px solid var(--g300);margin-bottom:8px;}
 .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--g500);margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+  color:var(--g500);margin-bottom:18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
 .eyebrow::before{content:"";width:24px;height:1.5px;background:var(--clay);}
 h1.title{font-family:var(--serif);font-weight:500;font-size:clamp(36px,5vw,58px);line-height:1.07;
   letter-spacing:-.018em;margin:0 0 6px;max-width:18ch;}
@@ -93,9 +93,9 @@ details.les{background:var(--paper);border:1.5px solid var(--g300);border-radius
 details.les[open]{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);}
 details.les summary{list-style:none;cursor:pointer;padding:20px 22px;display:block;}
 details.les summary::-webkit-details-marker{display:none;}
-.sec-head{display:flex;align-items:baseline;gap:14px;}
+.sec-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;}
 .sec-head .idx{font-family:var(--mono);font-size:13px;color:var(--clay);font-weight:600;min-width:26px;}
-.sec-head h2{font-family:var(--serif);font-weight:500;font-size:23px;margin:0;letter-spacing:-.01em;flex:1;}
+.sec-head h2{font-family:var(--serif);font-weight:500;font-size:23px;margin:0;letter-spacing:-.01em;flex:1;min-width:0;}
 .tagline{color:var(--g700);font-size:14px;margin:3px 0 0 40px;}
 .card-meta{margin:13px 0 0 40px;display:grid;gap:5px;}
 .meta-item{font-size:13px;color:var(--g700);}
@@ -126,7 +126,7 @@ details.les[open] .expand-hint{display:none;}
 .lesson-body ul,.lesson-body ol{margin:11px 0;padding-left:22px;}
 .lesson-body li{margin:5px 0;}
 .lesson-body code{font-family:var(--mono);font-size:.86em;background:var(--g100);padding:1.5px 5px;
-  border-radius:5px;border:1px solid var(--g200);}
+  border-radius:5px;border:1px solid var(--g200);overflow-wrap:anywhere;}
 .lesson-body pre{background:#2b2a27;color:#eceae3;border-radius:12px;padding:16px 18px;overflow-x:auto;
   font-size:12.7px;line-height:1.5;margin:14px 0;}
 .lesson-body pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit;}
@@ -156,7 +156,7 @@ footer p{margin:8px 0;max-width:680px;}
 
 /* ---- multipage: lesson cards on index + lesson pages ---- */
 .side-brand-link{text-decoration:none;color:inherit;display:block;}
-.lcards{display:grid;gap:14px;margin-top:18px;}
+.lcards{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;margin-top:18px;}
 a.lcard{display:block;text-decoration:none;color:inherit;background:var(--paper);border:1.5px solid var(--g300);
   border-radius:14px;padding:20px 22px;transition:border-color .15s,box-shadow .15s,transform .15s;}
 a.lcard:hover{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);transform:translateY(-1px);}
