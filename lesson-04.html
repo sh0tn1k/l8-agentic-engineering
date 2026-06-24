@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Урок 04. Context engineering — L8+ Agentic Engineering</title>
+<!-- Design language adapted from ThariqS/html-effectiveness (Apache-2.0, (c) Anthropic PBC). -->
+<style>
+:root{
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413; --clay:#D97757; --clay-d:#B85C3E;
+  --oat:#E3DACC; --olive:#788C5D; --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5;
+  --g500:#87867F; --g700:#3D3D3A;
+  --serif:ui-serif,Georgia,"Times New Roman",Times,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Monaco,Consolas,monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--ivory);color:var(--slate);font-family:var(--sans);
+  line-height:1.6;-webkit-font-smoothing:antialiased;font-size:16.5px;}
+
+a{color:var(--clay-d);text-decoration-color:var(--oat);text-underline-offset:3px;}
+a:hover{text-decoration-color:var(--clay);}
+
+/* layout shell: sticky sidebar + reading column */
+.shell{max-width:1180px;margin:0 auto;padding:0 28px;display:grid;
+  grid-template-columns:236px minmax(0,1fr);gap:48px;align-items:start;}
+@media(max-width:900px){.shell{grid-template-columns:1fr;gap:0;padding:0 20px;}}
+
+/* sidebar */
+.sidebar{position:sticky;top:0;max-height:100vh;overflow-y:auto;padding:34px 0 40px;}
+@media(max-width:900px){.sidebar{position:static;max-height:none;border-bottom:1.5px solid var(--g300);
+  margin-bottom:8px;padding-bottom:18px;}}
+.side-brand{font-family:var(--serif);font-size:19px;font-weight:600;letter-spacing:-.01em;margin-bottom:2px;}
+.side-brand em{font-style:italic;color:var(--clay);}
+.side-sub{font-family:var(--mono);font-size:10.5px;color:var(--g500);text-transform:uppercase;
+  letter-spacing:.1em;margin-bottom:20px;}
+.sidebar nav{display:flex;flex-direction:column;gap:1px;}
+.sidebar nav a{display:flex;gap:9px;align-items:baseline;text-decoration:none;color:var(--g700);
+  font-size:13px;line-height:1.35;padding:5px 9px;border-radius:7px;border-left:2px solid transparent;}
+.sidebar nav a .n{font-family:var(--mono);font-size:10px;color:var(--g500);min-width:16px;}
+.sidebar nav a:hover{background:var(--g100);color:var(--slate);}
+.sidebar nav a.active{background:var(--paper);border-left-color:var(--clay);color:var(--slate);
+  box-shadow:0 1px 0 var(--g200);}
+.sidebar nav a.active .n{color:var(--clay);}
+.sidebar nav a.lead{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--g500);margin-top:14px;padding-bottom:2px;pointer-events:none;}
+
+/* main reading column */
+main{max-width:840px;padding:0 0 140px;min-width:0;}
+
+/* masthead */
+header.masthead{padding:54px 0 34px;border-bottom:1.5px solid var(--g300);margin-bottom:8px;}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--g500);margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+.eyebrow::before{content:"";width:24px;height:1.5px;background:var(--clay);}
+h1.title{font-family:var(--serif);font-weight:500;font-size:clamp(36px,5vw,58px);line-height:1.07;
+  letter-spacing:-.018em;margin:0 0 6px;max-width:18ch;}
+h1.title em{font-style:italic;color:var(--clay);}
+.lede{font-size:17px;color:var(--g700);margin:20px 0 0;max-width:640px;}
+.disclaimer{margin:22px 0 0;padding:14px 18px;background:var(--g100);border-radius:12px;
+  border:1.5px solid var(--g200);font-size:13.5px;color:var(--g700);max-width:660px;}
+.disclaimer b{color:var(--slate);}
+
+/* feature panel (spine) */
+.panel{margin:40px 0 0;background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;
+  padding:26px 28px;scroll-margin-top:16px;}
+.panel h2,.howto h2{font-family:var(--serif);font-weight:500;font-size:25px;margin:0 0 4px;letter-spacing:-.01em;}
+.panel .sub{color:var(--g700);font-size:14px;margin:0 0 18px;}
+.flow{font-family:var(--mono);font-size:12.5px;line-height:1.7;background:var(--g100);border-radius:10px;
+  padding:14px 16px;overflow-x:auto;color:var(--g700);white-space:pre-wrap;border:1px solid var(--g200);}
+ol.inv{margin:18px 0 0;padding-left:0;counter-reset:inv;list-style:none;display:grid;gap:7px;}
+ol.inv li{position:relative;padding-left:30px;font-size:14px;color:var(--g700);}
+ol.inv li::before{counter-increment:inv;content:counter(inv);position:absolute;left:0;top:0;
+  font-family:var(--mono);font-size:11px;color:var(--clay);font-weight:600;
+  border:1.5px solid var(--oat);border-radius:6px;width:21px;height:21px;display:flex;
+  align-items:center;justify-content:center;}
+ol.inv li b{color:var(--slate);font-weight:600;}
+
+.howto{margin:34px 0 0;scroll-margin-top:16px;}
+.howto ul{margin:10px 0 0;padding-left:20px;}
+.howto li{margin:6px 0;color:var(--g700);font-size:14.5px;}
+
+.section-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--g500);margin:64px 0 6px;display:flex;align-items:center;gap:10px;}
+.section-label::before{content:"";width:20px;height:1.5px;background:var(--clay);}
+
+/* lessons / accordion */
+section.lesson{margin-top:18px;scroll-margin-top:14px;}
+details.les{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;overflow:hidden;
+  transition:border-color 150ms,box-shadow 150ms;}
+details.les[open]{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);}
+details.les summary{list-style:none;cursor:pointer;padding:20px 22px;display:block;}
+details.les summary::-webkit-details-marker{display:none;}
+.sec-head{display:flex;align-items:baseline;gap:14px;}
+.sec-head .idx{font-family:var(--mono);font-size:13px;color:var(--clay);font-weight:600;min-width:26px;}
+.sec-head h2{font-family:var(--serif);font-weight:500;font-size:23px;margin:0;letter-spacing:-.01em;flex:1;}
+.tagline{color:var(--g700);font-size:14px;margin:3px 0 0 40px;}
+.card-meta{margin:13px 0 0 40px;display:grid;gap:5px;}
+.meta-item{font-size:13px;color:var(--g700);}
+.meta-item .k{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--g500);margin-right:8px;}
+.expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(--mono);font-size:11px;
+  color:var(--clay);}
+details.les[open] .expand-hint{display:none;}
+
+/* maturity badges */
+.badge{font-family:var(--mono);font-size:10.5px;padding:3px 9px;border-radius:999px;white-space:nowrap;
+  border:1.5px solid var(--g300);color:var(--g700);align-self:flex-start;}
+.badge.b-core{background:#EEF1E9;border-color:#C3D1AE;color:#3f5430;}
+.badge.b-emerging{background:#FBEDE6;border-color:#EBC3AE;color:var(--clay-d);}
+.badge.b-disputed{background:#FAF3E2;border-color:#E6D08C;color:#8a6d1f;}
+.badge.b-hype{background:#FBE9E6;border-color:#E9B4A8;color:#a23b28;}
+.badge.b-special{background:#ECEAF3;border-color:#C7C0DE;color:#4b4080;}
+
+/* lesson body (rendered markdown) */
+.lesson-body{padding:4px 26px 28px;border-top:1px solid var(--g100);}
+.lesson-body .status{font-size:13px;color:var(--g700);background:var(--g100);border-radius:10px;
+  padding:12px 15px;margin:18px 0 8px;border:1px solid var(--g200);}
+.lesson-body h3{font-family:var(--serif);font-weight:600;font-size:21px;margin:32px 0 8px;letter-spacing:-.008em;}
+.lesson-body h4{font-family:var(--serif);font-weight:600;font-size:17px;margin:22px 0 6px;color:var(--g700);}
+.lesson-body h5{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--g500);margin:18px 0 6px;}
+.lesson-body p{margin:11px 0;}
+.lesson-body ul,.lesson-body ol{margin:11px 0;padding-left:22px;}
+.lesson-body li{margin:5px 0;}
+.lesson-body code{font-family:var(--mono);font-size:.86em;background:var(--g100);padding:1.5px 5px;
+  border-radius:5px;border:1px solid var(--g200);}
+.lesson-body pre{background:#2b2a27;color:#eceae3;border-radius:12px;padding:16px 18px;overflow-x:auto;
+  font-size:12.7px;line-height:1.5;margin:14px 0;}
+.lesson-body pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit;}
+.lesson-body blockquote{margin:14px 0;padding:12px 18px;border-left:3px solid var(--clay);
+  background:var(--paper);border-radius:0 10px 10px 0;color:var(--g700);}
+.lesson-body blockquote.quarantine{border-left-color:#c98a2e;background:#FAF3E2;}
+.lesson-body table{border-collapse:collapse;width:100%;margin:16px 0;font-size:13px;display:block;
+  overflow-x:auto;}
+.lesson-body th,.lesson-body td{border:1px solid var(--g300);padding:7px 10px;text-align:left;
+  vertical-align:top;}
+.lesson-body th{background:var(--g100);font-weight:600;font-family:var(--sans);}
+.lesson-body tr:nth-child(even) td{background:#fcfbf8;}
+.lesson-body hr{border:none;border-top:1.5px solid var(--g200);margin:26px 0;}
+.lesson-body a{word-break:break-word;}
+.lesson-body em{color:var(--g700);}
+
+/* footer */
+footer{margin:80px 0 0;border-top:1.5px solid var(--g300);padding-top:30px;font-size:13px;
+  color:var(--g500);scroll-margin-top:16px;}
+footer .k{font-family:var(--serif);font-style:italic;color:var(--g700);font-size:15px;}
+footer p{margin:8px 0;max-width:680px;}
+
+.toolbar{display:flex;gap:10px;margin:22px 0 0 40px;}
+.toolbar button{font-family:var(--mono);font-size:11px;background:var(--paper);border:1.5px solid var(--g300);
+  color:var(--g700);border-radius:999px;padding:6px 13px;cursor:pointer;}
+.toolbar button:hover{border-color:var(--slate);color:var(--slate);}
+
+/* ---- multipage: lesson cards on index + lesson pages ---- */
+.side-brand-link{text-decoration:none;color:inherit;display:block;}
+.lcards{display:grid;gap:14px;margin-top:18px;}
+a.lcard{display:block;text-decoration:none;color:inherit;background:var(--paper);border:1.5px solid var(--g300);
+  border-radius:14px;padding:20px 22px;transition:border-color .15s,box-shadow .15s,transform .15s;}
+a.lcard:hover{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);transform:translateY(-1px);}
+a.lcard .sec-head h2{color:var(--slate);}
+a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(--mono);font-size:11px;color:var(--clay);}
+.crumb{margin:30px 0 2px;}
+.crumb a{font-family:var(--mono);font-size:12px;color:var(--g500);text-decoration:none;}
+.crumb a:hover{color:var(--clay-d);}
+.lesson-head{padding:12px 0 24px;border-bottom:1.5px solid var(--g300);margin-bottom:4px;}
+.lesson-head .eyebrow{margin-bottom:13px;}
+.lesson-head h1.title{font-size:clamp(29px,4vw,44px);max-width:22ch;margin:0;}
+.lesson-head .lede{margin-top:13px;}
+.pager{display:flex;justify-content:space-between;align-items:stretch;gap:14px;margin:54px 0 0;
+  border-top:1.5px solid var(--g300);padding-top:22px;}
+.pager a{text-decoration:none;color:var(--g700);font-size:13.5px;border:1.5px solid var(--g300);border-radius:11px;
+  padding:11px 15px;max-width:49%;transition:.15s;line-height:1.4;}
+.pager a:hover{border-color:var(--slate);color:var(--slate);}
+.pager a .pk{font-family:var(--mono);font-size:10px;color:var(--g500);display:block;margin-bottom:2px;}
+.pager .pg-next{margin-left:auto;text-align:right;}
+.sidebar nav a.active{background:var(--paper);border-left-color:var(--clay);color:var(--slate);box-shadow:0 1px 0 var(--g200);}
+.sidebar nav a.active .n{color:var(--clay);}
+
+/* ---- interactive course widgets (.cw) ---- */
+.cw{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;margin:28px 0;overflow:hidden;}
+.cw-head{display:flex;align-items:center;gap:10px;padding:13px 20px;border-bottom:1px solid var(--g200);background:var(--g100);}
+.cw-head .tag{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--clay);
+  border:1.5px solid var(--oat);border-radius:999px;padding:2px 9px;}
+.cw-head .ttl{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--slate);}
+.cw-body{padding:18px 20px;display:flex;flex-direction:column;gap:15px;}
+.cw-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+.cw-grid{display:grid;gap:10px;}
+.cw .lbl{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--g500);margin-bottom:7px;}
+.cw .metric{background:var(--g100);border:1px solid var(--g200);border-radius:10px;padding:9px 13px;}
+.cw .metric .mk{font-size:12px;color:var(--g500);}
+.cw .metric .mv{font-size:21px;font-weight:600;font-family:var(--serif);color:var(--slate);line-height:1.2;}
+.cw button{font-family:var(--sans);cursor:pointer;border-radius:8px;border:1.5px solid var(--g300);background:var(--paper);
+  color:var(--g700);font-size:13px;padding:7px 12px;transition:.12s;line-height:1.3;}
+.cw button:hover{border-color:var(--slate);color:var(--slate);}
+.cw .act{background:var(--clay);border-color:var(--clay);color:#fff;font-weight:600;}
+.cw .act:hover{background:var(--clay-d);border-color:var(--clay-d);color:#fff;}
+.cw .chip{font-family:var(--mono);font-size:11px;padding:5px 10px;border-radius:999px;}
+.cw .chip.sel{background:var(--slate);border-color:var(--slate);color:var(--ivory);}
+.cw .tog{display:flex;align-items:center;gap:8px;text-align:left;}
+.cw .tog.on-bad{background:#FBE9E6;border-color:#E9B4A8;color:#a23b28;}
+.cw .tog.on-good{background:#EEF1E9;border-color:#C3D1AE;color:#3f5430;}
+.cw input[type=range]{width:100%;accent-color:var(--clay);margin:2px 0;}
+.cw .slabel{display:flex;justify-content:space-between;font-size:12.5px;color:var(--g700);margin-bottom:2px;}
+.cw .slabel b{font-weight:600;color:var(--slate);}
+.cw .bar{display:flex;height:40px;border-radius:9px;overflow:hidden;border:1px solid var(--g300);}
+.cw .seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;overflow:hidden;
+  white-space:nowrap;border-right:1px solid var(--paper);}
+.cw .seg.c{background:#EEF1E9;color:#3f5430;}
+.cw .seg.u{background:#FAF3E2;color:#8a6d1f;}
+.cw .trace{display:flex;flex-direction:column;gap:6px;}
+.cw .trow{border-left:3px solid var(--g300);background:var(--g100);border-radius:0 8px 8px 0;padding:7px 12px;
+  font-family:var(--mono);font-size:12.5px;}
+.cw .trow .th{font-weight:600;color:var(--slate);}
+.cw .trow .tb{color:var(--g700);white-space:pre-wrap;word-break:break-word;margin-top:2px;}
+.cw .t-obs{border-color:var(--olive);}
+.cw .t-think{border-color:#c98a2e;}
+.cw .t-act{border-color:var(--g500);}
+.cw .t-block{border-color:#6f9152;}
+.cw .t-leak{border-color:var(--clay-d);}
+.cw .verdict{border-radius:10px;padding:12px 15px;font-size:14px;}
+.cw .v-safe{background:#EEF1E9;color:#3f5430;border:1px solid #C3D1AE;}
+.cw .v-leak{background:#FBE9E6;color:#a23b28;border:1px solid #E9B4A8;}
+.cw .verdict .vt{font-weight:700;}
+.cw .verdict .vd{margin-top:3px;line-height:1.5;}
+.cw .note{font-size:11.5px;color:var(--g500);line-height:1.6;}
+.cw .dot{display:inline-block;width:10px;height:10px;border-radius:3px;vertical-align:middle;margin-right:4px;}
+.cw textarea{width:100%;font-family:var(--mono);font-size:12.5px;border:1.5px solid var(--g300);border-radius:8px;
+  padding:8px 10px;background:var(--paper);color:var(--slate);resize:vertical;}
+.cw .runs{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;max-width:420px;}
+.cw .evd{aspect-ratio:1;border-radius:3px;background:var(--g200);}
+.cw .evd.ok{background:#9cbf6e;}
+.cw .evd.no{background:#e0a99c;}
+.cw .mlist{display:flex;flex-direction:column;gap:7px;}
+.cw .mitem{display:flex;align-items:center;gap:10px;border:1px solid var(--g200);border-radius:9px;padding:8px 11px;
+  font-size:13px;background:var(--g100);}
+.cw .mitem .mt{color:var(--slate);}
+.cw .mitem .src{font-family:var(--mono);font-size:10.5px;color:var(--g500);}
+.cw .pill{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:999px;margin-left:auto;white-space:nowrap;}
+.cw .pill.w{background:#EEF1E9;color:#3f5430;}
+.cw .pill.q{background:#FAF3E2;color:#8a6d1f;}
+.cw .pill.r{background:#FBE9E6;color:#a23b28;}
+.cw .stepc{font-family:var(--mono);font-size:11px;color:var(--g500);}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="top">
+    <a class="side-brand-link" href="index.html"><div class="side-brand">L8+ <em>Agentic</em></div></a>
+    <div class="side-sub">актуально 2026-06-23</div>
+    <nav>
+<a href="index.html">▲ Главная</a>
+<a class="lead">Карта</a>
+<a href="index.html#spine"><span class="n">◆</span>Reference-spine</a>
+<a href="index.html#how"><span class="n">?</span>Как читать</a>
+<a class="lead">Уроки</a>
+<a href="lesson-01.html"><span class="n">01</span>Зрелость автономии</a>
+<a href="lesson-02.html"><span class="n">02</span>Примитивы и reference-spine</a>
+<a href="lesson-03.html"><span class="n">03</span>Task lifecycle и durable execution</a>
+<a href="lesson-04.html" class="active"><span class="n">04</span>Context engineering</a>
+<a href="lesson-05.html"><span class="n">05</span>Инструменты, права, policy</a>
+<a href="lesson-06.html"><span class="n">06</span>Evals, verifier, trajectory</a>
+<a href="lesson-07.html"><span class="n">07</span>Память и жизненный цикл знания</a>
+<a href="lesson-08.html"><span class="n">08</span>Retrieval: RAG, hybrid, GraphRAG</a>
+<a href="lesson-09.html"><span class="n">09</span>Observability и воспроизводимость</a>
+<a href="lesson-10.html"><span class="n">10</span>Безопасность: injection, threat model</a>
+<a href="lesson-11.html"><span class="n">11</span>Мультиагентность: MCP / A2A</a>
+<a href="lesson-12.html"><span class="n">12</span>Human-in-the-loop и operating model</a>
+<a href="lesson-13.html"><span class="n">13</span>Экономика и production readiness (capstone)</a>
+<a href="lesson-14.html"><span class="n">14</span>Фронт и горизонт-сканирование</a>
+<a class="lead">Конец</a>
+<a href="index.html#footer"><span class="n">§</span>Метод и источники</a>
+    </nav>
+  </aside>
+
+  <main>
+    <div class="crumb"><a href="index.html">← Все уроки</a></div>
+    <header class="lesson-head">
+      <div class="eyebrow">Урок 04<span class="badge b-core" style="margin-left:6px">[устоявшееся] деградация</span></div>
+      <h1 class="title">Context engineering</h1>
+      <p class="lede">Контекст — бюджет внимания, не хранилище</p>
+      <div class="card-meta">
+        <div class="meta-item"><span class="k">Cold-open</span>Du et al.: деградация при идеальном retrieval</div>
+        <div class="meta-item"><span class="k">В spine</span>context-builder (бюджет + 4 операции)</div>
+      </div>
+    </header>
+    <div class="lesson-body">
+      <div class="status"><p><strong>Статус:</strong> актуально на 2026-06-23, пересмотреть до 2026-09.
+Деградация длинного контекста (context rot, lost-in-the-middle, длина-сама-по-себе) — <strong>[устоявшееся]</strong>
+(воспроизведено независимо: Chroma, OOLONG, Du et al.). Контекст-инженерные операции (compaction,
+offloading, just-in-time retrieval, isolation) — <strong>[формирующееся]</strong>, практикуются в проде. RLM —
+<strong>[формирующееся]</strong> (есть статья + независимая репликация, но не дефолт). Опирается на context-builder
+примитив (урок 2) и compounding error (урок 3).</p></div>
+<hr />
+<h3>0. Зачем этот урок</h3>
+<p>Урок 3 обеспечил, что задача <strong>доходит до конца</strong> несмотря на сбои. Но он молчал о том, что внутри одной
+длинной траектории <strong>качество тихо деградирует</strong> — даже без падений. Этот урок про то, как собрать вход
+LLM на каждом шаге так, чтобы модель работала на пике, и почему наивная интуиция «дай модели больше
+контекста» эмпирически неверна. Это связующий этап: память (7) и retrieval (8) — это, по сути, <strong>решения
+проблемы контекста</strong>, и мы здесь задаём рамку, в которую они встанут.</p>
+<p>Две мысли, которые урок должен оставить:</p>
+<blockquote>
+<p><strong>(1)</strong> Контекст — это <strong>бюджет внимания, а не хранилище</strong>. Больше токенов ≠ лучше; качество падает от
+самой длины, даже при идеальном retrieval. Инженерия контекста — это управление дефицитным вниманием.
+<strong>(2)</strong> На длинном горизонте ошибки <strong>компаундятся</strong>: context rot + потеря деталей при сжатии + ошибка
+шага накладываются. Лечится не «окном побольше», а архитектурой сборки контекста + промежуточными
+проверками.</p>
+</blockquote>
+<hr />
+
+<div class="cw" id="w-kv">
+  <div class="cw-head"><span class="tag">Интерактив</span><span class="ttl">Окно контекста и KV-кэш</span></div>
+  <div class="cw-body">
+    <div class="cw-grid" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr));">
+      <div class="metric"><div class="mk">Кэш-хит</div><div class="mv m-hit">—</div></div>
+      <div class="metric"><div class="mk">$ / вызов</div><div class="mv m-cost">—</div></div>
+      <div class="metric"><div class="mk">$ / 1000 вызовов</div><div class="mv m-k">—</div></div>
+      <div class="metric"><div class="mk">Экономия кэша</div><div class="mv m-save">—</div></div>
+    </div>
+    <div>
+      <div class="bar"></div>
+      <div class="note" style="margin-top:8px;"><span class="dot" style="background:#EEF1E9;"></span>кэшируется · $0.30/Mtok &nbsp;&nbsp; <span class="dot" style="background:#FAF3E2;"></span>пересчёт каждый вызов · $3/Mtok</div>
+    </div>
+    <div class="cw-grid" style="grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px 18px;">
+      <div class="sl" data-k="sys"><div class="slabel"><span>System prompt</span><b class="v"></b></div><input type="range" min="200" max="4000" step="100" value="1200"></div>
+      <div class="sl" data-k="tool"><div class="slabel"><span>Определения инструментов</span><b class="v"></b></div><input type="range" min="0" max="8000" step="200" value="3000"></div>
+      <div class="sl" data-k="hist"><div class="slabel"><span>История диалога</span><b class="v"></b></div><input type="range" min="0" max="40000" step="500" value="12000"></div>
+      <div class="sl" data-k="rag"><div class="slabel"><span>RAG / retrieved (волатильное)</span><b class="v"></b></div><input type="range" min="0" max="20000" step="500" value="6000"></div>
+    </div>
+    <div class="cw-row">
+      <button class="tog o-order on-good" data-on="good"></button>
+      <button class="tog o-hist on-good" data-on="append"></button>
+    </div>
+    <div class="note">Цены — пример тарифа Claude Sonnet ($3/Mtok вход, чтение кэша ≈ $0.30/Mtok). Кэшируется только непрерывный <em>стабильный префикс</em> от начала окна; первый волатильный блок обрывает кэш для всего, что после него.</div>
+  </div>
+</div>
+<script>(function(){
+  var R=document.getElementById('w-kv'); if(!R) return;
+  var P_IN=3.0, P_CACHE=0.30;
+  function fmt(n){return n>=1000?(Math.round(n/100)/10)+'k':Math.round(n);}
+  function money(x){return '$'+(x<1?x.toFixed(3):x.toFixed(2));}
+  function val(k){return +R.querySelector('.sl[data-k='+k+'] input').value;}
+  function read(){return {sys:val('sys'),tool:val('tool'),hist:val('hist'),rag:val('rag'),
+    order:R.querySelector('.o-order').dataset.on, hist2:R.querySelector('.o-hist').dataset.on};}
+  function segs(st){
+    var append=st.hist2==='append';
+    var b={sys:{l:'System',t:st.sys,s:true},tool:{l:'Tools',t:st.tool,s:true},hist:{l:'История',t:st.hist,s:append},rag:{l:'RAG',t:st.rag,s:false},user:{l:'User',t:240,s:false}};
+    var order=st.order==='good'?['sys','tool','hist','rag','user']:['rag','sys','tool','hist','user'];
+    return order.map(function(k){return b[k];}).filter(function(x){return x.t>0;});
+  }
+  function paintTog(b,good){b.classList.toggle('on-good',good);b.classList.toggle('on-bad',!good);}
+  function render(){
+    var st=read();
+    R.querySelectorAll('.sl').forEach(function(sl){sl.querySelector('.v').textContent=fmt(+sl.querySelector('input').value);});
+    var ob=R.querySelector('.o-order'); ob.textContent=st.order==='good'?'Порядок: стабильное → волатильное':'Порядок: волатильное впереди'; paintTog(ob,st.order==='good');
+    var hb=R.querySelector('.o-hist'); hb.textContent=st.hist2==='append'?'История: только дозапись':'История: переписывается'; paintTog(hb,st.hist2==='append');
+    var ss=segs(st), total=ss.reduce(function(a,x){return a+x.t;},0), cached=0, wall=false;
+    ss.forEach(function(x){x.cached=(!wall&&x.s);if(x.cached)cached+=x.t;else wall=true;});
+    var uncached=total-cached, bar=R.querySelector('.bar'); bar.innerHTML='';
+    ss.forEach(function(x){var d=document.createElement('div');d.className='seg '+(x.cached?'c':'u');
+      d.style.flex='0 0 '+(total?x.t/total*100:0)+'%';d.textContent=x.l;d.title=x.l+' · '+fmt(x.t)+' tok';bar.appendChild(d);});
+    var cc=(cached*P_CACHE+uncached*P_IN)/1e6, cn=total*P_IN/1e6, save=cn>0?Math.round((1-cc/cn)*100):0;
+    R.querySelector('.m-hit').textContent=total?Math.round(cached/total*100)+'%':'0%';
+    R.querySelector('.m-cost').textContent=money(cc);
+    R.querySelector('.m-k').textContent=money(cc*1000);
+    var ms=R.querySelector('.m-save'); ms.textContent=save+'%'; ms.style.color=save>50?'#3f5430':save>0?'#8a6d1f':'#a23b28';
+  }
+  R.querySelectorAll('input[type=range]').forEach(function(s){s.addEventListener('input',render);});
+  R.querySelector('.o-order').addEventListener('click',function(){this.dataset.on=this.dataset.on==='good'?'bad':'good';render();});
+  R.querySelector('.o-hist').addEventListener('click',function(){this.dataset.on=this.dataset.on==='append'?'rewrite':'append';render();});
+  render();
+})();</script>
+<h3>1. Cold-open: эмпирическая казнь интуиции «больше контекста = лучше»</h3>
+<p>Наивная инженерная модель: «у модели окно 200K–1M токенов → засунь туда всё нужное (или достань хорошим
+retrieval) → модель разберётся». Три независимых результата 2025 года показывают, что это <strong>ложно</strong>:</p>
+<ul>
+<li><strong>Du et al., «Context Length Alone Hurts LLM Performance Despite Perfect Retrieval»</strong> (arXiv 2510.05381,
+  EMNLP 2025). Ключевой контроль: модели <strong>дают идеальный retrieval</strong> — нужный факт гарантированно в
+  контексте, без отвлекающих данных. И всё равно производительность падает <strong>на 13.9–85%</strong> просто от
+  увеличения длины входа. Вывод названием: <em>length alone hurts, despite perfect retrieval.</em> Это убивает
+  формулу «достань нужное и дай модели» — проблема не в том, <em>что</em> достать, а в <em>объёме</em>.</li>
+<li><strong>OOLONG</strong> (Bertsch et al., arXiv 2511.02817). Задачи на анализ множества фрагментов и агрегацию. При
+  128K токенов <strong>все</strong> фронтир-модели — GPT-5, Claude Sonnet 4, Gemini 2.5 Pro — набирают <strong>&lt;50%</strong>.</li>
+<li><strong>Chroma, «Context Rot»</strong> (техотчёт, 14.07.2025). Деградация <strong>неравномерна</strong> по длине: качество падает
+  по мере роста входа нелинейно, сильнее на задачах с непрямыми (семантическими, а не лексическими)
+  связями.</li>
+</ul>
+<p>То есть длинное окно — это <strong>ёмкость, а не способность им пользоваться</strong>. Заявленные «1M токенов» не значат
+«1M полезных токенов».</p>
+<p>Отсюда тезис урока:</p>
+<blockquote>
+<p>Контекст — дефицитный <strong>бюджет внимания</strong>. Качество деградирует от длины <strong>до</strong> исчерпания окна, даже при
+идеальном retrieval. Поэтому задача инженера — не «вместить больше», а <strong>на каждом шаге собрать минимально
+достаточный, релевантный контекст</strong> и не дать ошибке накопиться по шагам.</p>
+</blockquote>
+<p><em>(Честная оговорка: ряд циркулирующих цифр по этой теме я не подтвердил — MCP «97M скачиваний», memory-метрики
+M+, точные числа RLM «+130%»; они в карантине, §9. Несущие цифры выше — из верифицированных первоисточников.)</em></p>
+<hr />
+<h3>2. Деривация: от «засунь всё» к управлению вниманием</h3>
+<h4>2.1 Наивно</h4>
+<pre><code class="language-python">context = system_prompt + full_history + all_tool_outputs + everything_retrieved
+response = llm(context)   # «окно большое, влезет»
+</code></pre>
+<p>Влезет — но §1 показал, что качество просядет ещё до лимита окна. Нужно управлять не вместимостью, а
+вниманием. Идём по операциям, каждая — ответ на конкретную боль. (Рамка четырёх операций — LangChain
+«Context Engineering»: <strong>write, select, compress, isolate</strong>.)</p>
+<h4>2.2 Боль → операция</h4>
+<ul>
+<li><strong>«История диалога растёт, качество падает» (context rot).</strong> Операция <strong>compress / compaction</strong>
+  (Anthropic «Effective Context Engineering»): периодически суммировать историю в конспект, как только она
+  угрожает бюджету. В Claude Code авто-сжатие срабатывает при высоком заполнении окна. <strong>Риск:</strong> сжатие
+  теряет детали, нужные позже (→ failure mode §4).</li>
+<li><strong>«Критичные детали нельзя терять при сжатии».</strong> Операция <strong>write / offloading</strong>: вынести важное во
+  внешнее хранилище (файл-скретчпад, заметки, состояние) и подтягивать по необходимости. Пример —
+  <code>CLAUDE.md</code>-подобный файл проектного состояния, переживающий перезагрузку контекста. Это смычка с
+  durable state из урока 3 и с памятью (этап 7).</li>
+<li><strong>«Не всё нужное нужно сразу».</strong> Операция <strong>select / just-in-time retrieval</strong>: не грузить всё заранее, а
+  доставать релевантное на шаге (RAG, инструменты). Снижает стартовую нагрузку, <strong>цена</strong> — задержка на
+  каждый подзапрос. (Этап 8.)</li>
+<li><strong>«Одна задача требует разнородных больших контекстов».</strong> Операция <strong>isolate</strong>: раздать подзадачи
+  субагентам с <strong>чистыми</strong> контекстами, каждый возвращает краткий отчёт. Anthropic так параллелит
+  исследование. <strong>Цена</strong> — ≈15× токенов (урок 2) и координация.</li>
+<li><strong>«Стабильность кэша важнее, чем кажется» (стоимость/латентность).</strong> Пятое измерение — <strong>KV-cache
+  stability</strong> (Manus, «Context Engineering for AI Agents»): держи префикс контекста стабильным и
+  <strong>append-only</strong>. Любое изменение в начале окна (переставил инструмент, переписал системный промпт)
+  инвалидирует KV-кэш и кратно удорожает/замедляет шаг. Тезис Manus: «KV-cache hit rate — главная метрика»,
+  помечай cache breakpoints. Это экономическая грань контекста (смычка с этапом 13).</li>
+</ul>
+<h4>2.3 Новая проблема: compounding error внутри траектории (мост от урока 3)</h4>
+<p>Даже с идеальными операциями остаётся горизонтальная проблема. На каждом шаге агент строит вход из
+<em>предыдущего</em> (слегка искажённого) состояния: context rot ухудшил извлечение → compaction потеряла деталь →
+шаг ошибся → ошибка записана в историю → следующий шаг строит контекст уже из неё. Ошибки <strong>накладываются</strong>
+(compounding error, урок 3, §1: p^N). Ключевой сдвиг: проблема контекста — не только <em>пространственная</em>
+(что в окне сейчас), но и <em>временная</em> (как состояние дрейфует по шагам). Поэтому context engineering
+неразрывен с <strong>промежуточной верификацией</strong> (этап 6) и <strong>HITL-чекпоинтами</strong> (этап 12): без точек проверки
+длинная траектория статистически деградирует независимо от качества каждой отдельной сборки контекста.</p>
+<h4>2.4 Новая проблема (мост к §3): а можно ли вообще обойтись без сжатия?</h4>
+<p>Compaction теряет детали; retrieval добавляет задержку и (Du et al.) не спасает от длины. Появился третий
+путь — <strong>RLM</strong>: не сжимать и не «доставать нужное», а <strong>рекурсивно</strong> обрабатывать длинный вход как внешнюю
+среду. Это §3.</p>
+<hr />
+<h3>3. Карта решений: чем платить за длинный горизонт</h3>
+<table>
+<thead>
+<tr>
+<th>Стратегия</th>
+<th>Идея</th>
+<th>Сильная сторона</th>
+<th>Цена</th>
+<th>Когда брать</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Compaction</strong> (Anthropic, Claude Code)</td>
+<td>суммировать историю при угрозе бюджету</td>
+<td>дёшево, сохраняет связность</td>
+<td>теряет детали (§4); сжатие необратимо</td>
+<td>длинные диалоги, где связность &gt; полнота деталей</td>
+</tr>
+<tr>
+<td><strong>Just-in-time retrieval / RAG</strong></td>
+<td>доставать релевантное на шаге</td>
+<td>малый стартовый контекст, свежесть</td>
+<td>задержка/подзапрос; <strong>не спасает от длины</strong> (Du et al.)</td>
+<td>большие базы знаний вне модели (этап 8)</td>
+</tr>
+<tr>
+<td><strong>Context isolation / sub-agents</strong></td>
+<td>чистый контекст на подзадачу</td>
+<td>параллелизм, нет взаимного шума</td>
+<td>≈15× токенов, координация</td>
+<td>разнородные объёмные подзадачи</td>
+</tr>
+<tr>
+<td><strong>Long context (1M токенов)</strong></td>
+<td>просто положить всё</td>
+<td>просто концептуально</td>
+<td>деградация от длины; «1M ёмкости ≠ 1M внимания»</td>
+<td>короткие/средние входы, где деградация терпима</td>
+</tr>
+<tr>
+<td><strong>RLM</strong> (рекурсивная обработка)</td>
+<td>вход как внешняя среда, рекурсивные под-вызовы в REPL</td>
+<td>сохраняет детали без сжатия; на порядки длиннее</td>
+<td>многократные вызовы → латентность + сложность инфраструктуры</td>
+<td>разреженные факты в очень длинном входе, где compaction теряет нужное</td>
+</tr>
+</tbody>
+</table>
+<h4>3.1 Спорные точки (оставляем спорными)</h4>
+<ul>
+<li><strong>«Длинный контекст заменяет retrieval».</strong> Долго считалось, что окно на 1M делает RAG ненужным. Du et
+  al. опровергают: при идеальном retrieval модель <strong>всё равно</strong> деградирует от длины. Значит, и retrieval
+  не панацея, и длинное окно — поэтому гибрид (минимально достаточные факты + структурированные под-вызовы)
+  выглядит сильнее любой крайности. Консенсуса о точке баланса нет.</li>
+<li><strong>Compaction vs RLM.</strong> Сжатие дёшево, но теряет детали; RLM сохраняет детали, но платит вызовами. RLM
+  сообщает <strong>+26% над compaction</strong> (GPT-5-mini, авторы RLM) и <strong>независимо реплицирован</strong> Prime Intellect
+  (INTELLECT-3) — это сигнал «не один лаб» по trend-рубрике этапа 14. Но RLM пока <strong>[формирующееся]</strong>: не
+  дефолт прод-агентов, инфраструктурно тяжелее. Для каких задач/масштабов он выгоднее compaction —
+  открытый вопрос.</li>
+<li><strong>Актуален ли lost-in-the-middle на текущих моделях?</strong> Феномен описан Liu et al. (2023, TACL): данные в
+  середине длинного входа усваиваются хуже краёв. Структурное дообучение (SPLiCe / Structured Packing) его
+  смягчает. Но Chroma/OOLONG показывают, что <strong>деградация от длины сохраняется</strong> на фронтир-моделях 2025,
+  пусть и в другой форме. Вывод с датой: «середина» — частный случай более общего context rot; проверять
+  на конкретной модели, не считать решённым.</li>
+<li><strong>Канонические бенчмарки длины.</strong> <strong>Needle-in-a-Haystack (NIAH)</strong> — стандартный тест long-context; Chroma
+  критикует его как слишком лёгкий (лексическое совпадение), а <strong>NoLiMa</strong> (arXiv 2502.05167) меряет
+  извлечение <strong>без</strong> буквального совпадения — деградация там резче и ближе к реальным задачам.</li>
+<li><strong>Isolate — не бесплатно (контр-аргумент).</strong> Anthropic выносит подзадачи в чистые суб-контексты, но
+  Cognition («Don't Build Multi-Agents») предупреждает: дробление контекста между агентами <strong>теряет общий
+  контекст</strong> и плодит рассогласование. Для линейных задач один агент с дисциплиной контекста часто лучше
+  (подробнее — урок 11).</li>
+</ul>
+<hr />
+<h3>4. Failure modes: как именно портится контекст</h3>
+<table>
+<thead>
+<tr>
+<th>Отказ</th>
+<th>Механизм</th>
+<th>Операция-противоядие</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Context rot</strong></td>
+<td>качество извлечения падает с ростом длины (даже при perfect retrieval)</td>
+<td>compress + select (минимально достаточный контекст)</td>
+</tr>
+<tr>
+<td><strong>Lost-in-the-middle</strong></td>
+<td>данные в середине усваиваются хуже краёв</td>
+<td>reorder (важное — к краям); select</td>
+</tr>
+<tr>
+<td><strong>Compaction detail loss</strong></td>
+<td>сжатие выбросило деталь, нужную позже</td>
+<td>write/offload критичного до сжатия</td>
+</tr>
+<tr>
+<td><strong>Compounding error</strong></td>
+<td>ошибка шага записана → следующий строит контекст из неё</td>
+<td>промежуточная верификация (этап 6), HITL (12)</td>
+</tr>
+<tr>
+<td><strong>Context poisoning</strong></td>
+<td>ложный факт/галлюцинация попал в контекст и переиспользуется как истина</td>
+<td>write gate + provenance (этап 7); verifier</td>
+</tr>
+<tr>
+<td><strong>Distraction</strong></td>
+<td>нерелевантные токены отвлекают внимание модели</td>
+<td>select (фильтрация), isolate</td>
+</tr>
+</tbody>
+</table>
+<p>Практический смысл: «модель тупит на длинной задаче» → адресный диагноз «context rot на шаге N + потеря
+детали при compaction на шаге M». Cold-open (Du/OOLONG/Chroma) = эмпирическая база первых двух строк.</p>
+<hr />
+<h3>5. Вклад в reference-spine: контракт context-builder</h3>
+<p>Наполняем <code>ContextBuilder</code> из урока 2. Контекст собирается <strong>под бюджет токенов</strong>, с явными операциями и
+provenance (для борьбы с poisoning).</p>
+<pre><code class="language-python">@dataclass
+class ContextBudget:
+    max_tokens: int
+    reserve_output: int          # резерв под ответ модели
+    # инвариант: assembled_tokens &lt;= max_tokens - reserve_output
+
+@dataclass
+class ContextItem:
+    content: str
+    source: str                  # provenance: откуда (история | tool | memory | retrieval)
+    trust: str                   # verified | untrusted  (анти-poisoning, мост к этапу 7)
+    priority: int                # для вытеснения при нехватке бюджета
+    tokens: int
+    compressed: bool = False         # помечено как сжатое (lossy) — для теста §6
+    marked_untrusted: bool = False   # untrusted подан с пометкой, не как факт — для теста §6
+
+class ContextBuilder(Protocol):
+    def build(self, step, memory, retrieval, budget: ContextBudget) -&gt; list[ContextItem]:
+        ...
+        # операции (write/select/compress/isolate):
+        #  select   — взять только релевантное под шаг (just-in-time)
+        #  compress — суммировать историю, ПОМЕТИВ что сжато (lossy)
+        #  write    — критичное вынести в memory ДО сжатия (не потерять)
+        #  isolate  — для подзадач отдать чистый суб-контекст
+        # ИНВАРИАНТЫ:
+        #  (1) sum(item.tokens) &lt;= budget.max_tokens - budget.reserve_output
+        #  (2) untrusted-контент НЕ подаётся как факт без пометки (poisoning)
+        #  (3) при вытеснении первым уходит low-priority, не критичное
+        #  (4) reorder: высокий приоритет — к краям окна (анти lost-in-the-middle)
+</code></pre>
+<p><strong>Контракт для следующих этапов:</strong> memory (7) и retrieval (8) — это <strong>поставщики <code>ContextItem</code></strong> с
+provenance/trust; verifier (6) проверяет, что в контекст не попал непроверенный факт как истина; HITL (12)
+— точка прерывания при низком доверии сборки. Context-builder — узел, где сходятся почти все примитивы.</p>
+<hr />
+<h3>6. Pset 4 — бюджетный сборщик контекста</h3>
+<p><strong>Задача.</strong> Реализовать <code>build</code> с (а) жёстким бюджетом токенов; (б) compaction с пометкой потерь; (в)
+provenance/trust (анти-poisoning); (г) reorder важного к краям.</p>
+<p><strong>Скелет</strong> (<code>context_builder.py</code>):</p>
+<pre><code class="language-python">def build(history, tools_out, memory, retrieval, budget) -&gt; list[ContextItem]:
+    items = collect(history, tools_out, memory, retrieval)   # с source/trust/priority/tokens
+    items = select_relevant(items, step)                     # just-in-time: режем нерелевантное
+    if total_tokens(items) &gt; budget.max_tokens - budget.reserve_output:
+        items = compress_low_priority(items)                 # суммируем НИЗКОприоритетное, помечаем lossy
+    assert total_tokens(items) &lt;= budget.max_tokens - budget.reserve_output   # инвариант (1)
+    items = mark_untrusted(items)                            # инвариант (2): untrusted ≠ факт
+    items = reorder_high_priority_to_edges(items)            # инвариант (4): анти lost-in-the-middle
+    return items
+</code></pre>
+<p><strong>Тесты:</strong></p>
+<pre><code class="language-python">def test_budget_is_never_exceeded():
+    out = build(huge_history, ..., budget=ContextBudget(8000, reserve_output=2000))
+    assert total_tokens(out) &lt;= 6000
+
+def test_critical_item_offloaded_before_compaction():
+    # критичный пункт (priority=MAX) НЕ должен быть потерян при сжатии
+    out = build(history_with_critical, ..., small_budget)
+    assert any(i.priority == MAX and not i.compressed for i in out)
+
+def test_untrusted_not_presented_as_fact():
+    out = build(history_with_untrusted_retrieval, ...)
+    untrusted = [i for i in out if i.trust == &quot;untrusted&quot;]
+    assert all(i.marked_untrusted for i in untrusted)        # анти-poisoning
+
+def test_high_priority_placed_at_edges():
+    out = build(many_items, ...)
+    assert out[0].priority == MAX or out[-1].priority == MAX  # не в середине
+
+def test_eviction_drops_low_priority_first():
+    out = build(over_budget_mixed_priority, ...)
+    assert all(i.priority &gt;= THRESHOLD for i in out)          # low-priority вытеснено первым
+</code></pre>
+<p><strong>Эталон.</strong> Главные мысли: (1) бюджет — жёсткий инвариант, а не «примерно влезет»; (2) critical-item
+выносится (write) <strong>до</strong> compaction — иначе теряется (failure mode §4); (3) untrusted помечается, а не
+подаётся как факт (мост к poisoning/этап 7); (4) reorder к краям — прямое противоядие lost-in-the-middle.
+<code>test_untrusted...</code> связывает context с безопасностью (этап 10).</p>
+<p><strong>Расширение.</strong> Добавь симулятор деградации: функция <code>quality(n_tokens)</code> убывающая (по форме Chroma);
+покажи тестом, что урезание контекста до релевантного <strong>повышает</strong> ожидаемое качество, хотя выкидывает
+токены — операционализация cold-open.</p>
+<hr />
+<h3>7. Диагностические вопросы (проверяют суждение)</h3>
+<ol>
+<li>Коллега предлагает решить проблему переходом на модель с окном 1M токенов «чтобы всё влезало». По §1 —
+   почему это не решит задачу и какой эксперимент Du et al. ты приведёшь как контраргумент?</li>
+<li>Дан агент, который «забывает» инструкцию из начала длинной сессии. Назови два разных механизма (§4),
+   которые это вызывают, и разные противоядия к каждому.</li>
+<li>Когда RLM оправдан над compaction, а когда наоборот (§3.1)? Какой признак задачи решает выбор и почему
+   независимая репликация (Prime Intellect) важна для доверия к RLM?</li>
+<li>Compaction сжала историю и выбросила деталь, всплывшую через 30 шагов. На каком этапе сборки контекста
+   (§5) это надо было предотвратить и какой операцией?</li>
+<li>Почему «достань идеальный контекст через RAG» не закрывает проблему длины? Что это говорит о связке
+   retrieval (этап 8) и context engineering?</li>
+<li><strong>Open question</strong> (§2.3): предложи метрику «дрейфа состояния» за шаг, по которой можно предсказать,
+   когда вставить промежуточную верификацию. Чем её можно обмануть?</li>
+</ol>
+<hr />
+<h3>8. Глоссарий-дельта</h3>
+<ul>
+<li><strong>Контекст как бюджет внимания</strong> — окно LLM ограничено не только ёмкостью, но и <em>способностью</em> им
+  пользоваться; качество падает от длины.</li>
+<li><strong>Context rot</strong> — деградация использования контекста с ростом длины входа (Chroma); неравномерна,
+  сильнее на семантических связях.</li>
+<li><strong>Lost-in-the-middle</strong> — данные в середине длинного входа усваиваются хуже краёв (Liu 2023); частный
+  случай context rot.</li>
+<li><strong>Token budgeting</strong> — распределение дефицитного окна между системным промптом, историей, tool-выводами,
+  retrieval; с резервом под ответ.</li>
+<li><strong>Четыре операции (LangChain)</strong> — <strong>write</strong> (offload во вне), <strong>select</strong> (just-in-time retrieval),
+  <strong>compress</strong> (compaction/summarization), <strong>isolate</strong> (sub-agents, чистые контексты).</li>
+<li><strong>Compaction</strong> — суммаризация истории при угрозе бюджету; lossy (риск потери деталей).</li>
+<li><strong>Context offloading / scratchpad</strong> — вынос критичного во внешнее хранилище (файл состояния).</li>
+<li><strong>RLM (Recursive Language Models)</strong> — длинный вход как внешняя среда + рекурсивные под-вызовы (REPL); без
+  сжатия. arXiv 2512.24601. [формирующееся].</li>
+<li><strong>Context poisoning</strong> — ложный факт/галлюцинация попал в контекст и переиспользуется как истина;
+  противоядие — provenance + trust (этап 7).</li>
+<li><strong>Compounding error (в контексте)</strong> — дрейф состояния по шагам: ошибка записана → следующий контекст
+  строится из неё.</li>
+</ul>
+<hr />
+<h3>9. Первоисточники (верифицированы 2026-06-23)</h3>
+<ol>
+<li><strong>Du et al. — «Context Length Alone Hurts LLM Performance Despite Perfect Retrieval»</strong>, arXiv 2510.05381,
+   EMNLP 2025 Findings. <a href="https://arxiv.org/abs/2510.05381" target="_blank" rel="noopener">https://arxiv.org/abs/2510.05381</a> — cold-open: деградация от длины при идеальном
+   retrieval (13.9–85%).</li>
+<li><strong>Bertsch et al. — «Oolong: Evaluating Long Context Reasoning and Aggregation»</strong>, arXiv 2511.02817.
+   <a href="https://arxiv.org/abs/2511.02817" target="_blank" rel="noopener">https://arxiv.org/abs/2511.02817</a> — фронтир-модели &lt;50% при 128K.</li>
+<li><strong>Chroma — «Context Rot: How Increasing Input Tokens Impacts LLM Performance»</strong> (техотчёт, 2025-07-14).
+   <a href="https://www.trychroma.com/research/context-rot" target="_blank" rel="noopener">https://www.trychroma.com/research/context-rot</a> · код: <a href="https://github.com/chroma-core/context-rot" target="_blank" rel="noopener">https://github.com/chroma-core/context-rot</a> —
+   неравномерная деградация.</li>
+<li><strong>Liu et al. — «Lost in the Middle»</strong>, TACL 2023. <a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener">https://arxiv.org/abs/2307.03172</a> — смещение внимания
+   к краям контекста.</li>
+<li><strong>Zhang et al. — «Recursive Language Models» (RLM)</strong>, arXiv 2512.24601, MIT CSAIL. Блог:
+   <a href="https://alexzhang13.github.io/blog/2025/rlm/" target="_blank" rel="noopener">https://alexzhang13.github.io/blog/2025/rlm/</a> — рекурсивная обработка длинного входа; +26% над compaction.
+   Независимая репликация: Prime Intellect, INTELLECT-3 (<a href="https://www.primeintellect.ai/blog/rlm" target="_blank" rel="noopener">https://www.primeintellect.ai/blog/rlm</a>).</li>
+<li><strong>Anthropic — «Effective Context Engineering for AI Agents»</strong> (2025).
+   <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents</a> — context rot, «бюджет
+   внимания», compaction.</li>
+<li><strong>LangChain — «Context Engineering»</strong> (write / select / compress / isolate).
+   <a href="https://blog.langchain.com/context-engineering-for-agents/" target="_blank" rel="noopener">https://blog.langchain.com/context-engineering-for-agents/</a> — рамка четырёх операций.</li>
+<li><strong>Wu et al. — «LongMemEval»</strong>, arXiv 2410.10813 (2024). <a href="https://arxiv.org/abs/2410.10813" target="_blank" rel="noopener">https://arxiv.org/abs/2410.10813</a> — деградация
+   долговременной памяти чат-ассистентов на длинных историях.</li>
+<li><strong>Manus — «Context Engineering for AI Agents: Lessons from Building Manus»</strong> (Y. Ji, 2025).
+   <a href="https://manus.im/blog/Context-Engineering-for-AI-Agents-Lessons-from-Building-Manus" target="_blank" rel="noopener">https://manus.im/blog/Context-Engineering-for-AI-Agents-Lessons-from-Building-Manus</a> — KV-cache stability,
+   append-only контекст (§2.2).</li>
+<li><strong>NoLiMa — «Long-Context Evaluation Beyond Literal Matching»</strong>, arXiv 2502.05167 (2025).
+    <a href="https://arxiv.org/abs/2502.05167" target="_blank" rel="noopener">https://arxiv.org/abs/2502.05167</a> — деградация long-context без лексического совпадения (§3.1).</li>
+<li><strong>Cognition — «Don't Build Multi-Agents»</strong> (2025). <a href="https://cognition.ai/blog/dont-build-multi-agents" target="_blank" rel="noopener">https://cognition.ai/blog/dont-build-multi-agents</a>
+    — контр-аргумент к context isolation (§3.1; см. урок 11).</li>
+</ol>
+<blockquote class="quarantine">
+<p><strong>Карантин:</strong> MCP-числа «97 млн скачиваний / 75+ подключений» (фабрикация точности; MCP относится к
+этапу 11, не к этому уроку); «M+ / MemoryLLM 20K→160K» (не верифицировано); Anthropic Pokemon «1234 шага,
+8/10 уровней» (демо реально, числа не подтверждены — в уроке не используются как факт); RLM «+130% vs
+CodeAct / +28.3% на 220B» (точные значения не сверены — использован только подтверждаемый headline +26%).</p>
+</blockquote>
+<hr />
+<p><em>Плотность — целевая. Этап длинный по праву (одна из самых насыщенных тем). Cold-open — не анекдот, а
+эмпирическая казнь интуиции тремя независимыми верифицированными результатами (сильнее единичного
+инцидента). Spine получил полный контракт context-builder (бюджет + provenance + 4 операции) — узел, куда
+встанут память и retrieval. §2.3 связал пространственную проблему контекста с временной (compounding error)
+и пробросил мост к верификации (этап 6). Самое аккуратное досье на входе из четырёх — gate в основном
+подтверждал, а не вырезал.</em></p>
+    </div>
+    <nav class="pager">
+      <a class="pg-prev" href="lesson-03.html"><span class="pk">← Урок 03</span>Task lifecycle и durable execution</a>
+      <a class="pg-next" href="lesson-05.html"><span class="pk">Урок 05 →</span>Инструменты, права, policy</a>
+    </nav>
+    <footer id="footer">
+      <p>Дизайн-язык адаптирован из <a href="https://github.com/ThariqS/html-effectiveness"
+        target="_blank" rel="noopener">html-effectiveness</a> (Apache-2.0). Актуально на 2026-06-23.</p>
+    </footer>
+  </main>
+</div>
+<script>
+// keep the active lesson visible in the sticky sidebar on load
+var act=document.querySelector('.sidebar nav a.active');
+if(act && act.scrollIntoView){ act.scrollIntoView({block:'center'}); }
+</script>
+</body>
+</html>

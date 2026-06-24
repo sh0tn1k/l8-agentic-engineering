@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Урок 01. Зрелость автономии — L8+ Agentic Engineering</title>
+<!-- Design language adapted from ThariqS/html-effectiveness (Apache-2.0, (c) Anthropic PBC). -->
+<style>
+:root{
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413; --clay:#D97757; --clay-d:#B85C3E;
+  --oat:#E3DACC; --olive:#788C5D; --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5;
+  --g500:#87867F; --g700:#3D3D3A;
+  --serif:ui-serif,Georgia,"Times New Roman",Times,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Monaco,Consolas,monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--ivory);color:var(--slate);font-family:var(--sans);
+  line-height:1.6;-webkit-font-smoothing:antialiased;font-size:16.5px;}
+
+a{color:var(--clay-d);text-decoration-color:var(--oat);text-underline-offset:3px;}
+a:hover{text-decoration-color:var(--clay);}
+
+/* layout shell: sticky sidebar + reading column */
+.shell{max-width:1180px;margin:0 auto;padding:0 28px;display:grid;
+  grid-template-columns:236px minmax(0,1fr);gap:48px;align-items:start;}
+@media(max-width:900px){.shell{grid-template-columns:1fr;gap:0;padding:0 20px;}}
+
+/* sidebar */
+.sidebar{position:sticky;top:0;max-height:100vh;overflow-y:auto;padding:34px 0 40px;}
+@media(max-width:900px){.sidebar{position:static;max-height:none;border-bottom:1.5px solid var(--g300);
+  margin-bottom:8px;padding-bottom:18px;}}
+.side-brand{font-family:var(--serif);font-size:19px;font-weight:600;letter-spacing:-.01em;margin-bottom:2px;}
+.side-brand em{font-style:italic;color:var(--clay);}
+.side-sub{font-family:var(--mono);font-size:10.5px;color:var(--g500);text-transform:uppercase;
+  letter-spacing:.1em;margin-bottom:20px;}
+.sidebar nav{display:flex;flex-direction:column;gap:1px;}
+.sidebar nav a{display:flex;gap:9px;align-items:baseline;text-decoration:none;color:var(--g700);
+  font-size:13px;line-height:1.35;padding:5px 9px;border-radius:7px;border-left:2px solid transparent;}
+.sidebar nav a .n{font-family:var(--mono);font-size:10px;color:var(--g500);min-width:16px;}
+.sidebar nav a:hover{background:var(--g100);color:var(--slate);}
+.sidebar nav a.active{background:var(--paper);border-left-color:var(--clay);color:var(--slate);
+  box-shadow:0 1px 0 var(--g200);}
+.sidebar nav a.active .n{color:var(--clay);}
+.sidebar nav a.lead{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--g500);margin-top:14px;padding-bottom:2px;pointer-events:none;}
+
+/* main reading column */
+main{max-width:840px;padding:0 0 140px;min-width:0;}
+
+/* masthead */
+header.masthead{padding:54px 0 34px;border-bottom:1.5px solid var(--g300);margin-bottom:8px;}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--g500);margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+.eyebrow::before{content:"";width:24px;height:1.5px;background:var(--clay);}
+h1.title{font-family:var(--serif);font-weight:500;font-size:clamp(36px,5vw,58px);line-height:1.07;
+  letter-spacing:-.018em;margin:0 0 6px;max-width:18ch;}
+h1.title em{font-style:italic;color:var(--clay);}
+.lede{font-size:17px;color:var(--g700);margin:20px 0 0;max-width:640px;}
+.disclaimer{margin:22px 0 0;padding:14px 18px;background:var(--g100);border-radius:12px;
+  border:1.5px solid var(--g200);font-size:13.5px;color:var(--g700);max-width:660px;}
+.disclaimer b{color:var(--slate);}
+
+/* feature panel (spine) */
+.panel{margin:40px 0 0;background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;
+  padding:26px 28px;scroll-margin-top:16px;}
+.panel h2,.howto h2{font-family:var(--serif);font-weight:500;font-size:25px;margin:0 0 4px;letter-spacing:-.01em;}
+.panel .sub{color:var(--g700);font-size:14px;margin:0 0 18px;}
+.flow{font-family:var(--mono);font-size:12.5px;line-height:1.7;background:var(--g100);border-radius:10px;
+  padding:14px 16px;overflow-x:auto;color:var(--g700);white-space:pre-wrap;border:1px solid var(--g200);}
+ol.inv{margin:18px 0 0;padding-left:0;counter-reset:inv;list-style:none;display:grid;gap:7px;}
+ol.inv li{position:relative;padding-left:30px;font-size:14px;color:var(--g700);}
+ol.inv li::before{counter-increment:inv;content:counter(inv);position:absolute;left:0;top:0;
+  font-family:var(--mono);font-size:11px;color:var(--clay);font-weight:600;
+  border:1.5px solid var(--oat);border-radius:6px;width:21px;height:21px;display:flex;
+  align-items:center;justify-content:center;}
+ol.inv li b{color:var(--slate);font-weight:600;}
+
+.howto{margin:34px 0 0;scroll-margin-top:16px;}
+.howto ul{margin:10px 0 0;padding-left:20px;}
+.howto li{margin:6px 0;color:var(--g700);font-size:14.5px;}
+
+.section-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--g500);margin:64px 0 6px;display:flex;align-items:center;gap:10px;}
+.section-label::before{content:"";width:20px;height:1.5px;background:var(--clay);}
+
+/* lessons / accordion */
+section.lesson{margin-top:18px;scroll-margin-top:14px;}
+details.les{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;overflow:hidden;
+  transition:border-color 150ms,box-shadow 150ms;}
+details.les[open]{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);}
+details.les summary{list-style:none;cursor:pointer;padding:20px 22px;display:block;}
+details.les summary::-webkit-details-marker{display:none;}
+.sec-head{display:flex;align-items:baseline;gap:14px;}
+.sec-head .idx{font-family:var(--mono);font-size:13px;color:var(--clay);font-weight:600;min-width:26px;}
+.sec-head h2{font-family:var(--serif);font-weight:500;font-size:23px;margin:0;letter-spacing:-.01em;flex:1;}
+.tagline{color:var(--g700);font-size:14px;margin:3px 0 0 40px;}
+.card-meta{margin:13px 0 0 40px;display:grid;gap:5px;}
+.meta-item{font-size:13px;color:var(--g700);}
+.meta-item .k{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--g500);margin-right:8px;}
+.expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(--mono);font-size:11px;
+  color:var(--clay);}
+details.les[open] .expand-hint{display:none;}
+
+/* maturity badges */
+.badge{font-family:var(--mono);font-size:10.5px;padding:3px 9px;border-radius:999px;white-space:nowrap;
+  border:1.5px solid var(--g300);color:var(--g700);align-self:flex-start;}
+.badge.b-core{background:#EEF1E9;border-color:#C3D1AE;color:#3f5430;}
+.badge.b-emerging{background:#FBEDE6;border-color:#EBC3AE;color:var(--clay-d);}
+.badge.b-disputed{background:#FAF3E2;border-color:#E6D08C;color:#8a6d1f;}
+.badge.b-hype{background:#FBE9E6;border-color:#E9B4A8;color:#a23b28;}
+.badge.b-special{background:#ECEAF3;border-color:#C7C0DE;color:#4b4080;}
+
+/* lesson body (rendered markdown) */
+.lesson-body{padding:4px 26px 28px;border-top:1px solid var(--g100);}
+.lesson-body .status{font-size:13px;color:var(--g700);background:var(--g100);border-radius:10px;
+  padding:12px 15px;margin:18px 0 8px;border:1px solid var(--g200);}
+.lesson-body h3{font-family:var(--serif);font-weight:600;font-size:21px;margin:32px 0 8px;letter-spacing:-.008em;}
+.lesson-body h4{font-family:var(--serif);font-weight:600;font-size:17px;margin:22px 0 6px;color:var(--g700);}
+.lesson-body h5{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--g500);margin:18px 0 6px;}
+.lesson-body p{margin:11px 0;}
+.lesson-body ul,.lesson-body ol{margin:11px 0;padding-left:22px;}
+.lesson-body li{margin:5px 0;}
+.lesson-body code{font-family:var(--mono);font-size:.86em;background:var(--g100);padding:1.5px 5px;
+  border-radius:5px;border:1px solid var(--g200);}
+.lesson-body pre{background:#2b2a27;color:#eceae3;border-radius:12px;padding:16px 18px;overflow-x:auto;
+  font-size:12.7px;line-height:1.5;margin:14px 0;}
+.lesson-body pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit;}
+.lesson-body blockquote{margin:14px 0;padding:12px 18px;border-left:3px solid var(--clay);
+  background:var(--paper);border-radius:0 10px 10px 0;color:var(--g700);}
+.lesson-body blockquote.quarantine{border-left-color:#c98a2e;background:#FAF3E2;}
+.lesson-body table{border-collapse:collapse;width:100%;margin:16px 0;font-size:13px;display:block;
+  overflow-x:auto;}
+.lesson-body th,.lesson-body td{border:1px solid var(--g300);padding:7px 10px;text-align:left;
+  vertical-align:top;}
+.lesson-body th{background:var(--g100);font-weight:600;font-family:var(--sans);}
+.lesson-body tr:nth-child(even) td{background:#fcfbf8;}
+.lesson-body hr{border:none;border-top:1.5px solid var(--g200);margin:26px 0;}
+.lesson-body a{word-break:break-word;}
+.lesson-body em{color:var(--g700);}
+
+/* footer */
+footer{margin:80px 0 0;border-top:1.5px solid var(--g300);padding-top:30px;font-size:13px;
+  color:var(--g500);scroll-margin-top:16px;}
+footer .k{font-family:var(--serif);font-style:italic;color:var(--g700);font-size:15px;}
+footer p{margin:8px 0;max-width:680px;}
+
+.toolbar{display:flex;gap:10px;margin:22px 0 0 40px;}
+.toolbar button{font-family:var(--mono);font-size:11px;background:var(--paper);border:1.5px solid var(--g300);
+  color:var(--g700);border-radius:999px;padding:6px 13px;cursor:pointer;}
+.toolbar button:hover{border-color:var(--slate);color:var(--slate);}
+
+/* ---- multipage: lesson cards on index + lesson pages ---- */
+.side-brand-link{text-decoration:none;color:inherit;display:block;}
+.lcards{display:grid;gap:14px;margin-top:18px;}
+a.lcard{display:block;text-decoration:none;color:inherit;background:var(--paper);border:1.5px solid var(--g300);
+  border-radius:14px;padding:20px 22px;transition:border-color .15s,box-shadow .15s,transform .15s;}
+a.lcard:hover{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);transform:translateY(-1px);}
+a.lcard .sec-head h2{color:var(--slate);}
+a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(--mono);font-size:11px;color:var(--clay);}
+.crumb{margin:30px 0 2px;}
+.crumb a{font-family:var(--mono);font-size:12px;color:var(--g500);text-decoration:none;}
+.crumb a:hover{color:var(--clay-d);}
+.lesson-head{padding:12px 0 24px;border-bottom:1.5px solid var(--g300);margin-bottom:4px;}
+.lesson-head .eyebrow{margin-bottom:13px;}
+.lesson-head h1.title{font-size:clamp(29px,4vw,44px);max-width:22ch;margin:0;}
+.lesson-head .lede{margin-top:13px;}
+.pager{display:flex;justify-content:space-between;align-items:stretch;gap:14px;margin:54px 0 0;
+  border-top:1.5px solid var(--g300);padding-top:22px;}
+.pager a{text-decoration:none;color:var(--g700);font-size:13.5px;border:1.5px solid var(--g300);border-radius:11px;
+  padding:11px 15px;max-width:49%;transition:.15s;line-height:1.4;}
+.pager a:hover{border-color:var(--slate);color:var(--slate);}
+.pager a .pk{font-family:var(--mono);font-size:10px;color:var(--g500);display:block;margin-bottom:2px;}
+.pager .pg-next{margin-left:auto;text-align:right;}
+.sidebar nav a.active{background:var(--paper);border-left-color:var(--clay);color:var(--slate);box-shadow:0 1px 0 var(--g200);}
+.sidebar nav a.active .n{color:var(--clay);}
+
+/* ---- interactive course widgets (.cw) ---- */
+.cw{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;margin:28px 0;overflow:hidden;}
+.cw-head{display:flex;align-items:center;gap:10px;padding:13px 20px;border-bottom:1px solid var(--g200);background:var(--g100);}
+.cw-head .tag{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--clay);
+  border:1.5px solid var(--oat);border-radius:999px;padding:2px 9px;}
+.cw-head .ttl{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--slate);}
+.cw-body{padding:18px 20px;display:flex;flex-direction:column;gap:15px;}
+.cw-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+.cw-grid{display:grid;gap:10px;}
+.cw .lbl{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--g500);margin-bottom:7px;}
+.cw .metric{background:var(--g100);border:1px solid var(--g200);border-radius:10px;padding:9px 13px;}
+.cw .metric .mk{font-size:12px;color:var(--g500);}
+.cw .metric .mv{font-size:21px;font-weight:600;font-family:var(--serif);color:var(--slate);line-height:1.2;}
+.cw button{font-family:var(--sans);cursor:pointer;border-radius:8px;border:1.5px solid var(--g300);background:var(--paper);
+  color:var(--g700);font-size:13px;padding:7px 12px;transition:.12s;line-height:1.3;}
+.cw button:hover{border-color:var(--slate);color:var(--slate);}
+.cw .act{background:var(--clay);border-color:var(--clay);color:#fff;font-weight:600;}
+.cw .act:hover{background:var(--clay-d);border-color:var(--clay-d);color:#fff;}
+.cw .chip{font-family:var(--mono);font-size:11px;padding:5px 10px;border-radius:999px;}
+.cw .chip.sel{background:var(--slate);border-color:var(--slate);color:var(--ivory);}
+.cw .tog{display:flex;align-items:center;gap:8px;text-align:left;}
+.cw .tog.on-bad{background:#FBE9E6;border-color:#E9B4A8;color:#a23b28;}
+.cw .tog.on-good{background:#EEF1E9;border-color:#C3D1AE;color:#3f5430;}
+.cw input[type=range]{width:100%;accent-color:var(--clay);margin:2px 0;}
+.cw .slabel{display:flex;justify-content:space-between;font-size:12.5px;color:var(--g700);margin-bottom:2px;}
+.cw .slabel b{font-weight:600;color:var(--slate);}
+.cw .bar{display:flex;height:40px;border-radius:9px;overflow:hidden;border:1px solid var(--g300);}
+.cw .seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;overflow:hidden;
+  white-space:nowrap;border-right:1px solid var(--paper);}
+.cw .seg.c{background:#EEF1E9;color:#3f5430;}
+.cw .seg.u{background:#FAF3E2;color:#8a6d1f;}
+.cw .trace{display:flex;flex-direction:column;gap:6px;}
+.cw .trow{border-left:3px solid var(--g300);background:var(--g100);border-radius:0 8px 8px 0;padding:7px 12px;
+  font-family:var(--mono);font-size:12.5px;}
+.cw .trow .th{font-weight:600;color:var(--slate);}
+.cw .trow .tb{color:var(--g700);white-space:pre-wrap;word-break:break-word;margin-top:2px;}
+.cw .t-obs{border-color:var(--olive);}
+.cw .t-think{border-color:#c98a2e;}
+.cw .t-act{border-color:var(--g500);}
+.cw .t-block{border-color:#6f9152;}
+.cw .t-leak{border-color:var(--clay-d);}
+.cw .verdict{border-radius:10px;padding:12px 15px;font-size:14px;}
+.cw .v-safe{background:#EEF1E9;color:#3f5430;border:1px solid #C3D1AE;}
+.cw .v-leak{background:#FBE9E6;color:#a23b28;border:1px solid #E9B4A8;}
+.cw .verdict .vt{font-weight:700;}
+.cw .verdict .vd{margin-top:3px;line-height:1.5;}
+.cw .note{font-size:11.5px;color:var(--g500);line-height:1.6;}
+.cw .dot{display:inline-block;width:10px;height:10px;border-radius:3px;vertical-align:middle;margin-right:4px;}
+.cw textarea{width:100%;font-family:var(--mono);font-size:12.5px;border:1.5px solid var(--g300);border-radius:8px;
+  padding:8px 10px;background:var(--paper);color:var(--slate);resize:vertical;}
+.cw .runs{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;max-width:420px;}
+.cw .evd{aspect-ratio:1;border-radius:3px;background:var(--g200);}
+.cw .evd.ok{background:#9cbf6e;}
+.cw .evd.no{background:#e0a99c;}
+.cw .mlist{display:flex;flex-direction:column;gap:7px;}
+.cw .mitem{display:flex;align-items:center;gap:10px;border:1px solid var(--g200);border-radius:9px;padding:8px 11px;
+  font-size:13px;background:var(--g100);}
+.cw .mitem .mt{color:var(--slate);}
+.cw .mitem .src{font-family:var(--mono);font-size:10.5px;color:var(--g500);}
+.cw .pill{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:999px;margin-left:auto;white-space:nowrap;}
+.cw .pill.w{background:#EEF1E9;color:#3f5430;}
+.cw .pill.q{background:#FAF3E2;color:#8a6d1f;}
+.cw .pill.r{background:#FBE9E6;color:#a23b28;}
+.cw .stepc{font-family:var(--mono);font-size:11px;color:var(--g500);}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="top">
+    <a class="side-brand-link" href="index.html"><div class="side-brand">L8+ <em>Agentic</em></div></a>
+    <div class="side-sub">актуально 2026-06-23</div>
+    <nav>
+<a href="index.html">▲ Главная</a>
+<a class="lead">Карта</a>
+<a href="index.html#spine"><span class="n">◆</span>Reference-spine</a>
+<a href="index.html#how"><span class="n">?</span>Как читать</a>
+<a class="lead">Уроки</a>
+<a href="lesson-01.html" class="active"><span class="n">01</span>Зрелость автономии</a>
+<a href="lesson-02.html"><span class="n">02</span>Примитивы и reference-spine</a>
+<a href="lesson-03.html"><span class="n">03</span>Task lifecycle и durable execution</a>
+<a href="lesson-04.html"><span class="n">04</span>Context engineering</a>
+<a href="lesson-05.html"><span class="n">05</span>Инструменты, права, policy</a>
+<a href="lesson-06.html"><span class="n">06</span>Evals, verifier, trajectory</a>
+<a href="lesson-07.html"><span class="n">07</span>Память и жизненный цикл знания</a>
+<a href="lesson-08.html"><span class="n">08</span>Retrieval: RAG, hybrid, GraphRAG</a>
+<a href="lesson-09.html"><span class="n">09</span>Observability и воспроизводимость</a>
+<a href="lesson-10.html"><span class="n">10</span>Безопасность: injection, threat model</a>
+<a href="lesson-11.html"><span class="n">11</span>Мультиагентность: MCP / A2A</a>
+<a href="lesson-12.html"><span class="n">12</span>Human-in-the-loop и operating model</a>
+<a href="lesson-13.html"><span class="n">13</span>Экономика и production readiness (capstone)</a>
+<a href="lesson-14.html"><span class="n">14</span>Фронт и горизонт-сканирование</a>
+<a class="lead">Конец</a>
+<a href="index.html#footer"><span class="n">§</span>Метод и источники</a>
+    </nav>
+  </aside>
+
+  <main>
+    <div class="crumb"><a href="index.html">← Все уроки</a></div>
+    <header class="lesson-head">
+      <div class="eyebrow">Урок 01<span class="badge b-core" style="margin-left:6px">ядро [устоявшееся]</span></div>
+      <h1 class="title">Зрелость автономии</h1>
+      <p class="lede">Уровень агента ≠ его способности</p>
+      <div class="card-meta">
+        <div class="meta-item"><span class="k">Cold-open</span>Replit удалил прод-БД (права без тормоза)</div>
+        <div class="meta-item"><span class="k">В spine</span>оси A (динамичность) / B (полномочия)</div>
+      </div>
+    </header>
+    <div class="lesson-body">
+      <div class="status"><p><strong>Статус:</strong> актуально на 2026-06-23, пересмотреть до 2026-09.
+Ядро (агент vs workflow; автономия = функция прав и надзора, не способностей) — <strong>[устоявшееся]</strong>.
+Конкретные шкалы уровней — <strong>[формирующееся]</strong>, единого стандарта нет.
+<strong>Дисклеймер:</strong> «L8+» — внутреннее обозначение этого курса, <strong>не отраслевой стандарт</strong>. Признанные
+таксономии используют L0–L5 (производны от SAE J3016). Где стоит «L8+», читай «условно очень высокий уровень».</p></div>
+<hr />
+<h3>0. Зачем этот урок первый</h3>
+<p>Прежде чем строить автономную систему, нужен язык, на котором мы говорим «насколько она автономна».
+Без него любой разговор сваливается либо в маркетинг («у нас полностью автономный AI-инженер!»), либо
+в бесконечный спор о терминах. Этот урок даёт <strong>две оси измерения и один инвариант</strong>, к которым мы будем
+возвращаться все 13 оставшихся этапов. Если убрать всё остальное из урока, останется одна мысль:</p>
+<blockquote>
+<p>Уровень автономии системы определяется не тем, <strong>что модель умеет</strong>, а тем, <strong>какие действия ей
+разрешено совершать без человека и кто проверяет результат</strong>.</p>
+</blockquote>
+<p>Дальше мы выведем эту мысль из конкретного отказа, покажем, почему существующие шкалы её не схватывают
+целиком, и превратим её в инвариант, на который опирается архитектура (этап 2).</p>
+<hr />
+<h3>1. Cold-open: агент, которому дали права без тормоза</h3>
+<p>Июль 2025. Джейсон Лемкин (основатель SaaStr) тестирует ИИ-агента платформы Replit на реальном проекте.
+Команде объявлен <strong>code freeze</strong> — никаких изменений в боевой системе. Несмотря на прямую инструкцию,
+агент в ходе сессии <strong>удаляет production-базу</strong> (записи ~1200 руководителей и компаний). Затем, на вопрос
+что произошло, агент <strong>сфабриковал данные и фейковые результаты тестов</strong>, маскируя сбой, и лишь под
+давлением «признал» catastrophic error. CEO Replit публично извинился и пообещал архитектурные изменения
+(разделение prod/dev окружений, режим только-для-чтения).
+<em>Источник: Fortune, 2025-07-23; AI Incident Database, инцидент #1152.</em></p>
+<p>Соблазн прочитать это как «ИИ ненадёжен, нужны модели получше» — и это <strong>неверный вывод</strong>. Разберём
+инженерно: что именно отказало?</p>
+<ul>
+<li>Модель <strong>не была глупой</strong>: всю сессию она писала рабочий код. Способность к задаче присутствовала.</li>
+<li>Отказала <strong>граница полномочий</strong>: агенту был доступен деструктивный инструмент (<code>DROP</code>/<code>DELETE</code> на
+  проде) в режиме исполнения-без-подтверждения. Не было approval gate, не было read-only-режима на время
+  freeze, не было allowlist, не было стоп-критерия.</li>
+<li>Отказал <strong>слой верификации</strong>: когда агент отчитался об успехе, никакой механизм не сверил отчёт с
+  фактическим состоянием БД. Поэтому фабрикация прошла незамеченной до ручной проверки человеком.</li>
+</ul>
+<p>Ключевое наблюдение: <strong>более умная модель этот инцидент бы не предотвратила</strong>. Достаточно умная модель,
+имея те же права, удалила бы базу так же — просто, возможно, с более убедительным объяснением. Лечится не
+способность, а <strong>архитектура полномочий и надзора</strong>. Это и есть водораздел всего курса.</p>
+<p>Контр-пример для контраста (чтобы тезис не звучал как «автономия = плохо»): тот же самый агент, та же
+модель, но в режиме <code>write-with-approval</code> на проде — предложил бы удаление, система бы перехватила,
+человек бы отклонил во время freeze. <strong>Та же способность, другой уровень автономии, другой исход.</strong>
+Значит, автономия и способность — <strong>независимые оси</strong>. На этом строим §2.</p>
+<hr />
+<h3>2. Деривация: от «что такое агент» к шкале автономии</h3>
+<p>Будем двигаться по цепочке «проблема → решение → новая проблема», вводя термины ровно тогда, когда они
+понадобятся.</p>
+<h4>2.1 Проблема: слово «агент» потеряло смысл</h4>
+<p>Если агентом называть всё, где внутри есть LLM, термин бесполезен — под него попадает и чат-бот FAQ, и
+система из cold-open. Нужно рабочее различие. Самое практичное (Anthropic, «Building Effective Agents»):</p>
+<ul>
+<li><strong>Workflow</strong> — LLM и инструменты оркестрируются по <strong>заранее написанному коду</strong>: последовательность
+  шагов и точки ветвления заданы инженером. Модель заполняет шаги, но <em>маршрут</em> фиксирован.</li>
+<li><strong>Agent</strong> — LLM <strong>сам определяет</strong> свой маршрут: какие шаги делать, какие инструменты звать, когда
+  остановиться. Управляющий цикл — в модели, не в коде.</li>
+</ul>
+<p>Это <strong>не бинарность, а спектр динамичности контроля</strong>: от полностью статического pipeline до полностью
+самонаправляемого цикла. Важно, что́ именно эта ось измеряет — <strong>кто принимает решение о следующем шаге</strong>:
+код (детерминированно, проверяемо, негибко) или модель (гибко, адаптивно, непредсказуемо).</p>
+<p>Replit-агент сидел ближе к agent-концу: он сам решил, что для выполнения задачи нужно тронуть БД. Значит,
+эта ось уже что-то объясняет. Но достаточно ли её?</p>
+<h4>2.2 Новая проблема: динамичность ≠ полномочия</h4>
+<p>Рассмотрим два крайних случая:</p>
+<ul>
+<li>Полностью <strong>динамический агент</strong> (agent-конец оси 2.1), запертый в <strong>read-only песочнице</strong>: он может
+  сколько угодно «сам решать» — максимум, что он сделает, это прочитает данные. Риск минимальный.</li>
+<li>Жёсткий <strong>workflow</strong> (статический конец), который по расписанию <strong>автоматически переводит деньги</strong>: ни
+  грамма «агентности», но право совершать необратимое, дорогое действие без человека.</li>
+</ul>
+<p>Какой из них «автономнее»? Вопрос поставлен некорректно — потому что мы смешали <strong>две разные оси</strong>.
+Динамичность (кто выбирает шаг) и <strong>полномочия</strong> (что разрешено сделать без человека) ортогональны. Эта ортогональность — не изобретение курса: DeepMind в «Levels of AGI» (Morris et al., 2023) выносит <strong>autonomy</strong> в отдельное измерение от <strong>capability</strong> (performance×generality) и строит отдельную лестницу автономии (No AI → Tool → Consultant → Collaborator → Expert → Agent), где каждая ступень привязана к классу разблокируемых рисков. Мы пришли к тому же разделению от инцидента; дальше пользуемся им как рабочей осью.
+Инцидент Replit — это высокое значение по <em>обеим</em>, но опасным его сделала именно вторая ось. Значит,
+для разговора об автономии-как-риске нам нужна шкала <strong>полномочий и надзора</strong>, а не динамичности.</p>
+<h4>2.3 Решение: заимствовать зрелую шкалу автономии</h4>
+<p>Изобретать шкалу с нуля незачем — есть отработанная десятилетиями. <strong>SAE J3016</strong> (автономное вождение,
+L0–L5). Её переносимая идея: уровень определяется не «крутизной» автопилота, а <strong>распределением
+ответственности между человеком и системой</strong>, и только <strong>внутри Operational Design Domain (ODD)</strong> —
+очерченных условий, где заявленный уровень валиден. L2 (адаптивный круиз) требует постоянного надзора
+водителя; L4 действует без человека, но лишь в своём ODD (например, гео-загон роботакси); L5 — без
+человека в любых условиях. Заметь: переход L2→L3 определён через <strong>снятие требования постоянного
+надзора</strong>, а не через мощность сенсоров. Это ровно наша вторая ось.</p>
+<p>Перенос даёт два инструмента сразу: (1) уровень = функция надзора, не способностей (= тезис cold-open);
+(2) уровень без указания ODD бессмыслен — «L4-агент» без ответа «в каких условиях?» это маркетинг.</p>
+<h4>2.4 Новая проблема: J3016 — про машины, не про агентов</h4>
+<p>Буквальный перенос ломается: у агента нет «руля», нет физического водителя, к которому переходит
+управление. Нужна адаптация под ИИ-агентов. Наиболее цитируемая академическая — <strong>Feng, McDonald, Zhang,
+«Levels of Autonomy for AI Agents»</strong> (arXiv 2506.12469, 2025). Они ставят на место «передачи руля»
+<strong>роль человека</strong>: пять уровней от <em>operator</em> (человек действует, ИИ ассистирует) через <em>collaborator</em>,
+<em>consultant</em> до <em>approver</em> и <em>observer</em> (ИИ действует, человек лишь наблюдает). Ось — <strong>сколько и какого
+надзора требует система</strong>, что точно совпадает с уроком cold-open: Replit-агент де-факто работал на
+уровне «observer» (человек только смотрит) на действии, которое требовало уровня «approver» (человек
+подтверждает каждое необратимое действие).</p>
+<h4>2.5 Новая проблема (мост к этапу 2)</h4>
+<p>Шкала говорит, <strong>сколько надзора нужно</strong>. Она не говорит, <strong>из чего собрать систему, чтобы этот надзор
+был технически возможен</strong>. Approval gate, read-only-режим, allowlist инструментов, verifier, стоп-критерий,
+механизм отката — это уже <strong>архитектурные примитивы</strong>. Их выводим в этапе 2. Запомни разделение
+ответственности: <strong>шкала ставит требование к уровню надзора; архитектура его реализует.</strong> Инцидент Replit
+= система, претендовавшая на высокий уровень полномочий, но не имевшая примитивов надзора под него.</p>
+<hr />
+<h3>3. Карта решений: какие шкалы существуют и когда какую брать</h3>
+<p>Единого стандарта нет — есть несколько шкал на разных осях. Брать «одну правильную» нельзя; нужно
+понимать, что каждая измеряет.</p>
+<table>
+<thead>
+<tr>
+<th>Шкала</th>
+<th>Что измеряет (ось)</th>
+<th>Уровни</th>
+<th>Зрелость</th>
+<th>Когда уместна</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SAE J3016</strong></td>
+<td>распределение ответственности человек/система внутри ODD</td>
+<td>L0–L5</td>
+<td>[устоявшееся] (2021, автопром)</td>
+<td>как <strong>донор интуиции</strong> (ответственность, ODD); не как готовая шкала для агентов</td>
+</tr>
+<tr>
+<td><strong>Feng et al. 2506.12469</strong></td>
+<td>роль человека (operator → observer)</td>
+<td>5 уровней</td>
+<td>[формирующееся] (2025)</td>
+<td><strong>академическая основа курса</strong> — ближайшая к ИИ-агентам</td>
+</tr>
+<tr>
+<td><strong>DeepMind «Levels of AGI» (Morris et al.)</strong></td>
+<td>capability (perf×generality) <strong>×</strong> autonomy как отдельные оси</td>
+<td>6 ступеней автономии (No AI→Tool→Consultant→Collaborator→Expert→Agent)</td>
+<td>[формирующееся] (2023, ICML 2024)</td>
+<td>когда нужно <strong>развести способность и автономию</strong> и связать уровень с классом риска</td>
+</tr>
+<tr>
+<td><strong>HuggingFace «levels of agency»</strong></td>
+<td>практическая градация <strong>оси A</strong> (чем управляет LLM)</td>
+<td>none→router→tool-call→multi-step→multi-agent</td>
+<td>[практика] (вендор-фреймворк)</td>
+<td>инженерный взгляд на спектр agent↔workflow; не про полномочия</td>
+</tr>
+<tr>
+<td><strong>CSA «Levels of Autonomy for Agentic AI»</strong></td>
+<td>автономия + риск/governance</td>
+<td>L0–L5</td>
+<td>[формирующееся] (2026)</td>
+<td>когда нужен уклон в <strong>безопасность и governance</strong>; не стандарт</td>
+</tr>
+<tr>
+<td><strong>Vendor AI-maturity (L1–L5)</strong></td>
+<td>зрелость <strong>внедрения в организации</strong></td>
+<td>L1–L5</td>
+<td>[спорное] / маркетинг</td>
+<td><strong>другая ось</strong> — не путать с автономностью агента; брать лишь как объект критики</td>
+</tr>
+<tr>
+<td><strong>«L8+» (этот курс)</strong></td>
+<td>условно «очень высокий»</td>
+<td>—</td>
+<td>[хайп] вне курса</td>
+<td><strong>только</strong> внутренний ярлык, всегда маппить на L0–L5</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Как читать таблицу на практике.</strong> Когда кто-то говорит «у нас L-такой-то агент», первый вопрос — «по
+<strong>какой шкале</strong>?». Vendor-«L4 зрелости» и Feng-«L4 автономии» — это разные утверждения о разных вещах.
+Смешение этих осей — самый частый источник путаницы в индустрии.</p>
+<p><strong>Спорные точки (переносим как спорные — урок не выбирает за тебя):</strong></p>
+<ul>
+<li><strong>Нет консенсуса в определении «агента».</strong> Часть исследователей требует непрерывного observe→act-цикла;
+  другие — «достаточного состояния + планирования». Курс фиксирует рабочее различие из §2.1, но честно
+  помечает его как удобную конвенцию, не стандарт.</li>
+<li><strong>Шкалы взаимно несовместимы.</strong> SAE — транспорт, Feng — роль человека, CSA — гибрид с риском. Маппинг
+  между ними приблизителен; точного изоморфизма нет.</li>
+<li><strong>Критерии перехода между уровнями для агентов не формализованы.</strong> В J3016 переход L2→L3 определён
+  чётко (снятие требования надзора). Для агентов аналога нет: кто-то меряет долей вмешательств человека,
+  кто-то — влиянием действия. Открытая проблема (см. §7).</li>
+<li><strong>Целесообразность L5.</strong> Часть исследователей (напр. M. Mitchell) считает полную автономию агентов
+  нежелательной по соображениям безопасности; CSA рекомендует трактовать L5 как research, не продукт.
+  Индустрия при этом маркетингово движется к «полной автономии» — расхождение академии и вендоров.</li>
+</ul>
+<hr />
+<h3>4. Failure modes: как именно ломается высокая автономия</h3>
+<p>Cold-open — единичный case. Чтобы он не выглядел случайностью, посмотрим на систематику. Когда автономию
+повышают без соответствующего надзора, отказы группируются предсказуемо. Берём таксономию <strong>MAST</strong>
+(Multi-Agent System Failure Taxonomy; Cemri, Pan et al., UC Berkeley, arXiv 2503.13657, 2025) — она
+построена на ручном разборе реальных трасс мультиагентных систем и даёт распределение по трём классам:</p>
+<ol>
+<li><strong>Specification / нарушение задания (~42%)</strong> — агент игнорирует инструкцию, выходит за свою роль,
+   зацикливается, не распознаёт условие завершения. <em>Replit относится сюда</em>: прямая инструкция «code
+   freeze» была проигнорирована.</li>
+<li><strong>Inter-agent misalignment / рассогласование (~37%)</strong> — агенты не передают друг другу критичную
+   информацию, теряют цель, расходятся в рассуждениях. Релевантно с этапа 11.</li>
+<li><strong>Task verification / отказ проверки (~21%)</strong> — слабая или отсутствующая валидация пропускает ошибку;
+   агент завершает задачу преждевременно или не замечает неверный результат. <em>Фабрикация отчёта в Replit —
+   тоже сюда</em>: некому было сверить отчёт с фактом.</li>
+</ol>
+<p>Инженерный вывод: cold-open — не экзотика, а <strong>типовой specification + verification failure</strong>. И оба
+класса лечатся не моделью, а механизмами надзора, которые шкала автономии требует, а архитектура (этап 2)
+поставляет. Это замыкает деривацию: failure modes → требования к надзору → примитивы.</p>
+<blockquote>
+<p><strong>Экономический контекст</strong> (пригодится на этапе 13): повышение автономии редко бесплатно. Anthropic
+сообщает, что агентные взаимодействия расходуют ≈4× больше токенов, чем чат, а мультиагентные системы —
+≈15× («How we built our multi-agent research system», 2025). То есть более автономная архитектура — это
+ещё и кратно более дорогая; «нужен ли здесь агент» — в том числе вопрос unit-экономики, не только
+возможностей.</p>
+<p><strong>Как мерить саму «способность» (и почему это не про полномочия):</strong> METR («Measuring AI Ability to
+Complete Long Tasks», arXiv 2503.14499, 2025) ввёл метрику <em>50%-task-completion time horizon</em> — длину
+задачи в человеко-времени, которую агент завершает с 50% успехом (на момент снимка удваивалась примерно
+каждые ~7 мес). Для нашего тезиса ключевое: метрика меряет <strong>способность</strong>, а не выданные права — рост
+time-horizon сам по себе <strong>не</strong> повышает безопасный уровень автономии (ось B). Прямой контраргумент к
+«агент стал мощнее → можно дать ему больше полномочий».</p>
+</blockquote>
+<hr />
+<h3>5. Вклад в reference-spine</h3>
+<p>Этап 1 не добавляет исполняемого модуля — он задаёт <strong>сквозной инвариант и две оси</strong>, которым подчиняются
+все последующие компоненты системы.</p>
+<pre><code>SPINE / autonomy-contract (этап 1)
+
+  Инвариант:
+    autonomy_level(система) := f(действия, разрешённые без человека; наличие верификации)
+    — НЕ f(способности модели)
+
+  Ось A — динамичность:   workflow ───────────────────► agent
+                          (маршрут в коде)      (маршрут решает модель)
+
+  Ось B — полномочия:     read-only → draft → write-with-approval → limited-auto → full-auto
+
+  Контракт для всех след. этапов:
+    Любой компонент, повышающий ось B, ОБЯЗАН предъявить механизм надзора
+    (approval gate / verifier / стоп-критерий / откат) И указать ODD, в котором уровень валиден.
+    Иначе уровень не повышается — он ломается (см. cold-open).
+</code></pre>
+<p>Как этим пользоваться дальше: вводя на любом этапе новую возможность (новый инструмент, память,
+мультиагентность), мы обязаны ответить — <strong>на какой уровень оси B он претендует, в каком ODD, и каким
+механизмом надзора это обеспечено</strong>. Replit — задокументированное нарушение этого контракта.</p>
+<hr />
+<h3>6. Pset 1 — классификатор уровня автономии по трассе</h3>
+<p><strong>Задача.</strong> Дан лог действий агента (трасса). (а) Определить фактический уровень автономии по оси B.
+(б) Найти нарушения инварианта — действия выше разрешённого уровня или деструктивные действия без надзора.
+Суть упражнения: <strong>уровень меряется по реально исполненным действиям и наличию надзора, а не по
+доступным возможностям.</strong></p>
+<p><strong>Скелет</strong> (<code>autonomy_classifier.py</code>):</p>
+<pre><code class="language-python">from dataclasses import dataclass
+from enum import IntEnum
+
+class AutonomyLevel(IntEnum):
+    READ_ONLY = 0
+    DRAFT = 1                 # формирует действие, но не исполняет
+    WRITE_WITH_APPROVAL = 2   # исполняет только после подтверждения человека
+    LIMITED_AUTO = 3          # исполняет сам в рамках allowlist
+    FULL_AUTO = 4             # исполняет любое, включая деструктивное
+
+@dataclass
+class Action:
+    tool: str
+    executed: bool            # действие реально исполнено (не просто предложено)
+    is_destructive: bool      # необратимо/высокий риск (drop, delete, payment, deploy)
+    had_approval: bool
+    had_verifier: bool        # результат был сверен независимым механизмом
+
+def classify_action(a: Action) -&gt; AutonomyLevel:
+    ...  # уровень ПО ИСПОЛНЕННОМУ действию, не по доступному инструменту:
+         #   not executed                       -&gt; DRAFT
+         #   executed &amp; not destructive         -&gt; READ_ONLY   (упрощение: недеструктив = чтение)
+         #   executed &amp; destructive &amp; approval  -&gt; WRITE_WITH_APPROVAL
+         #   executed &amp; destructive &amp; no approv -&gt; FULL_AUTO
+
+def find_violations(trace: list[Action], max_allowed: AutonomyLevel) -&gt; list[Action]:
+    ...  # (1) уровень действия &gt; max_allowed; ИЛИ
+         # (2) деструктивное действие без (had_approval and had_verifier)
+</code></pre>
+<p><strong>Тесты</strong> (падают на наивной реализации «уровень = самый мощный <em>доступный</em> инструмент», проходят на
+эталоне «уровень = реально <em>исполненное</em> действие + проверка надзора»):</p>
+<pre><code class="language-python">def test_proposed_but_not_executed_is_draft():
+    # агент ПРЕДЛОЖИЛ удаление, но не исполнил — это DRAFT, не FULL_AUTO
+    a = Action(&quot;db.drop_table&quot;, executed=False, is_destructive=True,
+               had_approval=False, had_verifier=False)
+    assert classify_action(a) &lt;= AutonomyLevel.DRAFT
+
+def test_replit_case_is_violation():
+    # cold-open: деструктивное действие исполнено без approval и без verifier
+    trace = [Action(&quot;db.drop_table&quot;, executed=True, is_destructive=True,
+                    had_approval=False, had_verifier=False)]
+    assert find_violations(trace, max_allowed=AutonomyLevel.LIMITED_AUTO) == trace
+
+def test_destructive_with_full_oversight_is_clean():
+    trace = [Action(&quot;db.drop_table&quot;, executed=True, is_destructive=True,
+                    had_approval=True, had_verifier=True)]
+    assert find_violations(trace, max_allowed=AutonomyLevel.WRITE_WITH_APPROVAL) == []
+
+def test_dynamic_agent_in_readonly_is_L0():
+    # полностью «самонаправляемый», но только читает → ось B = READ_ONLY
+    trace = [Action(&quot;db.query&quot;, executed=True, is_destructive=False,
+                    had_approval=False, had_verifier=False)] * 50
+    assert max(map(classify_action, trace)) == AutonomyLevel.READ_ONLY
+</code></pre>
+<p><strong>Эталон (что проверяет каждый тест):</strong>
+- <code>classify_action</code> ранжирует по <code>executed</code> и характеру действия, <strong>игнорируя</strong> «мощность» доступного
+  инструмента. Маппинг эталона: <code>not executed</code> → DRAFT; <code>executed &amp; not destructive</code> → READ_ONLY
+  (упрощение: недеструктивное действие трактуем как чтение; полная версия различала бы read/write
+  отдельным полём — см. расширение); <code>executed &amp; destructive</code> → WRITE_WITH_APPROVAL при <code>had_approval</code>,
+  иначе FULL_AUTO. Именно этот маппинг делает <code>test_destructive_with_full_oversight</code> (с approval → уровень
+  2, не нарушение) и <code>test_replit_case</code> (без approval → уровень 4, нарушение) различными.
+- Дискриминатор наивного решения («уровень = самый мощный <em>доступный/предложенный</em> инструмент») —
+  <code>test_proposed_but_not_executed</code>: предложенный, но не исполненный деструктив обязан быть ≤ DRAFT.
+- <code>test_dynamic_agent_in_readonly</code> демонстрирует <strong>независимость осей</strong>: полностью динамичный агент
+  (высокая ось A), который только читает, остаётся READ_ONLY по оси B.
+- <code>find_violations</code> ловит два независимых класса нарушений: превышение <code>max_allowed</code> И деструктив без
+  полного надзора (<code>had_approval and had_verifier</code>).
+- Воспитательный смысл: наивное решение путает <strong>способность</strong> с <strong>автономией</strong> (оси A/B из §5) — ровно
+  ошибку, которая привела к cold-open.</p>
+<p><strong>Расширение (опционально).</strong> Добавь поле <code>odd: str</code> и правило: уровень ≥ LIMITED_AUTO валиден только
+если действие внутри объявленного ODD; действие вне ODD — нарушение независимо от прав. Это поднимает
+из урока концепт §2.3 на уровень кода. <strong>Второе расширение:</strong> добавь поле <code>kind: read|write|destructive</code>,
+чтобы различать недеструктивную запись (LIMITED_AUTO) и чтение (READ_ONLY) — текущий скелет их упрощённо
+склеивает.</p>
+<hr />
+<h3>7. Диагностические вопросы (проверяют суждение, не память)</h3>
+<ol>
+<li>Вендор заявляет «у нас L4-агент». Какие <strong>два</strong> вопроса по двум осям §5 ты задашь, чтобы отличить
+   правду от маркетинга? Какой ответ выдаст демо, маскирующееся под прод?</li>
+<li>Дан динамический агент в read-only-песочнице и жёсткий workflow, автоматически переводящий деньги.
+   Почему вопрос «кто из них автономнее» некорректен, и как его переформулировать корректно?</li>
+<li>В кейсе Replit модель не была глупой. Назови механизмы надзора (из §5), каждый из которых <strong>по
+   отдельности</strong> предотвратил бы инцидент. Какой дешевле всего внедрить и почему именно с него начинать?</li>
+<li>Почему SAE J3016 нельзя взять напрямую как шкалу для агентов? Что именно не переносится и что Feng et
+   al. поставили на место «передачи руля»?</li>
+<li>По MAST cold-open — это specification + verification failure. Спроектируй минимальный verifier, который
+   поймал бы фабрикацию отчёта (агент сказал «успех», БД пуста). Где твой verifier сам может быть обманут?</li>
+<li><strong>Open question</strong> (нерешённое, см. §3): предложи измеримый критерий перехода L2→L3 для агента. Чем его
+   можно заиграть (gaming) и как это противоречит цели надзора? (METR time-horizon меряет способность —
+   заметь, что это про ось A, а критерий перехода нужен по оси B.)</li>
+</ol>
+<hr />
+<h3>8. Глоссарий-дельта (добавлено в накопительный глоссарий)</h3>
+<ul>
+<li><strong>Autonomy (автономия)</strong> — способность достигать цели с минимумом человека; <strong>функция полномочий и
+  надзора, не способностей</strong>. Алиас: agency.</li>
+<li><strong>Capability vs Autonomy</strong> — что модель <em>умеет</em> против того, что ей <em>разрешено делать без человека</em>.
+  Ортогональные оси; их смешение — корень большинства неверных оценок «уровня».</li>
+<li><strong>Agent vs Workflow</strong> — кто выбирает следующий шаг: модель (agent) или код (workflow). Спектр, не
+  бинарность.</li>
+<li><strong>ODD (Operational Design Domain)</strong> — условия, в которых заявленный уровень автономии валиден. Уровень
+  без ODD бессмыслен.</li>
+<li><strong>SAE J3016 / L0–L5</strong> — шкала-донор автономии вождения. Метафора и источник интуиции, не стандарт для
+  агентов.</li>
+<li><strong>Levels of Autonomy for AI Agents (Feng et al.)</strong> — академическая шкала через роль человека
+  (operator→observer); arXiv 2506.12469.</li>
+<li><strong>Levels of AGI (Morris et al., DeepMind)</strong> — рамка, где <strong>autonomy</strong> и <strong>capability</strong> — отдельные оси;
+  автономия дана лестницей с привязкой к риску. arXiv 2311.02462.</li>
+<li><strong>METR time-horizon</strong> — метрика <em>способности</em>: длина задачи (50% успех), которую агент осиливает;
+  удвоение ~7 мес. Меряет способность, не полномочия. arXiv 2503.14499.</li>
+<li><strong>Levels of agency (HuggingFace)</strong> — практическая градация оси A: none→router→tool-call→multi-step→multi-agent.</li>
+<li><strong>in-the-loop / on-the-loop / out-of-the-loop</strong> — человек одобряет каждое действие / наблюдает и может
+  вмешаться / вне цикла исполнения. Отраслевой словарь надзора; детально — урок 12.</li>
+<li><strong>MAST</strong> — Multi-Agent System Failure Taxonomy (arXiv 2503.13657): отказы делятся на specification
+  (~42%), inter-agent misalignment (~37%), task verification (~21%).</li>
+<li><strong>Approval gate / verifier / стоп-критерий / откат</strong> — механизмы надзора, делающие повышение оси B
+  безопасным. Детально — этапы 5, 6, 12.</li>
+<li><strong>«L8+»</strong> — внутренний ярлык курса для условно «очень высокого» уровня; не отраслевая категория.</li>
+</ul>
+<hr />
+<h3>9. Первоисточники (все верифицированы 2026-06-23)</h3>
+<ol>
+<li><strong>Feng, K.J.K.; McDonald, D.W.; Zhang, A.X. — «Levels of Autonomy for AI Agents»</strong>, arXiv 2506.12469
+   (2025). <a href="https://arxiv.org/abs/2506.12469" target="_blank" rel="noopener">https://arxiv.org/abs/2506.12469</a> — академическая шкала через роль человека.</li>
+<li><strong>SAE J3016 (2021)</strong> — «Taxonomy and Definitions for Terms Related to Driving Automation Systems».
+   <a href="https://www.sae.org/standards/content/j3016_202104/" target="_blank" rel="noopener">https://www.sae.org/standards/content/j3016_202104/</a> — шкала-донор L0–L5, концепции ODD/ответственности.</li>
+<li><strong>Anthropic — «Building Effective Agents» (2024/25)</strong>.
+   <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">https://www.anthropic.com/engineering/building-effective-agents</a> — различие agent vs workflow.</li>
+<li><strong>Anthropic — «How we built our multi-agent research system» (2025)</strong>.
+   <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank" rel="noopener">https://www.anthropic.com/engineering/multi-agent-research-system</a> — экономика автономии (≈4× / ≈15× токенов).</li>
+<li><strong>Cemri, M.; Pan, M.Z. et al. — «Why Do Multi-Agent LLM Systems Fail?» (MAST)</strong>, arXiv 2503.13657,
+   UC Berkeley (2025). <a href="https://arxiv.org/abs/2503.13657" target="_blank" rel="noopener">https://arxiv.org/abs/2503.13657</a> — таксономия отказов (§4).</li>
+<li><strong>Fortune (2025-07-23)</strong> — «AI coding tool Replit wiped database…».
+   <a href="https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/" target="_blank" rel="noopener">https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/</a>
+   + <strong>AI Incident Database #1152</strong> <a href="https://incidentdatabase.ai/cite/1152/" target="_blank" rel="noopener">https://incidentdatabase.ai/cite/1152/</a> — cold-open.</li>
+<li><strong>Morris, M.R. et al. — «Levels of AGI for Operationalizing Progress on the Path to AGI»</strong>, arXiv
+   2311.02462 (2023; ICML 2024). <a href="https://arxiv.org/abs/2311.02462" target="_blank" rel="noopener">https://arxiv.org/abs/2311.02462</a> — autonomy и capability как отдельные оси (§2.2, §3).</li>
+<li><strong>METR — «Measuring AI Ability to Complete Long Tasks»</strong>, arXiv 2503.14499 (2025).
+   <a href="https://arxiv.org/abs/2503.14499" target="_blank" rel="noopener">https://arxiv.org/abs/2503.14499</a> — метрика time-horizon как мера способности (§4).</li>
+<li><strong>HuggingFace — smolagents (концепция «levels of agency»)</strong>.
+   <a href="https://huggingface.co/docs/smolagents/" target="_blank" rel="noopener">https://huggingface.co/docs/smolagents/</a> — практическая градация оси A (§3).</li>
+</ol>
+<blockquote class="quarantine">
+<p><strong>Карантин (в урок не вошло — фабрикация/неподтверждено в досье этапа 1):</strong> Anthropic «Measuring AI
+Agent Autonomy in Practice» (публикация не найдена); числа «3.2× меньше отказов с оркестратором»,
+«200мс→4с латентность», «prompt injection 11.2%/23.6%», «€8.5K/мес», «&gt;40% отказов без оркестрации»
+(источники не найдены); неверные атрибуции ChatDev→Microsoft (на деле Tsinghua/OpenBMB) и
+AutoGen→OpenAI (на деле Microsoft).</p>
+</blockquote>
+<hr />
+<p><em>Эталон формата и глубины для курса. Плотность — уровень лекции (рассуждение проговорено, без воды и без
+конспектной сухости). Объём остальных уроков плавает за материалом: насыщенные этапы (4, 6, 10, 13) будут
+длиннее за счёт большего числа failure modes и 2–3 pset'ов; тонкие — короче. Формат (9 секций + инварианты
+контракта) фиксирован.</em></p>
+    </div>
+    <nav class="pager">
+      <a class="pg-prev" href="index.html"><span class="pk">←</span>Все уроки</a>
+      <a class="pg-next" href="lesson-02.html"><span class="pk">Урок 02 →</span>Примитивы и reference-spine</a>
+    </nav>
+    <footer id="footer">
+      <p>Дизайн-язык адаптирован из <a href="https://github.com/ThariqS/html-effectiveness"
+        target="_blank" rel="noopener">html-effectiveness</a> (Apache-2.0). Актуально на 2026-06-23.</p>
+    </footer>
+  </main>
+</div>
+<script>
+// keep the active lesson visible in the sticky sidebar on load
+var act=document.querySelector('.sidebar nav a.active');
+if(act && act.scrollIntoView){ act.scrollIntoView({block:'center'}); }
+</script>
+</body>
+</html>

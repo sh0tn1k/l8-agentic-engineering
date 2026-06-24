@@ -1,0 +1,816 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Урок 03. Task lifecycle и durable execution — L8+ Agentic Engineering</title>
+<!-- Design language adapted from ThariqS/html-effectiveness (Apache-2.0, (c) Anthropic PBC). -->
+<style>
+:root{
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413; --clay:#D97757; --clay-d:#B85C3E;
+  --oat:#E3DACC; --olive:#788C5D; --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5;
+  --g500:#87867F; --g700:#3D3D3A;
+  --serif:ui-serif,Georgia,"Times New Roman",Times,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Monaco,Consolas,monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--ivory);color:var(--slate);font-family:var(--sans);
+  line-height:1.6;-webkit-font-smoothing:antialiased;font-size:16.5px;}
+
+a{color:var(--clay-d);text-decoration-color:var(--oat);text-underline-offset:3px;}
+a:hover{text-decoration-color:var(--clay);}
+
+/* layout shell: sticky sidebar + reading column */
+.shell{max-width:1180px;margin:0 auto;padding:0 28px;display:grid;
+  grid-template-columns:236px minmax(0,1fr);gap:48px;align-items:start;}
+@media(max-width:900px){.shell{grid-template-columns:1fr;gap:0;padding:0 20px;}}
+
+/* sidebar */
+.sidebar{position:sticky;top:0;max-height:100vh;overflow-y:auto;padding:34px 0 40px;}
+@media(max-width:900px){.sidebar{position:static;max-height:none;border-bottom:1.5px solid var(--g300);
+  margin-bottom:8px;padding-bottom:18px;}}
+.side-brand{font-family:var(--serif);font-size:19px;font-weight:600;letter-spacing:-.01em;margin-bottom:2px;}
+.side-brand em{font-style:italic;color:var(--clay);}
+.side-sub{font-family:var(--mono);font-size:10.5px;color:var(--g500);text-transform:uppercase;
+  letter-spacing:.1em;margin-bottom:20px;}
+.sidebar nav{display:flex;flex-direction:column;gap:1px;}
+.sidebar nav a{display:flex;gap:9px;align-items:baseline;text-decoration:none;color:var(--g700);
+  font-size:13px;line-height:1.35;padding:5px 9px;border-radius:7px;border-left:2px solid transparent;}
+.sidebar nav a .n{font-family:var(--mono);font-size:10px;color:var(--g500);min-width:16px;}
+.sidebar nav a:hover{background:var(--g100);color:var(--slate);}
+.sidebar nav a.active{background:var(--paper);border-left-color:var(--clay);color:var(--slate);
+  box-shadow:0 1px 0 var(--g200);}
+.sidebar nav a.active .n{color:var(--clay);}
+.sidebar nav a.lead{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--g500);margin-top:14px;padding-bottom:2px;pointer-events:none;}
+
+/* main reading column */
+main{max-width:840px;padding:0 0 140px;min-width:0;}
+
+/* masthead */
+header.masthead{padding:54px 0 34px;border-bottom:1.5px solid var(--g300);margin-bottom:8px;}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--g500);margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+.eyebrow::before{content:"";width:24px;height:1.5px;background:var(--clay);}
+h1.title{font-family:var(--serif);font-weight:500;font-size:clamp(36px,5vw,58px);line-height:1.07;
+  letter-spacing:-.018em;margin:0 0 6px;max-width:18ch;}
+h1.title em{font-style:italic;color:var(--clay);}
+.lede{font-size:17px;color:var(--g700);margin:20px 0 0;max-width:640px;}
+.disclaimer{margin:22px 0 0;padding:14px 18px;background:var(--g100);border-radius:12px;
+  border:1.5px solid var(--g200);font-size:13.5px;color:var(--g700);max-width:660px;}
+.disclaimer b{color:var(--slate);}
+
+/* feature panel (spine) */
+.panel{margin:40px 0 0;background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;
+  padding:26px 28px;scroll-margin-top:16px;}
+.panel h2,.howto h2{font-family:var(--serif);font-weight:500;font-size:25px;margin:0 0 4px;letter-spacing:-.01em;}
+.panel .sub{color:var(--g700);font-size:14px;margin:0 0 18px;}
+.flow{font-family:var(--mono);font-size:12.5px;line-height:1.7;background:var(--g100);border-radius:10px;
+  padding:14px 16px;overflow-x:auto;color:var(--g700);white-space:pre-wrap;border:1px solid var(--g200);}
+ol.inv{margin:18px 0 0;padding-left:0;counter-reset:inv;list-style:none;display:grid;gap:7px;}
+ol.inv li{position:relative;padding-left:30px;font-size:14px;color:var(--g700);}
+ol.inv li::before{counter-increment:inv;content:counter(inv);position:absolute;left:0;top:0;
+  font-family:var(--mono);font-size:11px;color:var(--clay);font-weight:600;
+  border:1.5px solid var(--oat);border-radius:6px;width:21px;height:21px;display:flex;
+  align-items:center;justify-content:center;}
+ol.inv li b{color:var(--slate);font-weight:600;}
+
+.howto{margin:34px 0 0;scroll-margin-top:16px;}
+.howto ul{margin:10px 0 0;padding-left:20px;}
+.howto li{margin:6px 0;color:var(--g700);font-size:14.5px;}
+
+.section-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--g500);margin:64px 0 6px;display:flex;align-items:center;gap:10px;}
+.section-label::before{content:"";width:20px;height:1.5px;background:var(--clay);}
+
+/* lessons / accordion */
+section.lesson{margin-top:18px;scroll-margin-top:14px;}
+details.les{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;overflow:hidden;
+  transition:border-color 150ms,box-shadow 150ms;}
+details.les[open]{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);}
+details.les summary{list-style:none;cursor:pointer;padding:20px 22px;display:block;}
+details.les summary::-webkit-details-marker{display:none;}
+.sec-head{display:flex;align-items:baseline;gap:14px;}
+.sec-head .idx{font-family:var(--mono);font-size:13px;color:var(--clay);font-weight:600;min-width:26px;}
+.sec-head h2{font-family:var(--serif);font-weight:500;font-size:23px;margin:0;letter-spacing:-.01em;flex:1;}
+.tagline{color:var(--g700);font-size:14px;margin:3px 0 0 40px;}
+.card-meta{margin:13px 0 0 40px;display:grid;gap:5px;}
+.meta-item{font-size:13px;color:var(--g700);}
+.meta-item .k{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--g500);margin-right:8px;}
+.expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(--mono);font-size:11px;
+  color:var(--clay);}
+details.les[open] .expand-hint{display:none;}
+
+/* maturity badges */
+.badge{font-family:var(--mono);font-size:10.5px;padding:3px 9px;border-radius:999px;white-space:nowrap;
+  border:1.5px solid var(--g300);color:var(--g700);align-self:flex-start;}
+.badge.b-core{background:#EEF1E9;border-color:#C3D1AE;color:#3f5430;}
+.badge.b-emerging{background:#FBEDE6;border-color:#EBC3AE;color:var(--clay-d);}
+.badge.b-disputed{background:#FAF3E2;border-color:#E6D08C;color:#8a6d1f;}
+.badge.b-hype{background:#FBE9E6;border-color:#E9B4A8;color:#a23b28;}
+.badge.b-special{background:#ECEAF3;border-color:#C7C0DE;color:#4b4080;}
+
+/* lesson body (rendered markdown) */
+.lesson-body{padding:4px 26px 28px;border-top:1px solid var(--g100);}
+.lesson-body .status{font-size:13px;color:var(--g700);background:var(--g100);border-radius:10px;
+  padding:12px 15px;margin:18px 0 8px;border:1px solid var(--g200);}
+.lesson-body h3{font-family:var(--serif);font-weight:600;font-size:21px;margin:32px 0 8px;letter-spacing:-.008em;}
+.lesson-body h4{font-family:var(--serif);font-weight:600;font-size:17px;margin:22px 0 6px;color:var(--g700);}
+.lesson-body h5{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--g500);margin:18px 0 6px;}
+.lesson-body p{margin:11px 0;}
+.lesson-body ul,.lesson-body ol{margin:11px 0;padding-left:22px;}
+.lesson-body li{margin:5px 0;}
+.lesson-body code{font-family:var(--mono);font-size:.86em;background:var(--g100);padding:1.5px 5px;
+  border-radius:5px;border:1px solid var(--g200);}
+.lesson-body pre{background:#2b2a27;color:#eceae3;border-radius:12px;padding:16px 18px;overflow-x:auto;
+  font-size:12.7px;line-height:1.5;margin:14px 0;}
+.lesson-body pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit;}
+.lesson-body blockquote{margin:14px 0;padding:12px 18px;border-left:3px solid var(--clay);
+  background:var(--paper);border-radius:0 10px 10px 0;color:var(--g700);}
+.lesson-body blockquote.quarantine{border-left-color:#c98a2e;background:#FAF3E2;}
+.lesson-body table{border-collapse:collapse;width:100%;margin:16px 0;font-size:13px;display:block;
+  overflow-x:auto;}
+.lesson-body th,.lesson-body td{border:1px solid var(--g300);padding:7px 10px;text-align:left;
+  vertical-align:top;}
+.lesson-body th{background:var(--g100);font-weight:600;font-family:var(--sans);}
+.lesson-body tr:nth-child(even) td{background:#fcfbf8;}
+.lesson-body hr{border:none;border-top:1.5px solid var(--g200);margin:26px 0;}
+.lesson-body a{word-break:break-word;}
+.lesson-body em{color:var(--g700);}
+
+/* footer */
+footer{margin:80px 0 0;border-top:1.5px solid var(--g300);padding-top:30px;font-size:13px;
+  color:var(--g500);scroll-margin-top:16px;}
+footer .k{font-family:var(--serif);font-style:italic;color:var(--g700);font-size:15px;}
+footer p{margin:8px 0;max-width:680px;}
+
+.toolbar{display:flex;gap:10px;margin:22px 0 0 40px;}
+.toolbar button{font-family:var(--mono);font-size:11px;background:var(--paper);border:1.5px solid var(--g300);
+  color:var(--g700);border-radius:999px;padding:6px 13px;cursor:pointer;}
+.toolbar button:hover{border-color:var(--slate);color:var(--slate);}
+
+/* ---- multipage: lesson cards on index + lesson pages ---- */
+.side-brand-link{text-decoration:none;color:inherit;display:block;}
+.lcards{display:grid;gap:14px;margin-top:18px;}
+a.lcard{display:block;text-decoration:none;color:inherit;background:var(--paper);border:1.5px solid var(--g300);
+  border-radius:14px;padding:20px 22px;transition:border-color .15s,box-shadow .15s,transform .15s;}
+a.lcard:hover{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);transform:translateY(-1px);}
+a.lcard .sec-head h2{color:var(--slate);}
+a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(--mono);font-size:11px;color:var(--clay);}
+.crumb{margin:30px 0 2px;}
+.crumb a{font-family:var(--mono);font-size:12px;color:var(--g500);text-decoration:none;}
+.crumb a:hover{color:var(--clay-d);}
+.lesson-head{padding:12px 0 24px;border-bottom:1.5px solid var(--g300);margin-bottom:4px;}
+.lesson-head .eyebrow{margin-bottom:13px;}
+.lesson-head h1.title{font-size:clamp(29px,4vw,44px);max-width:22ch;margin:0;}
+.lesson-head .lede{margin-top:13px;}
+.pager{display:flex;justify-content:space-between;align-items:stretch;gap:14px;margin:54px 0 0;
+  border-top:1.5px solid var(--g300);padding-top:22px;}
+.pager a{text-decoration:none;color:var(--g700);font-size:13.5px;border:1.5px solid var(--g300);border-radius:11px;
+  padding:11px 15px;max-width:49%;transition:.15s;line-height:1.4;}
+.pager a:hover{border-color:var(--slate);color:var(--slate);}
+.pager a .pk{font-family:var(--mono);font-size:10px;color:var(--g500);display:block;margin-bottom:2px;}
+.pager .pg-next{margin-left:auto;text-align:right;}
+.sidebar nav a.active{background:var(--paper);border-left-color:var(--clay);color:var(--slate);box-shadow:0 1px 0 var(--g200);}
+.sidebar nav a.active .n{color:var(--clay);}
+
+/* ---- interactive course widgets (.cw) ---- */
+.cw{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;margin:28px 0;overflow:hidden;}
+.cw-head{display:flex;align-items:center;gap:10px;padding:13px 20px;border-bottom:1px solid var(--g200);background:var(--g100);}
+.cw-head .tag{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--clay);
+  border:1.5px solid var(--oat);border-radius:999px;padding:2px 9px;}
+.cw-head .ttl{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--slate);}
+.cw-body{padding:18px 20px;display:flex;flex-direction:column;gap:15px;}
+.cw-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+.cw-grid{display:grid;gap:10px;}
+.cw .lbl{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--g500);margin-bottom:7px;}
+.cw .metric{background:var(--g100);border:1px solid var(--g200);border-radius:10px;padding:9px 13px;}
+.cw .metric .mk{font-size:12px;color:var(--g500);}
+.cw .metric .mv{font-size:21px;font-weight:600;font-family:var(--serif);color:var(--slate);line-height:1.2;}
+.cw button{font-family:var(--sans);cursor:pointer;border-radius:8px;border:1.5px solid var(--g300);background:var(--paper);
+  color:var(--g700);font-size:13px;padding:7px 12px;transition:.12s;line-height:1.3;}
+.cw button:hover{border-color:var(--slate);color:var(--slate);}
+.cw .act{background:var(--clay);border-color:var(--clay);color:#fff;font-weight:600;}
+.cw .act:hover{background:var(--clay-d);border-color:var(--clay-d);color:#fff;}
+.cw .chip{font-family:var(--mono);font-size:11px;padding:5px 10px;border-radius:999px;}
+.cw .chip.sel{background:var(--slate);border-color:var(--slate);color:var(--ivory);}
+.cw .tog{display:flex;align-items:center;gap:8px;text-align:left;}
+.cw .tog.on-bad{background:#FBE9E6;border-color:#E9B4A8;color:#a23b28;}
+.cw .tog.on-good{background:#EEF1E9;border-color:#C3D1AE;color:#3f5430;}
+.cw input[type=range]{width:100%;accent-color:var(--clay);margin:2px 0;}
+.cw .slabel{display:flex;justify-content:space-between;font-size:12.5px;color:var(--g700);margin-bottom:2px;}
+.cw .slabel b{font-weight:600;color:var(--slate);}
+.cw .bar{display:flex;height:40px;border-radius:9px;overflow:hidden;border:1px solid var(--g300);}
+.cw .seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;overflow:hidden;
+  white-space:nowrap;border-right:1px solid var(--paper);}
+.cw .seg.c{background:#EEF1E9;color:#3f5430;}
+.cw .seg.u{background:#FAF3E2;color:#8a6d1f;}
+.cw .trace{display:flex;flex-direction:column;gap:6px;}
+.cw .trow{border-left:3px solid var(--g300);background:var(--g100);border-radius:0 8px 8px 0;padding:7px 12px;
+  font-family:var(--mono);font-size:12.5px;}
+.cw .trow .th{font-weight:600;color:var(--slate);}
+.cw .trow .tb{color:var(--g700);white-space:pre-wrap;word-break:break-word;margin-top:2px;}
+.cw .t-obs{border-color:var(--olive);}
+.cw .t-think{border-color:#c98a2e;}
+.cw .t-act{border-color:var(--g500);}
+.cw .t-block{border-color:#6f9152;}
+.cw .t-leak{border-color:var(--clay-d);}
+.cw .verdict{border-radius:10px;padding:12px 15px;font-size:14px;}
+.cw .v-safe{background:#EEF1E9;color:#3f5430;border:1px solid #C3D1AE;}
+.cw .v-leak{background:#FBE9E6;color:#a23b28;border:1px solid #E9B4A8;}
+.cw .verdict .vt{font-weight:700;}
+.cw .verdict .vd{margin-top:3px;line-height:1.5;}
+.cw .note{font-size:11.5px;color:var(--g500);line-height:1.6;}
+.cw .dot{display:inline-block;width:10px;height:10px;border-radius:3px;vertical-align:middle;margin-right:4px;}
+.cw textarea{width:100%;font-family:var(--mono);font-size:12.5px;border:1.5px solid var(--g300);border-radius:8px;
+  padding:8px 10px;background:var(--paper);color:var(--slate);resize:vertical;}
+.cw .runs{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;max-width:420px;}
+.cw .evd{aspect-ratio:1;border-radius:3px;background:var(--g200);}
+.cw .evd.ok{background:#9cbf6e;}
+.cw .evd.no{background:#e0a99c;}
+.cw .mlist{display:flex;flex-direction:column;gap:7px;}
+.cw .mitem{display:flex;align-items:center;gap:10px;border:1px solid var(--g200);border-radius:9px;padding:8px 11px;
+  font-size:13px;background:var(--g100);}
+.cw .mitem .mt{color:var(--slate);}
+.cw .mitem .src{font-family:var(--mono);font-size:10.5px;color:var(--g500);}
+.cw .pill{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:999px;margin-left:auto;white-space:nowrap;}
+.cw .pill.w{background:#EEF1E9;color:#3f5430;}
+.cw .pill.q{background:#FAF3E2;color:#8a6d1f;}
+.cw .pill.r{background:#FBE9E6;color:#a23b28;}
+.cw .stepc{font-family:var(--mono);font-size:11px;color:var(--g500);}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="top">
+    <a class="side-brand-link" href="index.html"><div class="side-brand">L8+ <em>Agentic</em></div></a>
+    <div class="side-sub">актуально 2026-06-23</div>
+    <nav>
+<a href="index.html">▲ Главная</a>
+<a class="lead">Карта</a>
+<a href="index.html#spine"><span class="n">◆</span>Reference-spine</a>
+<a href="index.html#how"><span class="n">?</span>Как читать</a>
+<a class="lead">Уроки</a>
+<a href="lesson-01.html"><span class="n">01</span>Зрелость автономии</a>
+<a href="lesson-02.html"><span class="n">02</span>Примитивы и reference-spine</a>
+<a href="lesson-03.html" class="active"><span class="n">03</span>Task lifecycle и durable execution</a>
+<a href="lesson-04.html"><span class="n">04</span>Context engineering</a>
+<a href="lesson-05.html"><span class="n">05</span>Инструменты, права, policy</a>
+<a href="lesson-06.html"><span class="n">06</span>Evals, verifier, trajectory</a>
+<a href="lesson-07.html"><span class="n">07</span>Память и жизненный цикл знания</a>
+<a href="lesson-08.html"><span class="n">08</span>Retrieval: RAG, hybrid, GraphRAG</a>
+<a href="lesson-09.html"><span class="n">09</span>Observability и воспроизводимость</a>
+<a href="lesson-10.html"><span class="n">10</span>Безопасность: injection, threat model</a>
+<a href="lesson-11.html"><span class="n">11</span>Мультиагентность: MCP / A2A</a>
+<a href="lesson-12.html"><span class="n">12</span>Human-in-the-loop и operating model</a>
+<a href="lesson-13.html"><span class="n">13</span>Экономика и production readiness (capstone)</a>
+<a href="lesson-14.html"><span class="n">14</span>Фронт и горизонт-сканирование</a>
+<a class="lead">Конец</a>
+<a href="index.html#footer"><span class="n">§</span>Метод и источники</a>
+    </nav>
+  </aside>
+
+  <main>
+    <div class="crumb"><a href="index.html">← Все уроки</a></div>
+    <header class="lesson-head">
+      <div class="eyebrow">Урок 03<span class="badge b-emerging" style="margin-left:6px">[устоявшееся] DS + [формирующееся] на LLM</span></div>
+      <h1 class="title">Task lifecycle и durable execution</h1>
+      <p class="lede">Надёжность поверх недетерминированного LLM</p>
+      <div class="card-meta">
+        <div class="meta-item"><span class="k">Cold-open</span>Replit: compounding error + нет recovery</div>
+        <div class="meta-item"><span class="k">В spine</span>машина состояний + idempotency + event-log</div>
+      </div>
+    </header>
+    <div class="lesson-body">
+      <div class="status"><p><strong>Статус:</strong> актуально на 2026-06-23, пересмотреть до 2026-09.
+Классические примитивы надёжности (идемпотентность, retries/backoff, leases, event sourcing, circuit
+breaker) — <strong>[устоявшееся]</strong> (десятилетия в distributed systems). Их <strong>перенос на недетерминированный
+LLM-исполнитель</strong> — <strong>[формирующееся]</strong>. «Durable execution engine» как продуктовая категория —
+<strong>[формирующееся]</strong> (Temporal, Restate, Dapr). Опирается на executor-примитив из урока 2.</p></div>
+<hr />
+<h3>0. Зачем этот урок</h3>
+<p>Урок 2 дал executor как «точку, где исполняются действия». Но он умолчал о главном: <strong>исполнение
+ненадёжно</strong>. Процесс падает, сеть рвётся, API таймаутит, а LLM вдобавок <strong>недетерминирован</strong> — повтор того
+же шага даёт другой результат. Этот урок отвечает на вопрос «как довести задачу до конца, несмотря на сбои,
+когда сам исполнитель — стохастический». Хорошая новость: distributed systems решали это 30 лет (очереди,
+идемпотентность, event sourcing). Плохая: <strong>классические допущения о детерминизме шага здесь не держатся</strong>,
+и наивный перенос ломается.</p>
+<p>Две мысли, которые урок должен оставить:</p>
+<blockquote>
+<p><strong>(1)</strong> Надёжность — это не «модель получше», а <strong>машина состояний задачи + журнал событий + идемпотентные
+побочные эффекты</strong>. Recovery возможен только если состояние существует вне процесса-исполнителя.
+<strong>(2)</strong> Недетерминизм LLM смещает гарантию: ты не можешь воспроизвести <em>выход</em> шага, поэтому
+воспроизводишь <strong>решения и побочные эффекты</strong> (через event log + idempotency keys), а не токены.</p>
+</blockquote>
+<hr />
+
+<div class="cw" id="w-life">
+  <div class="cw-head"><span class="tag">Интерактив</span><span class="ttl">ReAct-петля: сбой и восстановление</span></div>
+  <div class="cw-body">
+    <div class="metric"><div class="mk">Задача: возврат заказа <b>#A-1042</b> на <b>$120</b>. На шаге 3 шлюз платежей даст таймаут — а платёж на стороне банка уже спишется.</div></div>
+    <div>
+      <div class="lbl">Durable-механики</div>
+      <div class="cw-row">
+        <button class="tog mech" data-k="idem" data-on="0">Idempotency-ключи</button>
+        <button class="tog mech" data-k="ckpt" data-on="0">Checkpoint / replay</button>
+        <button class="tog mech" data-k="verif" data-on="0">Verifier перед действием</button>
+      </div>
+    </div>
+    <div class="cw-row">
+      <button class="act step">Шаг ▸</button>
+      <button class="runall">Прогнать всё</button>
+      <button class="reset">Сброс</button>
+      <span class="stepc"></span>
+    </div>
+    <div class="trace"></div>
+    <div class="verdict" style="display:none;"></div>
+    <div class="note">Жми «Шаг», чтобы пройти петлю по одному действию. Меняешь механику — прогон сбрасывается. Детерминированная модель.</div>
+  </div>
+</div>
+<script>(function(){
+  var R=document.getElementById('w-life'); if(!R) return;
+  var steps=[], idx=0, fin=null;
+  function s(k){return R.querySelector('.mech[data-k='+k+']').dataset.on==='1';}
+  function build(){
+    var idem=s('idem'), ckpt=s('ckpt'), verif=s('verif'), st=[];
+    st.push(['think','Шаг 1 · Размышление','Возврат заказа #A-1042 на $120. План: найти заказ → проверить статус → выполнить возврат.']);
+    st.push(['obs','Шаг 2 · lookup_order(#A-1042)','Заказ найден, оплачен $120, возврат ранее не выполнялся.']);
+    st.push(['act','Шаг 3 · issue_refund($120)','Таймаут шлюза. Ответ не получен — неизвестно, прошёл ли возврат. (На самом деле банк уже списал $120.)']);
+    var safe=false, why='';
+    if(verif){st.push(['block','Шаг 4 · Verifier','Перед повтором проверяю состояние: get_refund_state(#A-1042) → возврат УЖЕ выполнен ($120). Повтор отменён.']);safe=true;why='verifier';}
+    else if(idem){st.push(['act','Шаг 4 · Повтор issue_refund($120) [idem-key R-A1042]','Сервер видит тот же idempotency-ключ → дубликат отклонён. Остаётся ровно $120.']);safe=true;why='idem';}
+    else if(ckpt){st.push(['act','Шаг 4 · Replay из чекпойнта → issue_refund($120)','Фреймворк воспроизвёл шаг от последнего durable-чекпойнта. Но ключ не идемпотентен → возврат отправлен ПОВТОРНО.']);safe=false;why='ckpt';}
+    else {st.push(['think','Шаг 4 · Размышление','Ответа не было — на всякий случай повторю возврат.']);st.push(['act','Шаг 5 · issue_refund($120)','Второй возврат отправлен. Ключ не идемпотентен — банк проводит ещё раз.']);safe=false;why='naive';}
+    st.push(safe?['obs','Итог','Клиенту возвращено ровно $120. Состояние согласовано.']:['leak','Итог','ДВОЙНОЙ ВОЗВРАТ: клиенту ушло $240. Compounding error — действие построено на неизвестном состоянии.']);
+    var V={verifier:['safe','Безопасно · verifier поймал','Проверка истинного состояния перед действием — самый надёжный тормоз compounding error.'],
+           idem:['safe','Безопасно · идемпотентность','Побочный эффект защищён ключом — повтор не удваивает деньги. Durable execution требует идемпотентных сайд-эффектов.'],
+           ckpt:['leak','Двойной возврат · $240','Checkpoint/replay восстановил ход, но без идемпотентности повтор всё равно удвоил платёж. Replay ≠ корректность.'],
+           naive:['leak','Двойной возврат · $240','Ни идемпотентности, ни verifier — наивный повтор после таймаута удвоил возврат.']};
+    return {st:st, v:V[why]};
+  }
+  function row(tone,head,body){var d=document.createElement('div');d.className='trow t-'+tone;
+    var h=document.createElement('div');h.className='th';h.textContent=head;d.appendChild(h);
+    if(body){var p=document.createElement('div');p.className='tb';p.textContent=body;d.appendChild(p);}return d;}
+  function reset(){var r=build();steps=r.st;fin=r.v;idx=0;R.querySelector('.trace').innerHTML='';R.querySelector('.verdict').style.display='none';counter();}
+  function counter(){R.querySelector('.stepc').textContent=idx+' / '+steps.length+' шагов';}
+  function reveal(){if(idx>=steps.length)return;var st=steps[idx++];R.querySelector('.trace').appendChild(row(st[0],st[1],st[2]));counter();
+    if(idx>=steps.length){var v=R.querySelector('.verdict');v.style.display='block';v.className='verdict '+(fin[0]==='leak'?'v-leak':'v-safe');
+      v.innerHTML='<span class="vt"></span><div class="vd"></div>';v.querySelector('.vt').textContent=fin[1];v.querySelector('.vd').textContent=fin[2];}}
+  R.querySelector('.step').addEventListener('click',reveal);
+  R.querySelector('.runall').addEventListener('click',function(){while(idx<steps.length)reveal();});
+  R.querySelector('.reset').addEventListener('click',reset);
+  R.querySelectorAll('.mech').forEach(function(b){b.classList.add('on-good');b.classList.remove('on-good');
+    b.addEventListener('click',function(){var nv=b.dataset.on==='1'?'0':'1';b.dataset.on=nv;b.classList.toggle('on-good',nv==='1');reset();});});
+  reset();
+})();</script>
+<h3>1. Cold-open: серия «нормальных» шагов, заканчивающаяся катастрофой</h3>
+<p>Вернёмся к инциденту Replit из урока 1 (июль 2025, удаление prod-БД во время code freeze; Fortune, AI
+Incident DB #1152) — но зададим <strong>другой вопрос</strong>. В уроке 1 нас интересовали <em>полномочия</em>. Здесь —
+<em>жизненный цикл и восстановление</em>. И с этого ракурса видно новое:</p>
+<ul>
+<li>агент выполнил <strong>последовательность шагов, каждый из которых по отдельности выглядел нормально</strong>, а
+  катастрофа возникла на хвосте — это <strong>compounding error</strong>;</li>
+<li>удаление было <strong>неидемпотентным и необратимым</strong> — не было event log, по которому можно «отыграть назад»,
+  не было компенсирующей операции, не было checkpoint'а состояния до деструктивного шага;</li>
+<li>когда агент «отчитался об успехе», не было <strong>durable-состояния</strong>, с которым отчёт можно сверить, —
+  поэтому фабрикация прошла.</li>
+</ul>
+<p>Compounding error — это не метафора, а арифметика. Если каждый из N шагов «успешен» с вероятностью p, то
+вся цепочка — с p^N:</p>
+<table>
+<thead>
+<tr>
+<th>p (точность шага)</th>
+<th>N=5</th>
+<th>N=10</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.95</td>
+<td>0.77</td>
+<td>0.60</td>
+</tr>
+<tr>
+<td>0.85</td>
+<td><strong>0.44</strong></td>
+<td><strong>0.20</strong></td>
+</tr>
+<tr>
+<td>0.70</td>
+<td>0.17</td>
+<td>0.03</td>
+</tr>
+</tbody>
+</table>
+<p><em>(Это иллюстративная модель — арифметика, а не измеренная константа. Реальные шаги коррелированы, но
+направление верное: без промежуточных проверок и точек восстановления длинные траектории деградируют
+экспоненциально. Глубоко — этап 4.)</em></p>
+<p>Отсюда тезис урока:</p>
+<blockquote>
+<p>Длинная агентная задача без <strong>машины состояний, журнала событий и идемпотентных побочных эффектов</strong> —
+это не «риск», а <strong>статистически предсказуемый отказ</strong>. Лечится не интеллект шага, а архитектура
+жизненного цикла, которая делает каждый шаг восстановимым.</p>
+</blockquote>
+<p><em>(Честная оговорка: многие циркулирующие «инцидентные» цифры по MAS — «79% — координация», «&gt;40% отказов
+без оркестрации» — я не смог подтвердить по первоисточникам; они в карантине, см. §9. Верифицированный
+якорь распределения отказов — MAST: specification ~42% / inter-agent ~37% / verification ~21%.)</em></p>
+<hr />
+<h3>2. Деривация: от «fire-and-forget» к жизненному циклу</h3>
+<p>Идём от наивного исполнения, добавляя примитив только под конкретный сбой.</p>
+<h4>2.1 Наивно</h4>
+<pre><code class="language-python">result = llm_executor.run(step)   # синхронно, в памяти процесса, без следов
+</code></pre>
+<p>Падает процесс — задача исчезает. Повтор — дубль побочного эффекта. Никакого восстановления.</p>
+<h4>2.2 Боль → примитив</h4>
+<ul>
+<li><strong>«Процесс упал — задача потеряна».</strong> Состояние задачи должно жить <strong>вне исполнителя</strong>. Вводим **status</li>
+<li>машину состояний<strong>: <code>queued → in_progress → succeeded | failed | timed_out | waiting_approval</code>, с
+  </strong>таблицей допустимых переходов** (§5). Теперь после рестарта понятно, что было.</li>
+<li><strong>«Повтор продублировал побочный эффект» (двойной платёж, дубль записи).</strong> Вводим <strong>идемпотентность</strong>:
+  каждый побочный эффект несёт <code>idempotency_key</code>; повторный вызов с тем же ключом возвращает сохранённый
+  результат, а не выполняется заново. Это сдвигает нас в <strong>at-least-once + idempotency</strong> вместо
+  недостижимого exactly-once. Каноническое обоснование — <strong>Pat Helland, «Building on Quicksand»</strong> (2009):
+  для длинных автономных распределённых активностей exactly-once недостижим, поэтому надёжность строят на
+  at-least-once + идемпотентности + компенсациях («memories, guesses, apologies»).</li>
+<li><strong>«Временный сбой (таймаут API)».</strong> Вводим <strong>retry с экспоненциальным backoff</strong> (100→200→400 мс…), чтобы
+  не бить упавший сервис синхронно. Backoff + jitter гасит <strong>retry storm</strong>.</li>
+<li><strong>«Шаг завис навсегда».</strong> Вводим <strong>timeout</strong> на шаг/задачу → <code>timed_out</code>, дальше retry или HITL.</li>
+<li><strong>«Два воркера взяли одну задачу».</strong> Вводим <strong>lease/lock</strong>: задача арендуется воркером на время; упал —
+  аренда истекла, задача вернулась в очередь. (Очередь — RabbitMQ/Kafka/SQS — даёт durable-доставку.)</li>
+<li><strong>«Упал на середине, часть эффектов уже произошла» (partial success).</strong> Нужен <strong>event log (event
+  sourcing)</strong>: неизменяемый журнал «что реально произошло». После рестарта воркер <strong>реплеит лог</strong>,
+  понимает, какие шаги зафиксированы, и <strong>продолжает с места</strong> либо запускает <strong>компенсацию</strong> (откат уже
+  сделанного).</li>
+<li><strong>«Хочу гарантию, что задача дойдёт до конца сама».</strong> Это уже <strong>durable execution</strong> — движок сохраняет
+  состояние после каждого шага и возобновляет с точки сбоя автоматически.</li>
+</ul>
+<h4>2.3 Где классика ломается на LLM</h4>
+<p>Distributed systems традиционно предполагают, что <strong>повтор шага детерминирован</strong> (та же функция на тех же
+данных → тот же результат), поэтому replay безопасен. <strong>LLM это нарушает:</strong> повтор шага даёт другой текст,
+другой план, другой tool-call. Следствия:</p>
+<ul>
+<li><strong>Нельзя «переиграть» выход модели</strong> — он каждый раз новый. Поэтому durable-системы реплеят не <em>выходы</em>,
+  а <strong>зафиксированные решения и побочные эффекты</strong> из event log (то, что уже случилось), а недетерминизм
+  изолируют как «активность», результат которой записан и не пересчитывается при replay (модель
+  Temporal/Restate: side effects deterministically replayed from history).</li>
+<li><strong>Граница идемпотентности тоньше:</strong> ключ должен покрывать <em>побочный эффект</em> (запись в БД, платёж), а не
+  <em>рассуждение</em> модели — иначе либо дубли, либо ложные «уже сделано».</li>
+<li><strong>Воспроизводимость переопределяется:</strong> воспроизводим <strong>траекторию решений и эффектов</strong>, а не токены.
+  Фиксация seed помогает слабо; опираемся на журнал.</li>
+</ul>
+<h4>2.4 Новая проблема (мост к §3)</h4>
+<p>Кто держит этот жизненный цикл — <strong>внешний движок</strong> (Temporal) или <strong>сам агентный фреймворк</strong> (LangGraph
+checkpoints)? Это не деталь, а архитектурный выбор с громким спором в индустрии. И мост к этапу 4: даже с
+идеальной durability <strong>compounding error внутри одной длинной траектории</strong> остаётся — его лечит уже context
+engineering, а не lifecycle. (Показательно, что индустрия сходится к этому контракту: MCP-спека моделирует
+<strong>task</strong> как durable state machine с idempotency-guidance для long-running запросов — урок 11.)</p>
+<hr />
+<h3>3. Карта решений: кто владеет состоянием и надёжностью</h3>
+<table>
+<thead>
+<tr>
+<th>Подход</th>
+<th>Кто держит состояние/надёжность</th>
+<th>Сила</th>
+<th>Цена</th>
+<th>Когда брать</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Durable workflow engine</strong> (Temporal, Restate, AWS Step Functions, Dapr Workflows, Inngest, Cloudflare Workflows, DBOS)</td>
+<td>движок: авто-persistence после каждого шага, replay, retries, timers</td>
+<td>гарантированное доведение до конца, кросс-язык, наблюдаемость</td>
+<td>сложность; задержка сериализации; лимиты (Temporal — <strong>2 МБ</strong> payload, warn с 256 КБ)</td>
+<td>критичные, долгоживущие, многошаговые процессы</td>
+</tr>
+<tr>
+<td><strong>Agent-framework checkpointing</strong> (LangGraph Checkpointer/Store, CrewAI, Google ADK)</td>
+<td>фреймворк: снэпшот state между шагами</td>
+<td>близко к логике агента, HITL-resumption, гибкая маршрутизация</td>
+<td>checkpoint ≠ полная durability (см. §3.1); часть recovery — на разработчике</td>
+<td>агентные сценарии со средними требованиями к надёжности</td>
+</tr>
+<tr>
+<td><strong>Очередь + БД (DIY)</strong></td>
+<td>разработчик: state в БД, события в очереди</td>
+<td>дёшево, полный контроль</td>
+<td>вся логика идемпотентности/recovery/edge-cases на тебе</td>
+<td>простые/специфичные пайплайны, есть экспертиза DS</td>
+</tr>
+<tr>
+<td><strong>Статический DAG</strong> (Airflow, Luigi, Argo)</td>
+<td>планировщик DAG</td>
+<td>зрелость, предсказуемость для batch</td>
+<td>негибок к динамическим развилкам и рантайм-решениям LLM</td>
+<td>предсказуемые batch-процессы, не агентные</td>
+</tr>
+</tbody>
+</table>
+<h4>3.1 Спорная точка: «checkpoints ≠ durable execution» (реальный межвендорский спор)</h4>
+<ul>
+<li><strong>Критика (Diagrid / Dapr, Yaron Schneider; вторят Temporal, Restate):</strong> checkpointing сохраняет
+  <em>снэпшоты состояния</em>, но не даёт настоящей durable execution — автоматического возобновления, корректной
+  семантики повторов и устойчивости к сбоям внутри шага. Тезис прямой: «Checkpoints Are Not Durable
+  Execution — why LangGraph, CrewAI, Google ADK fall short for production».</li>
+<li><strong>Позиция LangChain:</strong> LangGraph спроектирован как production-runtime с durability «from first
+  principles» (control, persistence, HITL) — для агентных задач этого достаточно, а тащить полноценный
+  workflow-движок часто избыточно.</li>
+</ul>
+<p><em>Как читать спор (навык, не вывод за тебя):</em> это спор <strong>вендоров с разными продуктами</strong>, а не нейтральная
+истина. Критик продаёт durable-execution-платформу; защищающийся — агентный фреймворк. Правильный вопрос не
+«кто прав», а «какой класс отказов для <strong>моей</strong> задачи неприемлем»: если необратимые побочные эффекты и
+долгие процессы — ближе к durable engine; если короткие восстановимые траектории — checkpoints хватает.
+<em>Источники: Diagrid (Schneider); LangChain «Building LangGraph»; Temporal docs.</em></p>
+<h4>3.2 Прочие спорные точки (оставляем спорными)</h4>
+<ul>
+<li><strong>Exactly-once vs at-least-once+idempotency.</strong> Строгие распределённые транзакции (2PC) дают строгую
+  согласованность, но дороги и хрупки. Практика (Temporal/Restate) — at-least-once + idempotency keys.
+  Где нужна настоящая транзакционность — открытый инженерный вопрос.</li>
+<li><strong>Гранулярность идемпотентности.</strong> Ключ на каждый внешний вызов или на задачу целиком? Тоньше — больше
+  учёта, грубее — риск дублей при частичном успехе.</li>
+<li><strong>Полнота журналирования.</strong> Логировать каждый токен (объяснимость, но дорого) или только решения и
+  эффекты? Запись каждого шага в БД добавляет задержку (≈единицы–десятки мс/шаг); для latency-critical
+  (&lt;100 мс) durable-on-every-step нежелателен. Формального правила нет.</li>
+<li><strong>Граница «оркестратор vs workflow engine».</strong> Где остановиться: слать задачи через API с ручным state в
+  БД — или целиком уйти в код-фреймворк с автоматикой?</li>
+</ul>
+<hr />
+<h3>4. Failure modes: каждый отказ = дефицит примитива жизненного цикла</h3>
+<table>
+<thead>
+<tr>
+<th>Отказ</th>
+<th>Чего не хватило</th>
+<th>Класс MAST</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Двойной побочный эффект</strong> (двойной платёж/запись после retry)</td>
+<td>idempotency key на эффекте</td>
+<td>task verification</td>
+</tr>
+<tr>
+<td><strong>Retry storm</strong> (синхронные повторы кладут downstream)</td>
+<td>backoff+jitter, circuit breaker</td>
+<td>— (инфраструктурный)</td>
+</tr>
+<tr>
+<td><strong>Partial success «повис»</strong> (полузаписанное состояние)</td>
+<td>event log + компенсация/resume</td>
+<td>specification</td>
+</tr>
+<tr>
+<td><strong>Silent interface drift</strong> (схема tool сменилась; API «200 OK», данных нет)</td>
+<td>verifier на результате + строгие контракты</td>
+<td>task verification (~21%)</td>
+</tr>
+<tr>
+<td><strong>Deadlock</strong> (две задачи ждут друг друга «без ошибки»)</td>
+<td>таймауты + детекция зависимостей</td>
+<td>inter-agent (~37%)</td>
+</tr>
+<tr>
+<td><strong>Compounding error</strong> (длинная цепочка тихо деградирует)</td>
+<td>промежуточные checkpoint'ы/проверки; см. этап 4</td>
+<td>specification (~42%)</td>
+</tr>
+<tr>
+<td><strong>Memory/context loss после деплоя</strong> (stateless-дизайн)</td>
+<td>durable state вне процесса</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>Практический смысл: «система иногда падает» превращается в адресный диагноз «между шагом N и N+1 нет
+verifier'а» или «эффект E неидемпотентен». Cold-open читается как <strong>compounding (specification) + отсутствие
+event log/компенсации</strong> — предсказуемый, не экзотический.</p>
+<hr />
+<h3>5. Вклад в reference-spine: контракт жизненного цикла задачи</h3>
+<p>Наполняем <code>Task</code> и <code>executor</code> из урока 2 машиной состояний и durability-контрактом.</p>
+<pre><code class="language-python">from enum import Enum
+
+class Status(str, Enum):
+    QUEUED = &quot;queued&quot;
+    IN_PROGRESS = &quot;in_progress&quot;
+    WAITING_APPROVAL = &quot;waiting_approval&quot;   # смычка с policy/HITL (уроки 1, 5, 12)
+    SUCCEEDED = &quot;succeeded&quot;
+    FAILED = &quot;failed&quot;
+    TIMED_OUT = &quot;timed_out&quot;
+    CANCELLED = &quot;cancelled&quot;
+    ABORTED = &quot;aborted&quot;                      # критический системный сбой
+
+# Таблица допустимых переходов — единственный источник правды.
+# Любой переход вне таблицы = баг (тест в §6).
+TRANSITIONS = {
+    Status.QUEUED:           {Status.IN_PROGRESS, Status.CANCELLED},
+    Status.IN_PROGRESS:      {Status.SUCCEEDED, Status.FAILED, Status.TIMED_OUT,
+                              Status.WAITING_APPROVAL, Status.ABORTED},
+    Status.WAITING_APPROVAL: {Status.IN_PROGRESS, Status.CANCELLED},
+    Status.FAILED:           {Status.IN_PROGRESS, Status.ABORTED},   # retry по политике
+    Status.TIMED_OUT:        {Status.IN_PROGRESS, Status.WAITING_APPROVAL, Status.ABORTED},
+    # SUCCEEDED / CANCELLED / ABORTED — терминальные (нет исходящих переходов)
+}
+
+@dataclass
+class Step:
+    id: str
+    idempotency_key: str        # покрывает ПОБОЧНЫЙ ЭФФЕКТ, не рассуждение модели (§2.3)
+    cost: int                   # бюджет (planner-инвариант, урок 2)
+
+@dataclass
+class Event:                     # неизменяемая запись event log (источник правды)
+    ts: str
+    task_id: str
+    kind: str                   # task_created | tool_requested | tool_completed | status_changed ...
+    idempotency_key: str | None
+    payload_hash: str           # хэш входа/выхода, не сырьё (приватность + объём)
+
+class Lifecycle(Protocol):
+    def transition(self, task: Task, to: Status) -&gt; Task: ...
+        # инвариант: to ∈ TRANSITIONS[task.status], иначе IllegalTransition
+    def append(self, e: Event) -&gt; None: ...
+        # инвариант: append-only; журнал — источник правды для replay
+    def resume(self, task_id: str) -&gt; Task: ...
+        # реплеит event log → восстанавливает состояние; идемпотентные шаги НЕ перевыполняются
+</code></pre>
+<p><strong>Контракт для следующих этапов:</strong> любой компонент, выполняющий побочный эффект, обязан (1) проводить его
+через <code>idempotency_key</code>, (2) писать <code>Event</code> до и после эффекта, (3) объявить компенсацию для необратимых
+действий. Executor (урок 2) теперь обязан возвращать tool-error как данные (не глотать) — иначе ломается
+переход в <code>FAILED</code>/retry. Replit-инцидент = деструктивный эффект без idempotency, без Event, без компенсации.</p>
+<hr />
+<h3>6. Pset 3 — машина состояний + идемпотентный retry + replay</h3>
+<p><strong>Задача.</strong> Реализовать lifecycle: (а) запретить недопустимые переходы; (б) гарантировать, что retry не
+дублирует побочный эффект; (в) восстановить состояние из event log; (г) корректно обработать
+недетерминированный шаг.</p>
+<p><strong>Скелет</strong> (<code>lifecycle.py</code>):</p>
+<pre><code class="language-python">class TaskRunner:
+    def __init__(self, store, effects, *, max_retries=3, base_backoff_ms=100):
+        self.store = store          # durable: статусы + append-only event log
+        self.effects = effects      # реестр идемпотентных побочных эффектов
+
+    def transition(self, task, to):
+        if to not in TRANSITIONS.get(task.status, set()):
+            raise IllegalTransition(task.status, to)
+        self.store.append(Event(now(), task.id, &quot;status_changed&quot;, None, hash(to)))
+        task.status = to
+        return task
+
+    def run_step(self, task, step):
+        # идемпотентность: если эффект с этим ключом уже зафиксирован — вернуть сохранённое
+        if (cached := self.store.find_effect(step.idempotency_key)) is not None:
+            return cached
+        for attempt in range(self.max_retries):
+            try:
+                self.store.append(Event(now(), task.id, &quot;tool_requested&quot;,
+                                        step.idempotency_key, hash(step)))
+                res = self.effects.apply(step)               # ЕДИНСТВЕННАЯ точка side-effect
+                self.store.save_effect(step.idempotency_key, res)   # кэш результата — чтобы find_effect выше вернул его при повторе
+                self.store.append(Event(now(), task.id, &quot;tool_completed&quot;,
+                                        step.idempotency_key, hash(res)))
+                return res
+            except TransientError:
+                sleep(self.base_backoff_ms * (2 ** attempt))  # exp backoff
+        return self.transition(task, Status.FAILED)
+
+    def resume(self, task_id):
+        ...  # реплей event log: восстановить статус и НЕ перевыполнять зафиксированные эффекты
+</code></pre>
+<p><strong>Тесты:</strong></p>
+<pre><code class="language-python">def test_illegal_transition_rejected():
+    with pytest.raises(IllegalTransition):
+        runner.transition(Task(status=Status.SUCCEEDED), Status.IN_PROGRESS)  # терминальный
+
+def test_retry_does_not_double_side_effect():
+    # тот же idempotency_key дважды → эффект применён ОДИН раз (анти «двойной платёж»)
+    r1 = runner.run_step(task, payment_step)
+    r2 = runner.run_step(task, payment_step)
+    assert r1 == r2
+    assert effects.apply_count(payment_step.idempotency_key) == 1
+
+def test_resume_reconstructs_state_without_replaying_effects():
+    runner.run_step(task, step_a)          # зафиксирован
+    crash()                                 # процесс «умер»
+    recovered = TaskRunner(store, effects).resume(task.id)
+    assert recovered.status == task.status
+    assert effects.apply_count(step_a.idempotency_key) == 1   # НЕ выполнен повторно
+
+def test_nondeterministic_step_is_safe_to_resume():
+    # LLM-шаг даёт разный текст, но idempotency покрывает эффект, не выход
+    runner.run_step(task, llm_step_with_effect)
+    runner.resume(task.id)
+    assert effects.apply_count(llm_step_with_effect.idempotency_key) == 1
+</code></pre>
+<p><strong>Эталон.</strong> Ключевые мысли: (1) переходы валидны только по <code>TRANSITIONS</code> — машина состояний, а не «status
+= любая строка»; (2) идемпотентность покрывает <strong>эффект</strong>, поэтому retry и resume безопасны даже при
+недетерминированном LLM (<code>test_nondeterministic...</code> — суть §2.3); (3) replay восстанавливает из журнала,
+<strong>не перевыполняя</strong> зафиксированное. <code>test_retry_does_not_double</code> — буквально анти-паттерн двойного платежа.</p>
+<p><strong>Расширение.</strong> Добавь <code>compensate(step)</code> для необратимых эффектов и тест: при <code>ABORTED</code> после частичного
+успеха выполняются компенсации в обратном порядке (saga-паттерн).</p>
+<hr />
+<h3>7. Диагностические вопросы (проверяют суждение)</h3>
+<ol>
+<li>Тебе предлагают «сделать агента надёжнее», дообучив модель. По §1 — почему это не там ищут? Что из §2
+   дало бы больший эффект дешевле?</li>
+<li>Команда выбирает Temporal vs LangGraph checkpoints для пайплайна, который рассылает реальные письма
+   клиентам. Какой класс отказов решает выбор (см. §3.1) и что ты спросишь про идемпотентность отправки?</li>
+<li>Почему классическое допущение «replay шага детерминирован» ломается на LLM и как durable-движки это
+   обходят (§2.3)? Что именно они реплеят вместо выхода модели?</li>
+<li>Дан «двойной платёж после retry». Где именно поставить idempotency key — на LLM-рассуждении, на
+   tool-call'е или на эффекте в платёжной системе? Почему остальные варианты не спасают?</li>
+<li>Тебе показывают цифру «79% отказов MAS — из-за координации». Как ты её проверишь и почему она
+   конфликтует с MAST? (см. §1/§9) Чему это учит про доверие к circulating-статистике?</li>
+<li><strong>Open question</strong> (§3.2): для latency-critical агента (&lt;100 мс) durable-on-every-step слишком дорог.
+   Спроектируй гибрид: что журналировать durable, а что держать в памяти? Где твой гибрид теряет
+   recovery-гарантию?</li>
+</ol>
+<hr />
+<h3>8. Глоссарий-дельта</h3>
+<ul>
+<li><strong>Машина состояний задачи</strong> — конечный набор статусов + таблица допустимых переходов; единственный
+  источник правды о состоянии. Переход вне таблицы = баг.</li>
+<li><strong>Идемпотентность</strong> — повтор операции с тем же ключом не создаёт новый побочный эффект. Ключ покрывает
+  <strong>эффект</strong>, не рассуждение модели.</li>
+<li><strong>Building on Quicksand (Helland &amp; Campbell, 2009)</strong> — канон: для длинных распределённых активностей
+  exactly-once недостижим → at-least-once + идемпотентность + компенсации/«apologies».</li>
+<li><strong>At-least-once + idempotency</strong> — практичная замена недостижимому exactly-once.</li>
+<li><strong>Retry / exponential backoff / jitter</strong> — повтор временно сбойного шага с растущими интервалами; гасит
+  retry storm.</li>
+<li><strong>Lease/Lock</strong> — временная эксклюзивная аренда задачи воркером; истекает при падении → задача
+  возвращается в очередь.</li>
+<li><strong>Event sourcing / event log</strong> — неизменяемый append-only журнал произошедшего; источник правды для
+  replay и аудита.</li>
+<li><strong>Durable execution</strong> — гарантия доведения задачи до конца через авто-persistence + возобновление с точки
+  сбоя (Temporal, Restate, Dapr Workflows).</li>
+<li><strong>Checkpoint</strong> — снэпшот состояния между шагами (LangGraph). <strong>≠ durable execution</strong> (спор §3.1).</li>
+<li><strong>Partial success / компенсация (saga)</strong> — часть эффектов произошла; откат уже сделанного обратными
+  операциями.</li>
+<li><strong>Circuit breaker</strong> — при пороге ошибок к сервису временно прекратить запросы.</li>
+<li><strong>Compounding error</strong> — экспоненциальная деградация длинной цепочки (p^N); мост к этапу 4.</li>
+<li><strong>Воспроизводимость (для агентов)</strong> — повтор <strong>траектории решений и эффектов</strong> из журнала, не токенов.</li>
+</ul>
+<hr />
+<h3>9. Первоисточники (верифицированы 2026-06-23)</h3>
+<ol>
+<li><strong>Temporal Docs</strong> — durable execution, payload/blob size limit (warn 256 КБ, error 2 МБ).
+   <a href="https://docs.temporal.io/troubleshooting/blob-size-limit-error" target="_blank" rel="noopener">https://docs.temporal.io/troubleshooting/blob-size-limit-error</a> · <a href="https://docs.temporal.io/" target="_blank" rel="noopener">https://docs.temporal.io/</a> — модель
+   durable-движка, replay, лимиты.</li>
+<li><strong>Diagrid (Yaron Schneider) — «Checkpoints Are Not Durable Execution»</strong> (критика LangGraph/CrewAI/ADK
+   со стороны durable-execution-вендора). <a href="https://www.diagrid.io/blog/checkpoints-are-not-durable-execution-why-langgraph-crewai-google-adk-and-others-fall-short-for-production-agent-workflows" target="_blank" rel="noopener">https://www.diagrid.io/blog/checkpoints-are-not-durable-execution-why-langgraph-crewai-google-adk-and-others-fall-short-for-production-agent-workflows</a>
+   — сторона «критика» спора §3.1.</li>
+<li><strong>LangChain — «Building LangGraph: Designing an Agent Runtime from first principles»</strong>.
+   <a href="https://www.langchain.com/blog/building-langgraph" target="_blank" rel="noopener">https://www.langchain.com/blog/building-langgraph</a> — сторона «защита» спора §3.1 (durability в агентном рантайме).</li>
+<li><strong>LangGraph Docs — Persistence (Checkpointers / Stores)</strong>.
+   <a href="https://langchain-ai.github.io/langgraph/concepts/persistence/" target="_blank" rel="noopener">https://langchain-ai.github.io/langgraph/concepts/persistence/</a> — механика checkpoint'ов, HITL-resumption.</li>
+<li><strong>AWS — «Build durable AI agents with LangGraph and Amazon DynamoDB»</strong>.
+   <a href="https://aws.amazon.com/blogs/database/build-durable-ai-agents-with-langgraph-and-amazon-dynamodb/" target="_blank" rel="noopener">https://aws.amazon.com/blogs/database/build-durable-ai-agents-with-langgraph-and-amazon-dynamodb/</a> —
+   определение checkpoint как StateSnapshot, durable-store на практике.</li>
+<li><strong>Cemri, Pan et al. — «Why Do Multi-Agent LLM Systems Fail?» (MAST)</strong>, arXiv 2503.13657 (UC Berkeley,
+   2025). <a href="https://arxiv.org/abs/2503.13657" target="_blank" rel="noopener">https://arxiv.org/abs/2503.13657</a> — верифицированное распределение отказов (42/37/21), §4.</li>
+<li><strong>Anthropic — «How we built our multi-agent research system» (2025)</strong>.
+   <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank" rel="noopener">https://www.anthropic.com/engineering/multi-agent-research-system</a> — контекст compounding/стоимости длинных траекторий.</li>
+<li><strong>Helland &amp; Campbell — «Building on Quicksand»</strong>, arXiv 0909.1788 (2009). <a href="https://arxiv.org/abs/0909.1788" target="_blank" rel="noopener">https://arxiv.org/abs/0909.1788</a>
+   — канон идемпотентности / at-least-once для длинных распределённых активностей (§2.2).</li>
+<li><strong>Durable-execution платформы:</strong> Inngest (built-for-AI) <a href="https://www.inngest.com/" target="_blank" rel="noopener">https://www.inngest.com/</a> · Cloudflare Workflows
+   (GA) <a href="https://blog.cloudflare.com/workflows-ga-production-ready-durable-execution/" target="_blank" rel="noopener">https://blog.cloudflare.com/workflows-ga-production-ready-durable-execution/</a> · DBOS <a href="https://www.dbos.dev/" target="_blank" rel="noopener">https://www.dbos.dev/</a> — карта движков (§3).</li>
+</ol>
+<blockquote class="quarantine">
+<p><strong>Карантин (фабрикация/неподтверждено):</strong> «79% отказов MAS — координация (UC Berkeley)» — противоречит
+MAST из той же группы (42/37/21); «&gt;40% отказов без оркестрации / снижение в 3.2×» — рециклинг,
+источник не найден (3-й этап подряд); цитата Netflix про Temporal — не подтверждена (Netflix построил
+собственный Conductor); practitioner-блоги Quellix Labs / EngineersMeetAI / Data Science Collective —
+не верифицированы, в несущие утверждения не идут. <strong>Illustrative:</strong> таблица p^N — арифметическая модель,
+не измеренная константа; «85% точности шага» как факт не используется.</p>
+</blockquote>
+<hr />
+<p><em>Плотность — целевая. Этап средне-тяжёлый: классика DS подаётся сжато (она [устоявшееся]), вес смещён на
+неочевидное — недетерминизм LLM ломает replay (§2.3) и реальный межвендорский спор о durability (§3.1).
+Cold-open переиспользует Replit через НОВЫЙ аналитический ракурс (жизненный цикл/recovery вместо
+полномочий) — это разные вопросы к одному верифицированному событию, а не повтор. Spine получил машину
+состояний + idempotency/event-log контракт; pset воспроизводит «двойной платёж» и safe-resume на
+недетерминированном шаге.</em></p>
+    </div>
+    <nav class="pager">
+      <a class="pg-prev" href="lesson-02.html"><span class="pk">← Урок 02</span>Примитивы и reference-spine</a>
+      <a class="pg-next" href="lesson-04.html"><span class="pk">Урок 04 →</span>Context engineering</a>
+    </nav>
+    <footer id="footer">
+      <p>Дизайн-язык адаптирован из <a href="https://github.com/ThariqS/html-effectiveness"
+        target="_blank" rel="noopener">html-effectiveness</a> (Apache-2.0). Актуально на 2026-06-23.</p>
+    </footer>
+  </main>
+</div>
+<script>
+// keep the active lesson visible in the sticky sidebar on load
+var act=document.querySelector('.sidebar nav a.active');
+if(act && act.scrollIntoView){ act.scrollIntoView({block:'center'}); }
+</script>
+</body>
+</html>

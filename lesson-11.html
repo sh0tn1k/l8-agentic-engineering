@@ -1,0 +1,701 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Урок 11. Мультиагентность: MCP / A2A — L8+ Agentic Engineering</title>
+<!-- Design language adapted from ThariqS/html-effectiveness (Apache-2.0, (c) Anthropic PBC). -->
+<style>
+:root{
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413; --clay:#D97757; --clay-d:#B85C3E;
+  --oat:#E3DACC; --olive:#788C5D; --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5;
+  --g500:#87867F; --g700:#3D3D3A;
+  --serif:ui-serif,Georgia,"Times New Roman",Times,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Monaco,Consolas,monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--ivory);color:var(--slate);font-family:var(--sans);
+  line-height:1.6;-webkit-font-smoothing:antialiased;font-size:16.5px;}
+
+a{color:var(--clay-d);text-decoration-color:var(--oat);text-underline-offset:3px;}
+a:hover{text-decoration-color:var(--clay);}
+
+/* layout shell: sticky sidebar + reading column */
+.shell{max-width:1180px;margin:0 auto;padding:0 28px;display:grid;
+  grid-template-columns:236px minmax(0,1fr);gap:48px;align-items:start;}
+@media(max-width:900px){.shell{grid-template-columns:1fr;gap:0;padding:0 20px;}}
+
+/* sidebar */
+.sidebar{position:sticky;top:0;max-height:100vh;overflow-y:auto;padding:34px 0 40px;}
+@media(max-width:900px){.sidebar{position:static;max-height:none;border-bottom:1.5px solid var(--g300);
+  margin-bottom:8px;padding-bottom:18px;}}
+.side-brand{font-family:var(--serif);font-size:19px;font-weight:600;letter-spacing:-.01em;margin-bottom:2px;}
+.side-brand em{font-style:italic;color:var(--clay);}
+.side-sub{font-family:var(--mono);font-size:10.5px;color:var(--g500);text-transform:uppercase;
+  letter-spacing:.1em;margin-bottom:20px;}
+.sidebar nav{display:flex;flex-direction:column;gap:1px;}
+.sidebar nav a{display:flex;gap:9px;align-items:baseline;text-decoration:none;color:var(--g700);
+  font-size:13px;line-height:1.35;padding:5px 9px;border-radius:7px;border-left:2px solid transparent;}
+.sidebar nav a .n{font-family:var(--mono);font-size:10px;color:var(--g500);min-width:16px;}
+.sidebar nav a:hover{background:var(--g100);color:var(--slate);}
+.sidebar nav a.active{background:var(--paper);border-left-color:var(--clay);color:var(--slate);
+  box-shadow:0 1px 0 var(--g200);}
+.sidebar nav a.active .n{color:var(--clay);}
+.sidebar nav a.lead{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--g500);margin-top:14px;padding-bottom:2px;pointer-events:none;}
+
+/* main reading column */
+main{max-width:840px;padding:0 0 140px;min-width:0;}
+
+/* masthead */
+header.masthead{padding:54px 0 34px;border-bottom:1.5px solid var(--g300);margin-bottom:8px;}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--g500);margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+.eyebrow::before{content:"";width:24px;height:1.5px;background:var(--clay);}
+h1.title{font-family:var(--serif);font-weight:500;font-size:clamp(36px,5vw,58px);line-height:1.07;
+  letter-spacing:-.018em;margin:0 0 6px;max-width:18ch;}
+h1.title em{font-style:italic;color:var(--clay);}
+.lede{font-size:17px;color:var(--g700);margin:20px 0 0;max-width:640px;}
+.disclaimer{margin:22px 0 0;padding:14px 18px;background:var(--g100);border-radius:12px;
+  border:1.5px solid var(--g200);font-size:13.5px;color:var(--g700);max-width:660px;}
+.disclaimer b{color:var(--slate);}
+
+/* feature panel (spine) */
+.panel{margin:40px 0 0;background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;
+  padding:26px 28px;scroll-margin-top:16px;}
+.panel h2,.howto h2{font-family:var(--serif);font-weight:500;font-size:25px;margin:0 0 4px;letter-spacing:-.01em;}
+.panel .sub{color:var(--g700);font-size:14px;margin:0 0 18px;}
+.flow{font-family:var(--mono);font-size:12.5px;line-height:1.7;background:var(--g100);border-radius:10px;
+  padding:14px 16px;overflow-x:auto;color:var(--g700);white-space:pre-wrap;border:1px solid var(--g200);}
+ol.inv{margin:18px 0 0;padding-left:0;counter-reset:inv;list-style:none;display:grid;gap:7px;}
+ol.inv li{position:relative;padding-left:30px;font-size:14px;color:var(--g700);}
+ol.inv li::before{counter-increment:inv;content:counter(inv);position:absolute;left:0;top:0;
+  font-family:var(--mono);font-size:11px;color:var(--clay);font-weight:600;
+  border:1.5px solid var(--oat);border-radius:6px;width:21px;height:21px;display:flex;
+  align-items:center;justify-content:center;}
+ol.inv li b{color:var(--slate);font-weight:600;}
+
+.howto{margin:34px 0 0;scroll-margin-top:16px;}
+.howto ul{margin:10px 0 0;padding-left:20px;}
+.howto li{margin:6px 0;color:var(--g700);font-size:14.5px;}
+
+.section-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--g500);margin:64px 0 6px;display:flex;align-items:center;gap:10px;}
+.section-label::before{content:"";width:20px;height:1.5px;background:var(--clay);}
+
+/* lessons / accordion */
+section.lesson{margin-top:18px;scroll-margin-top:14px;}
+details.les{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;overflow:hidden;
+  transition:border-color 150ms,box-shadow 150ms;}
+details.les[open]{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);}
+details.les summary{list-style:none;cursor:pointer;padding:20px 22px;display:block;}
+details.les summary::-webkit-details-marker{display:none;}
+.sec-head{display:flex;align-items:baseline;gap:14px;}
+.sec-head .idx{font-family:var(--mono);font-size:13px;color:var(--clay);font-weight:600;min-width:26px;}
+.sec-head h2{font-family:var(--serif);font-weight:500;font-size:23px;margin:0;letter-spacing:-.01em;flex:1;}
+.tagline{color:var(--g700);font-size:14px;margin:3px 0 0 40px;}
+.card-meta{margin:13px 0 0 40px;display:grid;gap:5px;}
+.meta-item{font-size:13px;color:var(--g700);}
+.meta-item .k{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--g500);margin-right:8px;}
+.expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(--mono);font-size:11px;
+  color:var(--clay);}
+details.les[open] .expand-hint{display:none;}
+
+/* maturity badges */
+.badge{font-family:var(--mono);font-size:10.5px;padding:3px 9px;border-radius:999px;white-space:nowrap;
+  border:1.5px solid var(--g300);color:var(--g700);align-self:flex-start;}
+.badge.b-core{background:#EEF1E9;border-color:#C3D1AE;color:#3f5430;}
+.badge.b-emerging{background:#FBEDE6;border-color:#EBC3AE;color:var(--clay-d);}
+.badge.b-disputed{background:#FAF3E2;border-color:#E6D08C;color:#8a6d1f;}
+.badge.b-hype{background:#FBE9E6;border-color:#E9B4A8;color:#a23b28;}
+.badge.b-special{background:#ECEAF3;border-color:#C7C0DE;color:#4b4080;}
+
+/* lesson body (rendered markdown) */
+.lesson-body{padding:4px 26px 28px;border-top:1px solid var(--g100);}
+.lesson-body .status{font-size:13px;color:var(--g700);background:var(--g100);border-radius:10px;
+  padding:12px 15px;margin:18px 0 8px;border:1px solid var(--g200);}
+.lesson-body h3{font-family:var(--serif);font-weight:600;font-size:21px;margin:32px 0 8px;letter-spacing:-.008em;}
+.lesson-body h4{font-family:var(--serif);font-weight:600;font-size:17px;margin:22px 0 6px;color:var(--g700);}
+.lesson-body h5{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--g500);margin:18px 0 6px;}
+.lesson-body p{margin:11px 0;}
+.lesson-body ul,.lesson-body ol{margin:11px 0;padding-left:22px;}
+.lesson-body li{margin:5px 0;}
+.lesson-body code{font-family:var(--mono);font-size:.86em;background:var(--g100);padding:1.5px 5px;
+  border-radius:5px;border:1px solid var(--g200);}
+.lesson-body pre{background:#2b2a27;color:#eceae3;border-radius:12px;padding:16px 18px;overflow-x:auto;
+  font-size:12.7px;line-height:1.5;margin:14px 0;}
+.lesson-body pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit;}
+.lesson-body blockquote{margin:14px 0;padding:12px 18px;border-left:3px solid var(--clay);
+  background:var(--paper);border-radius:0 10px 10px 0;color:var(--g700);}
+.lesson-body blockquote.quarantine{border-left-color:#c98a2e;background:#FAF3E2;}
+.lesson-body table{border-collapse:collapse;width:100%;margin:16px 0;font-size:13px;display:block;
+  overflow-x:auto;}
+.lesson-body th,.lesson-body td{border:1px solid var(--g300);padding:7px 10px;text-align:left;
+  vertical-align:top;}
+.lesson-body th{background:var(--g100);font-weight:600;font-family:var(--sans);}
+.lesson-body tr:nth-child(even) td{background:#fcfbf8;}
+.lesson-body hr{border:none;border-top:1.5px solid var(--g200);margin:26px 0;}
+.lesson-body a{word-break:break-word;}
+.lesson-body em{color:var(--g700);}
+
+/* footer */
+footer{margin:80px 0 0;border-top:1.5px solid var(--g300);padding-top:30px;font-size:13px;
+  color:var(--g500);scroll-margin-top:16px;}
+footer .k{font-family:var(--serif);font-style:italic;color:var(--g700);font-size:15px;}
+footer p{margin:8px 0;max-width:680px;}
+
+.toolbar{display:flex;gap:10px;margin:22px 0 0 40px;}
+.toolbar button{font-family:var(--mono);font-size:11px;background:var(--paper);border:1.5px solid var(--g300);
+  color:var(--g700);border-radius:999px;padding:6px 13px;cursor:pointer;}
+.toolbar button:hover{border-color:var(--slate);color:var(--slate);}
+
+/* ---- multipage: lesson cards on index + lesson pages ---- */
+.side-brand-link{text-decoration:none;color:inherit;display:block;}
+.lcards{display:grid;gap:14px;margin-top:18px;}
+a.lcard{display:block;text-decoration:none;color:inherit;background:var(--paper);border:1.5px solid var(--g300);
+  border-radius:14px;padding:20px 22px;transition:border-color .15s,box-shadow .15s,transform .15s;}
+a.lcard:hover{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);transform:translateY(-1px);}
+a.lcard .sec-head h2{color:var(--slate);}
+a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(--mono);font-size:11px;color:var(--clay);}
+.crumb{margin:30px 0 2px;}
+.crumb a{font-family:var(--mono);font-size:12px;color:var(--g500);text-decoration:none;}
+.crumb a:hover{color:var(--clay-d);}
+.lesson-head{padding:12px 0 24px;border-bottom:1.5px solid var(--g300);margin-bottom:4px;}
+.lesson-head .eyebrow{margin-bottom:13px;}
+.lesson-head h1.title{font-size:clamp(29px,4vw,44px);max-width:22ch;margin:0;}
+.lesson-head .lede{margin-top:13px;}
+.pager{display:flex;justify-content:space-between;align-items:stretch;gap:14px;margin:54px 0 0;
+  border-top:1.5px solid var(--g300);padding-top:22px;}
+.pager a{text-decoration:none;color:var(--g700);font-size:13.5px;border:1.5px solid var(--g300);border-radius:11px;
+  padding:11px 15px;max-width:49%;transition:.15s;line-height:1.4;}
+.pager a:hover{border-color:var(--slate);color:var(--slate);}
+.pager a .pk{font-family:var(--mono);font-size:10px;color:var(--g500);display:block;margin-bottom:2px;}
+.pager .pg-next{margin-left:auto;text-align:right;}
+.sidebar nav a.active{background:var(--paper);border-left-color:var(--clay);color:var(--slate);box-shadow:0 1px 0 var(--g200);}
+.sidebar nav a.active .n{color:var(--clay);}
+
+/* ---- interactive course widgets (.cw) ---- */
+.cw{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;margin:28px 0;overflow:hidden;}
+.cw-head{display:flex;align-items:center;gap:10px;padding:13px 20px;border-bottom:1px solid var(--g200);background:var(--g100);}
+.cw-head .tag{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--clay);
+  border:1.5px solid var(--oat);border-radius:999px;padding:2px 9px;}
+.cw-head .ttl{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--slate);}
+.cw-body{padding:18px 20px;display:flex;flex-direction:column;gap:15px;}
+.cw-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+.cw-grid{display:grid;gap:10px;}
+.cw .lbl{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--g500);margin-bottom:7px;}
+.cw .metric{background:var(--g100);border:1px solid var(--g200);border-radius:10px;padding:9px 13px;}
+.cw .metric .mk{font-size:12px;color:var(--g500);}
+.cw .metric .mv{font-size:21px;font-weight:600;font-family:var(--serif);color:var(--slate);line-height:1.2;}
+.cw button{font-family:var(--sans);cursor:pointer;border-radius:8px;border:1.5px solid var(--g300);background:var(--paper);
+  color:var(--g700);font-size:13px;padding:7px 12px;transition:.12s;line-height:1.3;}
+.cw button:hover{border-color:var(--slate);color:var(--slate);}
+.cw .act{background:var(--clay);border-color:var(--clay);color:#fff;font-weight:600;}
+.cw .act:hover{background:var(--clay-d);border-color:var(--clay-d);color:#fff;}
+.cw .chip{font-family:var(--mono);font-size:11px;padding:5px 10px;border-radius:999px;}
+.cw .chip.sel{background:var(--slate);border-color:var(--slate);color:var(--ivory);}
+.cw .tog{display:flex;align-items:center;gap:8px;text-align:left;}
+.cw .tog.on-bad{background:#FBE9E6;border-color:#E9B4A8;color:#a23b28;}
+.cw .tog.on-good{background:#EEF1E9;border-color:#C3D1AE;color:#3f5430;}
+.cw input[type=range]{width:100%;accent-color:var(--clay);margin:2px 0;}
+.cw .slabel{display:flex;justify-content:space-between;font-size:12.5px;color:var(--g700);margin-bottom:2px;}
+.cw .slabel b{font-weight:600;color:var(--slate);}
+.cw .bar{display:flex;height:40px;border-radius:9px;overflow:hidden;border:1px solid var(--g300);}
+.cw .seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;overflow:hidden;
+  white-space:nowrap;border-right:1px solid var(--paper);}
+.cw .seg.c{background:#EEF1E9;color:#3f5430;}
+.cw .seg.u{background:#FAF3E2;color:#8a6d1f;}
+.cw .trace{display:flex;flex-direction:column;gap:6px;}
+.cw .trow{border-left:3px solid var(--g300);background:var(--g100);border-radius:0 8px 8px 0;padding:7px 12px;
+  font-family:var(--mono);font-size:12.5px;}
+.cw .trow .th{font-weight:600;color:var(--slate);}
+.cw .trow .tb{color:var(--g700);white-space:pre-wrap;word-break:break-word;margin-top:2px;}
+.cw .t-obs{border-color:var(--olive);}
+.cw .t-think{border-color:#c98a2e;}
+.cw .t-act{border-color:var(--g500);}
+.cw .t-block{border-color:#6f9152;}
+.cw .t-leak{border-color:var(--clay-d);}
+.cw .verdict{border-radius:10px;padding:12px 15px;font-size:14px;}
+.cw .v-safe{background:#EEF1E9;color:#3f5430;border:1px solid #C3D1AE;}
+.cw .v-leak{background:#FBE9E6;color:#a23b28;border:1px solid #E9B4A8;}
+.cw .verdict .vt{font-weight:700;}
+.cw .verdict .vd{margin-top:3px;line-height:1.5;}
+.cw .note{font-size:11.5px;color:var(--g500);line-height:1.6;}
+.cw .dot{display:inline-block;width:10px;height:10px;border-radius:3px;vertical-align:middle;margin-right:4px;}
+.cw textarea{width:100%;font-family:var(--mono);font-size:12.5px;border:1.5px solid var(--g300);border-radius:8px;
+  padding:8px 10px;background:var(--paper);color:var(--slate);resize:vertical;}
+.cw .runs{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;max-width:420px;}
+.cw .evd{aspect-ratio:1;border-radius:3px;background:var(--g200);}
+.cw .evd.ok{background:#9cbf6e;}
+.cw .evd.no{background:#e0a99c;}
+.cw .mlist{display:flex;flex-direction:column;gap:7px;}
+.cw .mitem{display:flex;align-items:center;gap:10px;border:1px solid var(--g200);border-radius:9px;padding:8px 11px;
+  font-size:13px;background:var(--g100);}
+.cw .mitem .mt{color:var(--slate);}
+.cw .mitem .src{font-family:var(--mono);font-size:10.5px;color:var(--g500);}
+.cw .pill{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:999px;margin-left:auto;white-space:nowrap;}
+.cw .pill.w{background:#EEF1E9;color:#3f5430;}
+.cw .pill.q{background:#FAF3E2;color:#8a6d1f;}
+.cw .pill.r{background:#FBE9E6;color:#a23b28;}
+.cw .stepc{font-family:var(--mono);font-size:11px;color:var(--g500);}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="top">
+    <a class="side-brand-link" href="index.html"><div class="side-brand">L8+ <em>Agentic</em></div></a>
+    <div class="side-sub">актуально 2026-06-23</div>
+    <nav>
+<a href="index.html">▲ Главная</a>
+<a class="lead">Карта</a>
+<a href="index.html#spine"><span class="n">◆</span>Reference-spine</a>
+<a href="index.html#how"><span class="n">?</span>Как читать</a>
+<a class="lead">Уроки</a>
+<a href="lesson-01.html"><span class="n">01</span>Зрелость автономии</a>
+<a href="lesson-02.html"><span class="n">02</span>Примитивы и reference-spine</a>
+<a href="lesson-03.html"><span class="n">03</span>Task lifecycle и durable execution</a>
+<a href="lesson-04.html"><span class="n">04</span>Context engineering</a>
+<a href="lesson-05.html"><span class="n">05</span>Инструменты, права, policy</a>
+<a href="lesson-06.html"><span class="n">06</span>Evals, verifier, trajectory</a>
+<a href="lesson-07.html"><span class="n">07</span>Память и жизненный цикл знания</a>
+<a href="lesson-08.html"><span class="n">08</span>Retrieval: RAG, hybrid, GraphRAG</a>
+<a href="lesson-09.html"><span class="n">09</span>Observability и воспроизводимость</a>
+<a href="lesson-10.html"><span class="n">10</span>Безопасность: injection, threat model</a>
+<a href="lesson-11.html" class="active"><span class="n">11</span>Мультиагентность: MCP / A2A</a>
+<a href="lesson-12.html"><span class="n">12</span>Human-in-the-loop и operating model</a>
+<a href="lesson-13.html"><span class="n">13</span>Экономика и production readiness (capstone)</a>
+<a href="lesson-14.html"><span class="n">14</span>Фронт и горизонт-сканирование</a>
+<a class="lead">Конец</a>
+<a href="index.html#footer"><span class="n">§</span>Метод и источники</a>
+    </nav>
+  </aside>
+
+  <main>
+    <div class="crumb"><a href="index.html">← Все уроки</a></div>
+    <header class="lesson-head">
+      <div class="eyebrow">Урок 11<span class="badge b-disputed" style="margin-left:6px">[формирующееся]; польза [спорное]</span></div>
+      <h1 class="title">Мультиагентность: MCP / A2A</h1>
+      <p class="lede">MCP вертикаль, A2A горизонталь</p>
+      <div class="card-meta">
+        <div class="meta-item"><span class="k">Cold-open</span>Anthropic +90.2% / 15× / MAST 37%</div>
+        <div class="meta-item"><span class="k">В spine</span>координация + протоколы + Rule of Two на субагента</div>
+      </div>
+    </header>
+    <div class="lesson-body">
+      <div class="status"><p><strong>Статус:</strong> актуально на 2026-06-23, пересмотреть до 2026-09.
+MCP (агент↔инструмент) и A2A (агент↔агент) — <strong>[формирующееся]</strong> (MCP 2024; A2A v1.0 2026, Linux
+Foundation, 150+ орг). Ролевые архитектуры (Coordinator-Implementor-Verifier) — <strong>[формирующееся]</strong>.
+«Польза мультиагентности vs single-agent» — <strong>[спорное]</strong>. Расширяет router/orchestrator (урок 2), threat
+model и Rule of Two (урок 10), conflict-policy (урок 7).</p></div>
+<hr />
+<h3>0. Зачем этот урок</h3>
+<p>Десять этапов мы строили <strong>одного</strong> агента-оркестратора. Теперь вопрос: когда нужно <strong>несколько</strong> агентов,
+как они координируются, не мешая друг другу, и как агенты от <strong>разных</strong> вендоров вообще разговаривают. Это
+усиленный этап: после него у нас есть критерий «сколько агентов», протокол передачи и — главное —
+правильное (не перепутанное) понимание MCP vs A2A.</p>
+<p>Две мысли, которые урок должен оставить:</p>
+<blockquote>
+<p><strong>(1)</strong> «Больше агентов» — <strong>не бесплатно и не автоматически лучше</strong>. Мультиагент выигрывает на
+распараллеливаемой широте (Anthropic: +90.2% над одиночным на research), но добавляет <strong>целый класс
+отказов — координацию</strong> (MAST: 37% отказов MAS — рассогласование агентов) и платит ~15× токенов. 40%
+agentic-проектов отменят к 2027 (Gartner). Сначала спроси «нужен ли вообще второй агент».
+<strong>(2)</strong> Два протокола решают <strong>разные</strong> задачи и <strong>дополняют</strong> друг друга: <strong>MCP — вертикаль</strong>
+(агент↔инструмент/данные, Anthropic), <strong>A2A — горизонталь</strong> (агент↔агент, Google→Linux Foundation). Это
+не конкуренты; путать их — типовая ошибка.</p>
+</blockquote>
+<hr />
+<h3>1. Cold-open: мультиагент, который выиграл +90% и сжёг 15× — и тот, что породил рой</h3>
+<p>Мультиагентность продают как «просто добавь агентов — будет умнее». Реальность <strong>двойственна</strong>, и обе
+стороны верифицированы:</p>
+<ul>
+<li><strong>Выигрывает (иногда):</strong> Anthropic («How we built our multi-agent research system») — связка Opus-4-lead +
+  Sonnet-4-субагенты <strong>обошла одиночного Opus 4 на +90.2%</strong> на внутреннем research-eval. Для
+  распараллеливаемой широты (искать по многим направлениям) мультиагент реально лучше.</li>
+<li><strong>Платит дорого:</strong> та же система — <strong>≈15× токенов</strong> против чата. Координация не бесплатна.</li>
+<li><strong>Добавляет новый класс отказов:</strong> MAST (arXiv 2503.13657, верифицировано в уроках 2–3) — <strong>37% отказов
+  MAS — это inter-agent misalignment</strong>: агенты не передают критичное, расходятся в целях. Координация сама
+  — крупный источник сбоев.</li>
+<li><strong>Часто не окупается:</strong> Gartner — <strong>&gt;40% agentic-AI проектов отменят к 2027</strong> (стоимость, неясная
+  ценность, риски).</li>
+<li><strong>Может выродиться в рой:</strong> ранний провал Anthropic (урок 2) — лид породил <strong>50 субагентов на простой
+  запрос</strong>, решаемый одним.</li>
+</ul>
+<p>Отсюда тезис урока:</p>
+<blockquote>
+<p>Мультиагентность — это инструмент с резко нелинейным профилем: на правильной задаче (параллельная широта)
+она даёт большой выигрыш, но вносит <strong>новый класс отказов (координация, 37%)</strong> и кратную стоимость (15×).
+Дефолт — <strong>один агент с инструментами</strong>; несколько агентов вводят только когда задача реально требует
+параллелизма или разделения границ ответственности/безопасности.</p>
+</blockquote>
+<p><em>(Карантин: «200мс→4с латентность» (4-й рецидив фабрикации), «41–86.7% / 1642 прогона», «42.68% vs 2.92%»,
+«79% используют/96% расширяют» — не подтверждены; беру верифицированные Anthropic/MAST/Gartner. §9.)</em></p>
+<hr />
+<h3>2. Деривация: от одного агента к скоординированной сети</h3>
+<h4>2.1 Боль → механизм</h4>
+<ul>
+<li><strong>«Нужен ли вообще второй агент?»</strong> Дефолт — single-agent + tools (проще, дешевле, меньше точек отказа).
+  Мультиагент оправдан при: параллельной широте (Anthropic research), разделении зон безопасности (каждый
+  агент — минимум прав, урок 10), разных командах-владельцах. Иначе — это «рой» (cold-open) и 15× счёт зря.</li>
+<li><strong>«Агенты дублируют работу» (50 субагентов).</strong> Вводим <strong>роли с границами</strong>: паттерн
+  <strong>Coordinator–Implementor–Verifier</strong> (координатор декомпозирует, исполнители делают, верификатор
+  проверяет — урок 6). Role boundaries устраняют дублирование. Конкретная реализация — <strong>Magentic-One</strong>
+  (Microsoft): Orchestrator + специалисты. Отдельный паттерн — <strong>multiagent debate</strong> (Du et al.): несколько
+  моделей спорят и сходятся к ответу (консенсус ради качества, не декомпозиция).</li>
+<li><strong>«Как передать задачу/контекст».</strong> Вводим <strong>handoff-протокол</strong>: триажный агент → специалист (sales /
+  refund / human). Явная схема «кто что делает и кому передаёт».</li>
+<li><strong>«Общий контекст рассинхронизировался» (context drift).</strong> Один агент зовёт <code>f()</code>, другой уже переименовал
+  её в <code>g()</code>. Вводим выбор <strong>shared vs private context</strong> + синхронизацию; для кода — <strong>изоляцию</strong> (git
+  worktree), чтобы не было <strong>silent overwrite</strong> (два агента стёрли правки друг друга).</li>
+<li><strong>«Агенты дали противоречивые решения».</strong> Вводим <strong>conflict resolution</strong> (не молчаливый overwrite —
+  урок 7!): арбитр, голосование, или приоритет по trust/score. Сложное — на человека (урок 12).</li>
+<li><strong>«Агенты от разных вендоров не понимают друг друга».</strong> Вводим <strong>inter-agent протоколы</strong> — §2.2.</li>
+</ul>
+<h4>2.2 MCP vs A2A: вертикаль и горизонталь (не путать)</h4>
+<p>Это центральный и самый путаемый пункт. Два протокола, <strong>разные оси</strong>, <strong>дополняют</strong> друг друга:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><strong>MCP (Model Context Protocol)</strong></th>
+<th><strong>A2A (Agent2Agent)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ось</td>
+<td><strong>вертикаль</strong>: агент ↔ инструмент/данные</td>
+<td><strong>горизонталь</strong>: агент ↔ агент</td>
+</tr>
+<tr>
+<td>Кто</td>
+<td>Anthropic (2024), modelcontextprotocol.io</td>
+<td>Google → Linux Foundation, v1.0 2026, 150+ орг</td>
+</tr>
+<tr>
+<td>Задача</td>
+<td>подключить агента к tools/БД/сервисам (JSON-схемы tool-вызовов)</td>
+<td>обнаружение, делегирование, обмен между агентами</td>
+</tr>
+<tr>
+<td>Ключевой артефакт</td>
+<td>tool schema (урок 5)</td>
+<td><strong>AgentCard</strong> (визитка агента: name, url, capabilities), <strong>Signed Agent Cards</strong> (крипто-идентичность)</td>
+</tr>
+</tbody>
+</table>
+<p>Аналогия: <strong>MCP — как агент берёт инструмент в руку; A2A — как два агента жмут руки</strong>. Они не конкурируют:
+агент использует MCP, чтобы дотянуться до своих инструментов, и A2A, чтобы делегировать задачу другому
+агенту. Путать их (что GPT делает часто) — значит не понимать архитектуру сети агентов.</p>
+<p>MCP и A2A — два доминирующих, но <strong>ландшафт фрагментируется</strong>: есть ещё ACP (IBM/BeeAI), ANP и др.;
+систематизация — «A Survey of AI Agent Protocols» (Yang et al., 2504.16736). Тренд к стандартизации идёт, но
+не устаканился.</p>
+<h4>2.3 Новая проблема: мультиагент расширяет threat model (мост к уроку 10)</h4>
+<p>Каждый новый агент — новая поверхность атаки. <strong>Rogue agent</strong> (скомпрометированный агент заражает соседей
+через shared context/сообщения), перехват протокола, каскадное распространение poisoning (урок 7). Поэтому
+<strong>Rule of Two (урок 10) применяется к КАЖДОМУ субагенту</strong>, а доверие между агентами — через Signed Agent
+Cards. Мультиагентность не отменяет безопасность — она её умножает.</p>
+<h4>2.4 Новая проблема (мост к §3): протоколы незрелы, польза спорна</h4>
+<p>MCP/A2A — 2024–2026, без долгих полевых испытаний; реализации расходятся. И фундаментально: «мультиагент vs
+один агент + tools» не решён (Gartner 40% отмен). Это §3.</p>
+<hr />
+<h3>3. Карта решений: сколько агентов и как они говорят</h3>
+<table>
+<thead>
+<tr>
+<th>Ось</th>
+<th>Варианты</th>
+<th>Когда</th>
+<th>Цена</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Кол-во</strong></td>
+<td>single-agent+tools vs multi-agent</td>
+<td>один: линейные/короткие; много: параллельная широта, разделение безопасности</td>
+<td>каждый переход = промпт + латентность + токены (15×)</td>
+</tr>
+<tr>
+<td><strong>Паттерн</strong></td>
+<td>sequential / parallel / hierarchical (CIV) / dynamic</td>
+<td>pipeline предсказуем; parallel быстр; hierarchical контролируем; dynamic гибок</td>
+<td>координатор = единая точка отказа; parallel без синхр. → конфликты</td>
+</tr>
+<tr>
+<td><strong>Контекст</strong></td>
+<td>shared vs private</td>
+<td>shared: общая картина; private: изоляция, нет drift</td>
+<td>shared → context drift, silent overwrite</td>
+</tr>
+<tr>
+<td><strong>Протокол</strong></td>
+<td>MCP (tools) <strong>и</strong> A2A (agents)</td>
+<td>не «или-или»: MCP — вертикаль, A2A — горизонталь</td>
+<td>незрелы (2024–2026), реализации расходятся</td>
+</tr>
+</tbody>
+</table>
+<h4>3.1 Спорные точки (оставляем спорными)</h4>
+<ul>
+<li><strong>Польза мультиагентности vs один агент — настоящий дебат.</strong> <strong>За:</strong> Anthropic «How we built our
+  multi-agent research system» (+90.2% на research, за 15×). <strong>Против:</strong> Cognition «Don't Build Multi-Agents»
+  — дробление контекста между агентами теряет общую картину и плодит рассогласование; для многих задач один
+  агент с дисциплиной контекста надёжнее. Плюс координация — 37% отказов (MAST), 40% проектов отменят
+  (Gartner). Практический синтез (LangChain): начинать с одного агента, вводить мультиагентность только под
+  реальный параллелизм/разделение зон.</li>
+<li><strong>«Больше агентов» вредит.</strong> Накладные (context switching, синхронизация) могут перевесить параллелизм.
+  Для однофайловых/простых задач один LLM лучше CIV.</li>
+<li><strong>Зрелость протоколов.</strong> MCP/A2A молоды, без долгих полевых испытаний, версии и multi-tenancy ещё
+  дорабатываются. Между реализациями интерфейс может расходиться.</li>
+<li><strong>Метрики мультиагентности.</strong> Нет стандарта: критерий успеха локален (верный финал), системных метрик
+  (частота конфликтов, эффективность обмена) в стандарте нет.</li>
+</ul>
+<hr />
+<h3>4. Failure modes мультиагентности</h3>
+<table>
+<thead>
+<tr>
+<th>Отказ</th>
+<th>Механизм</th>
+<th>Противоядие</th>
+<th>Класс MAST</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Дублирование / рой</strong></td>
+<td>нет границ ролей (50 субагентов)</td>
+<td>role boundaries + бюджет (урок 2)</td>
+<td>specification</td>
+</tr>
+<tr>
+<td><strong>Inter-agent misalignment</strong></td>
+<td>не передали критичное, разошлись в цели</td>
+<td>handoff-протокол, shared-context дисциплина</td>
+<td><strong>inter-agent (37%)</strong></td>
+</tr>
+<tr>
+<td><strong>Context drift</strong></td>
+<td>один агент не знает об изменениях другого</td>
+<td>синхронизация / private context</td>
+<td>inter-agent</td>
+</tr>
+<tr>
+<td><strong>Silent overwrite</strong></td>
+<td>два агента стёрли правки друг друга</td>
+<td>изоляция (git worktree)</td>
+<td>inter-agent</td>
+</tr>
+<tr>
+<td><strong>Decision conflict</strong></td>
+<td>противоречивые решения молча перезаписаны</td>
+<td>арбитр/голосование, НЕ overwrite (урок 7)</td>
+<td>inter-agent</td>
+</tr>
+<tr>
+<td><strong>Rogue agent</strong></td>
+<td>скомпрометированный агент заражает соседей</td>
+<td>Rule of Two на субагента + Signed Agent Cards (урок 10)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>Cold-open: мультиагент-выигрыш (+90.2%) <strong>и</strong> доминирование inter-agent отказов (37%) — две стороны одного
+профиля.</p>
+<hr />
+<h3>5. Вклад в reference-spine: multi-agent контракт</h3>
+<p>Router/orchestrator (урок 2) обобщается на координацию сети агентов; добавляются роли, handoff, протоколы,
+trust-границы.</p>
+<pre><code class="language-python">@dataclass
+class AgentCard:                 # A2A: визитка для обнаружения/делегирования
+    name: str; url: str
+    capabilities: list[str]
+    signature: str               # Signed Agent Card: крипто-идентичность (доверие, урок 10)
+
+@dataclass
+class Handoff:
+    from_agent: str; to_agent: str
+    task: Task                   # урок 3
+    context_mode: str            # shared | private (анти context-drift)
+
+class Coordinator(Protocol):     # CIV: Coordinator–Implementor–Verifier
+    def should_spawn_multiagent(self, task) -&gt; bool:
+        ...  # ИНВАРИАНТ: True только если параллелизуемо/разные зоны безопасности
+             # иначе single-agent (анти-рой, cold-open) — мультиагент стоит ~15× токенов
+    def assign_roles(self, task) -&gt; list[&quot;RoleBinding&quot;]:
+        ...  # role boundaries: непересекающиеся зоны (анти-дублирование)
+    def handoff(self, h: Handoff) -&gt; None:
+        ...  # передача контекста; private по умолчанию для изоляции
+    def resolve_conflict(self, decisions) -&gt; &quot;Resolution&quot;:
+        ...  # арбитр/голосование/trust-приоритет — НЕ молчаливый overwrite (урок 7)
+
+# Протоколы (НЕ путать оси):
+#   MCP  — вертикаль: как агент дотягивается до tools (урок 5 tool_registry)
+#   A2A  — горизонталь: как агенты находят/делегируют друг другу (AgentCard, Signed Cards)
+
+class SubAgentSecurity(Protocol):
+    def check(self, sub_agent) -&gt; bool:
+        ...  # Rule of Two (урок 10) на КАЖДОГО субагента; доверие — через Signed Agent Card
+</code></pre>
+<p><strong>Контракт для следующих этапов:</strong> HITL (урок 12) — канал для conflict-эскалации и approval; экономика
+(урок 13) считает 15× стоимость мультиагента в unit-экономику; security (урок 10) распространяется на
+межагентные границы. Cold-open = мультиагент без проверки <code>should_spawn</code> (рой) и без role boundaries
+(дублирование, 37% inter-agent отказов).</p>
+<hr />
+<h3>6. Pset 11 — координатор с границами ролей, изоляцией и Rule of Two</h3>
+<p><strong>Задача.</strong> Реализовать координатор, который (а) не плодит агентов на простой задаче; (б) задаёт
+непересекающиеся роли; (в) изолирует контекст (анти silent-overwrite); (г) разрешает конфликт без overwrite;
+(д) применяет Rule of Two к субагентам.</p>
+<p><strong>Скелет</strong> (<code>coordinator.py</code>):</p>
+<pre><code class="language-python">def should_spawn_multiagent(task) -&gt; bool:
+    # мультиагент стоит ~15× токенов (Anthropic) — оправдан только при параллелизме/разделении
+    return task.is_parallelizable or task.needs_security_separation
+
+def assign_roles(task):
+    roles = decompose(task)                       # CIV: coordinator/implementor/verifier
+    assert no_overlap(roles)                      # role boundaries (анти-дублирование)
+    return roles
+
+def run(task):
+    if not should_spawn_multiagent(task):
+        return single_agent.run(task)             # дефолт: один агент (анти-рой)
+    bindings = assign_roles(task)
+    for b in bindings:
+        assert rule_of_two_ok(b.agent.caps)       # урок 10 на каждого субагента
+    results = parallel_run(bindings, context_mode=&quot;private&quot;)   # изоляция (анти overwrite/drift)
+    return resolve_conflict(collect(results))
+
+def resolve_conflict(decisions):
+    if consistent(decisions): return merge(decisions)
+    return arbiter(decisions)                     # trust-приоритет/голосование, НЕ overwrite (урок 7)
+</code></pre>
+<p><strong>Тесты:</strong></p>
+<pre><code class="language-python">def test_simple_task_uses_single_agent():
+    assert should_spawn_multiagent(simple_faq_task) is False     # анти-рой (cold-open)
+
+def test_parallelizable_task_spawns_multi():
+    assert should_spawn_multiagent(broad_research_task) is True
+
+def test_roles_do_not_overlap():
+    roles = assign_roles(task)
+    assert no_overlap(roles)                                     # анти-дублирование (50 субагентов)
+
+def test_private_context_prevents_silent_overwrite():
+    out = run(two_agents_editing_same_file)
+    assert out.no_lost_edits                                     # изоляция (git worktree)
+
+def test_conflict_not_silently_overwritten():
+    res = resolve_conflict([decision_A_high_trust, decision_B_low_trust])
+    assert res.method in (&quot;arbiter&quot;, &quot;vote&quot;, &quot;trust_priority&quot;)   # не overwrite (урок 7)
+
+def test_subagent_obeys_rule_of_two():
+    sub = SubAgent(caps=all_three_capabilities())                # урок 10
+    assert not passes_security(sub)                              # rogue-профиль блокируется
+</code></pre>
+<p><strong>Эталон.</strong> Главные мысли: (1) <code>test_simple_task_uses_single_agent</code> — дефолт один агент, мультиагент только
+по необходимости (cold-open «рой» + 15× стоимость); (2) role boundaries против дублирования; (3) private
+context против silent overwrite/drift; (4) конфликт — арбитром, не overwrite (урок 7); (5) Rule of Two на
+каждого субагента (урок 10) — мультиагентность не отменяет безопасность.</p>
+<p><strong>Расширение.</strong> Добавь A2A-слой: <code>AgentCard</code> с подписью; делегирование задачи внешнему агенту проходит, только
+если его Signed Agent Card валиден (доверительная граница). Покажи тестом, что неподписанный агент в
+делегирование не допускается (анти rogue-agent).</p>
+<hr />
+<h3>7. Диагностические вопросы (проверяют суждение)</h3>
+<ol>
+<li>PM требует «сделать мультиагентную систему, это современнее». По §1 (Gartner, MAST, 15×) — какие три
+   вопроса зададут, прежде чем плодить агентов? Когда честный ответ — «хватит одного агента с ролями»?</li>
+<li>Коллега говорит: «используем A2A, чтобы агент дотянулся до базы данных». Что не так с этой фразой
+   (§2.2)? Какой протокол для чего?</li>
+<li>Два агента параллельно правят один файл, и правки одного исчезли. Какой failure mode (§4) и какие два
+   механизма (§2.1, §5) это предотвращают?</li>
+<li>Мультиагент дал +90.2% у Anthropic, но 37% отказов MAS — координация. Как примирить эти факты —
+   когда разделение труда окупается, а когда вносит больше отказов, чем пользы (§3.1)?</li>
+<li>Вы добавили субагента, читающего внешние письма и имеющего доступ к внутренней БД и почте. Почему это
+   нарушает Rule of Two (урок 10) на уровне субагента и чем грозит в мультиагентной сети (rogue)?</li>
+<li><strong>Open question</strong> (§3.1): предложи метрику, отвечающую «окупилась ли мультиагентность на этой задаче»
+   (учти качество, токены, частоту конфликтов). Чем её можно заиграть?</li>
+</ol>
+<hr />
+<h3>8. Глоссарий-дельта</h3>
+<ul>
+<li><strong>Multi-agent vs single-agent</strong> — сеть специализированных агентов vs один агент с инструментами. Дефолт —
+  один; мультиагент при параллелизме/разделении зон.</li>
+<li><strong>MCP (Model Context Protocol)</strong> — <strong>вертикаль</strong>: агент↔инструмент/данные (Anthropic, 2024). Не путать с A2A.</li>
+<li><strong>A2A (Agent2Agent)</strong> — <strong>горизонталь</strong>: агент↔агент (Google→Linux Foundation, v1.0 2026, 150+ орг).
+  Обнаружение, делегирование, обмен.</li>
+<li><strong>AgentCard / Signed Agent Card</strong> — JSON-визитка агента (name/url/capabilities) / её крипто-подписанная
+  версия для доверия (A2A).</li>
+<li><strong>CIV (Coordinator–Implementor–Verifier)</strong> — ролевой паттерн: декомпозиция / исполнение / проверка.</li>
+<li><strong>Role boundaries</strong> — непересекающиеся зоны ответственности; против дублирования (рой).</li>
+<li><strong>Handoff / delegation</strong> — передача задачи/контекста между агентами.</li>
+<li><strong>Shared vs private context</strong> — общий пул vs изоляция; shared → context drift / silent overwrite.</li>
+<li><strong>Context drift</strong> — рассинхрон представлений агентов (один не знает об изменениях другого).</li>
+<li><strong>Silent overwrite</strong> — параллельные правки стирают друг друга (лечится изоляцией, git worktree).</li>
+<li><strong>Rogue agent</strong> — скомпрометированный агент заражает сеть; противоядие — Rule of Two + Signed Cards (урок 10).</li>
+<li><strong>Arbiter / consensus</strong> — разрешение конфликта решений (голосование/trust-приоритет), не overwrite (урок 7).</li>
+</ul>
+<hr />
+<h3>9. Первоисточники (верифицированы 2026-06-23)</h3>
+<ol>
+<li><strong>A2A (Agent2Agent) Protocol</strong> — Linux Foundation: v1.0 (2026), 150+ организаций, Signed Agent Cards,
+   web-aligned. <a href="https://www.linuxfoundation.org/press/a2a-protocol-surpasses-150-organizations-lands-in-major-cloud-platforms-and-sees-enterprise-production-use-in-first-year" target="_blank" rel="noopener">https://www.linuxfoundation.org/press/a2a-protocol-surpasses-150-organizations-lands-in-major-cloud-platforms-and-sees-enterprise-production-use-in-first-year</a>
+   · спека/код: <a href="https://github.com/a2aproject/A2A" target="_blank" rel="noopener">https://github.com/a2aproject/A2A</a> · a2a-protocol.org — горизонталь агент↔агент.</li>
+<li><strong>Model Context Protocol (MCP)</strong> — Anthropic (2024). <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">https://modelcontextprotocol.io</a> — вертикаль
+   агент↔инструмент/данные.</li>
+<li><strong>Anthropic — «How we built our multi-agent research system»</strong> (2025).
+   <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank" rel="noopener">https://www.anthropic.com/engineering/multi-agent-research-system</a> — +90.2% над одиночным, ≈15× токенов,
+   провал «50 субагентов».</li>
+<li><strong>Cemri, Pan et al. — «Why Do Multi-Agent LLM Systems Fail?» (MAST)</strong>, arXiv 2503.13657 (2025).
+   <a href="https://arxiv.org/abs/2503.13657" target="_blank" rel="noopener">https://arxiv.org/abs/2503.13657</a> — 37% отказов MAS = inter-agent misalignment.</li>
+<li><strong>Tran, Dao et al. — «Multi-Agent Collaboration Mechanisms: A Survey of LLMs»</strong>, arXiv 2501.06322 (2025).
+   <a href="https://arxiv.org/abs/2501.06322" target="_blank" rel="noopener">https://arxiv.org/abs/2501.06322</a> — таксономия паттернов координации (centralized/decentralized,
+   role-based). <em>(Досье ошибочно приписало «Galileo AI» — это академический survey, Tran et al.)</em></li>
+<li><strong>Gartner — «Over 40% of Agentic AI Projects Will Be Canceled by End of 2027»</strong> (2025-06-25).
+   <a href="https://www.gartner.com/en/newsroom/press-releases/2025-06-25-gartner-predicts-over-40-percent-of-agentic-ai-projects-will-be-canceled-by-end-of-2027" target="_blank" rel="noopener">https://www.gartner.com/en/newsroom/press-releases/2025-06-25-gartner-predicts-over-40-percent-of-agentic-ai-projects-will-be-canceled-by-end-of-2027</a>
+   — бизнес-контекст: стоимость/ценность/риски.</li>
+<li><strong>Cognition — «Don't Build Multi-Agents»</strong> (2025). <a href="https://cognition.ai/blog/dont-build-multi-agents" target="_blank" rel="noopener">https://cognition.ai/blog/dont-build-multi-agents</a> —
+   архитектурный скептик (контекст-фрагментация) напротив Anthropic (§3.1).</li>
+<li><strong>Yang et al. — «A Survey of AI Agent Protocols»</strong>, arXiv 2504.16736 (SJTU, 2025).
+   <a href="https://arxiv.org/abs/2504.16736" target="_blank" rel="noopener">https://arxiv.org/abs/2504.16736</a> — ландшафт MCP/A2A/ACP/ANP (§2.2).</li>
+<li><strong>Microsoft — «Magentic-One: A Generalist Multi-Agent System»</strong>, arXiv 2411.04468 + multiagent debate
+   (Du et al.). <a href="https://arxiv.org/abs/2411.04468" target="_blank" rel="noopener">https://arxiv.org/abs/2411.04468</a> — конкретная CIV-система / паттерн debate (§2.1).</li>
+</ol>
+<blockquote class="quarantine">
+<p><strong>Карантин:</strong> «200мс→4с латентность» — 4-й рецидив фабрикации (уроки 1, 3); «41–86.7% отказов / 1642
+прогона» — рецидив из этапа 3 (заменён верифицированным MAST 37%); «42.68% vs 2.92%» — не сверено (взят
+Anthropic +90.2%); «79% используют / 96% расширяют» — агрегат без источника. <strong>Правки:</strong> survey —
+Tran et al. (НЕ Galileo); EchoLeak в досье описан неверно («голосовое/Echo API») — он email-based
+(уроки 5/10), беру корректное описание. <strong>Не сверено, упомянуто осторожно:</strong> VeriMAP (EACL 2026), CIV
+(AugmentCode) — как [формирующиеся] паттерны, без жёстких заявлений о результатах.</p>
+</blockquote>
+<hr />
+<p><em>Плотность — целевая. Усиленный этап, длинный закономерно. Cold-open — двойственность мультиагентности на
+верифицированных числах (Anthropic +90.2% / 15×, MAST 37%, Gartner 40% отмен): инструмент с резко
+нелинейным профилем, дефолт — один агент. Центральный пункт §2.2 — MCP (вертикаль) vs A2A (горизонталь),
+поданный как «не путать», что снимает главный риск этого этапа. Spine обобщил координацию (роли, handoff,
+протоколы, Rule of Two на субагентов); pset кодирует «не плодить агентов зря» + изоляцию + conflict без
+overwrite. Gate подтвердил протоколы (направление верное!) и срезал 4-й рецидив «200мс→4с» и рецидив
+«1642 прогона».</em></p>
+    </div>
+    <nav class="pager">
+      <a class="pg-prev" href="lesson-10.html"><span class="pk">← Урок 10</span>Безопасность: injection, threat model</a>
+      <a class="pg-next" href="lesson-12.html"><span class="pk">Урок 12 →</span>Human-in-the-loop и operating model</a>
+    </nav>
+    <footer id="footer">
+      <p>Дизайн-язык адаптирован из <a href="https://github.com/ThariqS/html-effectiveness"
+        target="_blank" rel="noopener">html-effectiveness</a> (Apache-2.0). Актуально на 2026-06-23.</p>
+    </footer>
+  </main>
+</div>
+<script>
+// keep the active lesson visible in the sticky sidebar on load
+var act=document.querySelector('.sidebar nav a.active');
+if(act && act.scrollIntoView){ act.scrollIntoView({block:'center'}); }
+</script>
+</body>
+</html>

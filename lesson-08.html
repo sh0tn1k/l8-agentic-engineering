@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Урок 08. Retrieval: RAG, hybrid, GraphRAG — L8+ Agentic Engineering</title>
+<!-- Design language adapted from ThariqS/html-effectiveness (Apache-2.0, (c) Anthropic PBC). -->
+<style>
+:root{
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413; --clay:#D97757; --clay-d:#B85C3E;
+  --oat:#E3DACC; --olive:#788C5D; --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5;
+  --g500:#87867F; --g700:#3D3D3A;
+  --serif:ui-serif,Georgia,"Times New Roman",Times,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Monaco,Consolas,monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--ivory);color:var(--slate);font-family:var(--sans);
+  line-height:1.6;-webkit-font-smoothing:antialiased;font-size:16.5px;}
+
+a{color:var(--clay-d);text-decoration-color:var(--oat);text-underline-offset:3px;}
+a:hover{text-decoration-color:var(--clay);}
+
+/* layout shell: sticky sidebar + reading column */
+.shell{max-width:1180px;margin:0 auto;padding:0 28px;display:grid;
+  grid-template-columns:236px minmax(0,1fr);gap:48px;align-items:start;}
+@media(max-width:900px){.shell{grid-template-columns:1fr;gap:0;padding:0 20px;}}
+
+/* sidebar */
+.sidebar{position:sticky;top:0;max-height:100vh;overflow-y:auto;padding:34px 0 40px;}
+@media(max-width:900px){.sidebar{position:static;max-height:none;border-bottom:1.5px solid var(--g300);
+  margin-bottom:8px;padding-bottom:18px;}}
+.side-brand{font-family:var(--serif);font-size:19px;font-weight:600;letter-spacing:-.01em;margin-bottom:2px;}
+.side-brand em{font-style:italic;color:var(--clay);}
+.side-sub{font-family:var(--mono);font-size:10.5px;color:var(--g500);text-transform:uppercase;
+  letter-spacing:.1em;margin-bottom:20px;}
+.sidebar nav{display:flex;flex-direction:column;gap:1px;}
+.sidebar nav a{display:flex;gap:9px;align-items:baseline;text-decoration:none;color:var(--g700);
+  font-size:13px;line-height:1.35;padding:5px 9px;border-radius:7px;border-left:2px solid transparent;}
+.sidebar nav a .n{font-family:var(--mono);font-size:10px;color:var(--g500);min-width:16px;}
+.sidebar nav a:hover{background:var(--g100);color:var(--slate);}
+.sidebar nav a.active{background:var(--paper);border-left-color:var(--clay);color:var(--slate);
+  box-shadow:0 1px 0 var(--g200);}
+.sidebar nav a.active .n{color:var(--clay);}
+.sidebar nav a.lead{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--g500);margin-top:14px;padding-bottom:2px;pointer-events:none;}
+
+/* main reading column */
+main{max-width:840px;padding:0 0 140px;min-width:0;}
+
+/* masthead */
+header.masthead{padding:54px 0 34px;border-bottom:1.5px solid var(--g300);margin-bottom:8px;}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--g500);margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+.eyebrow::before{content:"";width:24px;height:1.5px;background:var(--clay);}
+h1.title{font-family:var(--serif);font-weight:500;font-size:clamp(36px,5vw,58px);line-height:1.07;
+  letter-spacing:-.018em;margin:0 0 6px;max-width:18ch;}
+h1.title em{font-style:italic;color:var(--clay);}
+.lede{font-size:17px;color:var(--g700);margin:20px 0 0;max-width:640px;}
+.disclaimer{margin:22px 0 0;padding:14px 18px;background:var(--g100);border-radius:12px;
+  border:1.5px solid var(--g200);font-size:13.5px;color:var(--g700);max-width:660px;}
+.disclaimer b{color:var(--slate);}
+
+/* feature panel (spine) */
+.panel{margin:40px 0 0;background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;
+  padding:26px 28px;scroll-margin-top:16px;}
+.panel h2,.howto h2{font-family:var(--serif);font-weight:500;font-size:25px;margin:0 0 4px;letter-spacing:-.01em;}
+.panel .sub{color:var(--g700);font-size:14px;margin:0 0 18px;}
+.flow{font-family:var(--mono);font-size:12.5px;line-height:1.7;background:var(--g100);border-radius:10px;
+  padding:14px 16px;overflow-x:auto;color:var(--g700);white-space:pre-wrap;border:1px solid var(--g200);}
+ol.inv{margin:18px 0 0;padding-left:0;counter-reset:inv;list-style:none;display:grid;gap:7px;}
+ol.inv li{position:relative;padding-left:30px;font-size:14px;color:var(--g700);}
+ol.inv li::before{counter-increment:inv;content:counter(inv);position:absolute;left:0;top:0;
+  font-family:var(--mono);font-size:11px;color:var(--clay);font-weight:600;
+  border:1.5px solid var(--oat);border-radius:6px;width:21px;height:21px;display:flex;
+  align-items:center;justify-content:center;}
+ol.inv li b{color:var(--slate);font-weight:600;}
+
+.howto{margin:34px 0 0;scroll-margin-top:16px;}
+.howto ul{margin:10px 0 0;padding-left:20px;}
+.howto li{margin:6px 0;color:var(--g700);font-size:14.5px;}
+
+.section-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--g500);margin:64px 0 6px;display:flex;align-items:center;gap:10px;}
+.section-label::before{content:"";width:20px;height:1.5px;background:var(--clay);}
+
+/* lessons / accordion */
+section.lesson{margin-top:18px;scroll-margin-top:14px;}
+details.les{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;overflow:hidden;
+  transition:border-color 150ms,box-shadow 150ms;}
+details.les[open]{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);}
+details.les summary{list-style:none;cursor:pointer;padding:20px 22px;display:block;}
+details.les summary::-webkit-details-marker{display:none;}
+.sec-head{display:flex;align-items:baseline;gap:14px;}
+.sec-head .idx{font-family:var(--mono);font-size:13px;color:var(--clay);font-weight:600;min-width:26px;}
+.sec-head h2{font-family:var(--serif);font-weight:500;font-size:23px;margin:0;letter-spacing:-.01em;flex:1;}
+.tagline{color:var(--g700);font-size:14px;margin:3px 0 0 40px;}
+.card-meta{margin:13px 0 0 40px;display:grid;gap:5px;}
+.meta-item{font-size:13px;color:var(--g700);}
+.meta-item .k{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--g500);margin-right:8px;}
+.expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(--mono);font-size:11px;
+  color:var(--clay);}
+details.les[open] .expand-hint{display:none;}
+
+/* maturity badges */
+.badge{font-family:var(--mono);font-size:10.5px;padding:3px 9px;border-radius:999px;white-space:nowrap;
+  border:1.5px solid var(--g300);color:var(--g700);align-self:flex-start;}
+.badge.b-core{background:#EEF1E9;border-color:#C3D1AE;color:#3f5430;}
+.badge.b-emerging{background:#FBEDE6;border-color:#EBC3AE;color:var(--clay-d);}
+.badge.b-disputed{background:#FAF3E2;border-color:#E6D08C;color:#8a6d1f;}
+.badge.b-hype{background:#FBE9E6;border-color:#E9B4A8;color:#a23b28;}
+.badge.b-special{background:#ECEAF3;border-color:#C7C0DE;color:#4b4080;}
+
+/* lesson body (rendered markdown) */
+.lesson-body{padding:4px 26px 28px;border-top:1px solid var(--g100);}
+.lesson-body .status{font-size:13px;color:var(--g700);background:var(--g100);border-radius:10px;
+  padding:12px 15px;margin:18px 0 8px;border:1px solid var(--g200);}
+.lesson-body h3{font-family:var(--serif);font-weight:600;font-size:21px;margin:32px 0 8px;letter-spacing:-.008em;}
+.lesson-body h4{font-family:var(--serif);font-weight:600;font-size:17px;margin:22px 0 6px;color:var(--g700);}
+.lesson-body h5{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--g500);margin:18px 0 6px;}
+.lesson-body p{margin:11px 0;}
+.lesson-body ul,.lesson-body ol{margin:11px 0;padding-left:22px;}
+.lesson-body li{margin:5px 0;}
+.lesson-body code{font-family:var(--mono);font-size:.86em;background:var(--g100);padding:1.5px 5px;
+  border-radius:5px;border:1px solid var(--g200);}
+.lesson-body pre{background:#2b2a27;color:#eceae3;border-radius:12px;padding:16px 18px;overflow-x:auto;
+  font-size:12.7px;line-height:1.5;margin:14px 0;}
+.lesson-body pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit;}
+.lesson-body blockquote{margin:14px 0;padding:12px 18px;border-left:3px solid var(--clay);
+  background:var(--paper);border-radius:0 10px 10px 0;color:var(--g700);}
+.lesson-body blockquote.quarantine{border-left-color:#c98a2e;background:#FAF3E2;}
+.lesson-body table{border-collapse:collapse;width:100%;margin:16px 0;font-size:13px;display:block;
+  overflow-x:auto;}
+.lesson-body th,.lesson-body td{border:1px solid var(--g300);padding:7px 10px;text-align:left;
+  vertical-align:top;}
+.lesson-body th{background:var(--g100);font-weight:600;font-family:var(--sans);}
+.lesson-body tr:nth-child(even) td{background:#fcfbf8;}
+.lesson-body hr{border:none;border-top:1.5px solid var(--g200);margin:26px 0;}
+.lesson-body a{word-break:break-word;}
+.lesson-body em{color:var(--g700);}
+
+/* footer */
+footer{margin:80px 0 0;border-top:1.5px solid var(--g300);padding-top:30px;font-size:13px;
+  color:var(--g500);scroll-margin-top:16px;}
+footer .k{font-family:var(--serif);font-style:italic;color:var(--g700);font-size:15px;}
+footer p{margin:8px 0;max-width:680px;}
+
+.toolbar{display:flex;gap:10px;margin:22px 0 0 40px;}
+.toolbar button{font-family:var(--mono);font-size:11px;background:var(--paper);border:1.5px solid var(--g300);
+  color:var(--g700);border-radius:999px;padding:6px 13px;cursor:pointer;}
+.toolbar button:hover{border-color:var(--slate);color:var(--slate);}
+
+/* ---- multipage: lesson cards on index + lesson pages ---- */
+.side-brand-link{text-decoration:none;color:inherit;display:block;}
+.lcards{display:grid;gap:14px;margin-top:18px;}
+a.lcard{display:block;text-decoration:none;color:inherit;background:var(--paper);border:1.5px solid var(--g300);
+  border-radius:14px;padding:20px 22px;transition:border-color .15s,box-shadow .15s,transform .15s;}
+a.lcard:hover{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);transform:translateY(-1px);}
+a.lcard .sec-head h2{color:var(--slate);}
+a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(--mono);font-size:11px;color:var(--clay);}
+.crumb{margin:30px 0 2px;}
+.crumb a{font-family:var(--mono);font-size:12px;color:var(--g500);text-decoration:none;}
+.crumb a:hover{color:var(--clay-d);}
+.lesson-head{padding:12px 0 24px;border-bottom:1.5px solid var(--g300);margin-bottom:4px;}
+.lesson-head .eyebrow{margin-bottom:13px;}
+.lesson-head h1.title{font-size:clamp(29px,4vw,44px);max-width:22ch;margin:0;}
+.lesson-head .lede{margin-top:13px;}
+.pager{display:flex;justify-content:space-between;align-items:stretch;gap:14px;margin:54px 0 0;
+  border-top:1.5px solid var(--g300);padding-top:22px;}
+.pager a{text-decoration:none;color:var(--g700);font-size:13.5px;border:1.5px solid var(--g300);border-radius:11px;
+  padding:11px 15px;max-width:49%;transition:.15s;line-height:1.4;}
+.pager a:hover{border-color:var(--slate);color:var(--slate);}
+.pager a .pk{font-family:var(--mono);font-size:10px;color:var(--g500);display:block;margin-bottom:2px;}
+.pager .pg-next{margin-left:auto;text-align:right;}
+.sidebar nav a.active{background:var(--paper);border-left-color:var(--clay);color:var(--slate);box-shadow:0 1px 0 var(--g200);}
+.sidebar nav a.active .n{color:var(--clay);}
+
+/* ---- interactive course widgets (.cw) ---- */
+.cw{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;margin:28px 0;overflow:hidden;}
+.cw-head{display:flex;align-items:center;gap:10px;padding:13px 20px;border-bottom:1px solid var(--g200);background:var(--g100);}
+.cw-head .tag{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--clay);
+  border:1.5px solid var(--oat);border-radius:999px;padding:2px 9px;}
+.cw-head .ttl{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--slate);}
+.cw-body{padding:18px 20px;display:flex;flex-direction:column;gap:15px;}
+.cw-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+.cw-grid{display:grid;gap:10px;}
+.cw .lbl{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--g500);margin-bottom:7px;}
+.cw .metric{background:var(--g100);border:1px solid var(--g200);border-radius:10px;padding:9px 13px;}
+.cw .metric .mk{font-size:12px;color:var(--g500);}
+.cw .metric .mv{font-size:21px;font-weight:600;font-family:var(--serif);color:var(--slate);line-height:1.2;}
+.cw button{font-family:var(--sans);cursor:pointer;border-radius:8px;border:1.5px solid var(--g300);background:var(--paper);
+  color:var(--g700);font-size:13px;padding:7px 12px;transition:.12s;line-height:1.3;}
+.cw button:hover{border-color:var(--slate);color:var(--slate);}
+.cw .act{background:var(--clay);border-color:var(--clay);color:#fff;font-weight:600;}
+.cw .act:hover{background:var(--clay-d);border-color:var(--clay-d);color:#fff;}
+.cw .chip{font-family:var(--mono);font-size:11px;padding:5px 10px;border-radius:999px;}
+.cw .chip.sel{background:var(--slate);border-color:var(--slate);color:var(--ivory);}
+.cw .tog{display:flex;align-items:center;gap:8px;text-align:left;}
+.cw .tog.on-bad{background:#FBE9E6;border-color:#E9B4A8;color:#a23b28;}
+.cw .tog.on-good{background:#EEF1E9;border-color:#C3D1AE;color:#3f5430;}
+.cw input[type=range]{width:100%;accent-color:var(--clay);margin:2px 0;}
+.cw .slabel{display:flex;justify-content:space-between;font-size:12.5px;color:var(--g700);margin-bottom:2px;}
+.cw .slabel b{font-weight:600;color:var(--slate);}
+.cw .bar{display:flex;height:40px;border-radius:9px;overflow:hidden;border:1px solid var(--g300);}
+.cw .seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;overflow:hidden;
+  white-space:nowrap;border-right:1px solid var(--paper);}
+.cw .seg.c{background:#EEF1E9;color:#3f5430;}
+.cw .seg.u{background:#FAF3E2;color:#8a6d1f;}
+.cw .trace{display:flex;flex-direction:column;gap:6px;}
+.cw .trow{border-left:3px solid var(--g300);background:var(--g100);border-radius:0 8px 8px 0;padding:7px 12px;
+  font-family:var(--mono);font-size:12.5px;}
+.cw .trow .th{font-weight:600;color:var(--slate);}
+.cw .trow .tb{color:var(--g700);white-space:pre-wrap;word-break:break-word;margin-top:2px;}
+.cw .t-obs{border-color:var(--olive);}
+.cw .t-think{border-color:#c98a2e;}
+.cw .t-act{border-color:var(--g500);}
+.cw .t-block{border-color:#6f9152;}
+.cw .t-leak{border-color:var(--clay-d);}
+.cw .verdict{border-radius:10px;padding:12px 15px;font-size:14px;}
+.cw .v-safe{background:#EEF1E9;color:#3f5430;border:1px solid #C3D1AE;}
+.cw .v-leak{background:#FBE9E6;color:#a23b28;border:1px solid #E9B4A8;}
+.cw .verdict .vt{font-weight:700;}
+.cw .verdict .vd{margin-top:3px;line-height:1.5;}
+.cw .note{font-size:11.5px;color:var(--g500);line-height:1.6;}
+.cw .dot{display:inline-block;width:10px;height:10px;border-radius:3px;vertical-align:middle;margin-right:4px;}
+.cw textarea{width:100%;font-family:var(--mono);font-size:12.5px;border:1.5px solid var(--g300);border-radius:8px;
+  padding:8px 10px;background:var(--paper);color:var(--slate);resize:vertical;}
+.cw .runs{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;max-width:420px;}
+.cw .evd{aspect-ratio:1;border-radius:3px;background:var(--g200);}
+.cw .evd.ok{background:#9cbf6e;}
+.cw .evd.no{background:#e0a99c;}
+.cw .mlist{display:flex;flex-direction:column;gap:7px;}
+.cw .mitem{display:flex;align-items:center;gap:10px;border:1px solid var(--g200);border-radius:9px;padding:8px 11px;
+  font-size:13px;background:var(--g100);}
+.cw .mitem .mt{color:var(--slate);}
+.cw .mitem .src{font-family:var(--mono);font-size:10.5px;color:var(--g500);}
+.cw .pill{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:999px;margin-left:auto;white-space:nowrap;}
+.cw .pill.w{background:#EEF1E9;color:#3f5430;}
+.cw .pill.q{background:#FAF3E2;color:#8a6d1f;}
+.cw .pill.r{background:#FBE9E6;color:#a23b28;}
+.cw .stepc{font-family:var(--mono);font-size:11px;color:var(--g500);}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="top">
+    <a class="side-brand-link" href="index.html"><div class="side-brand">L8+ <em>Agentic</em></div></a>
+    <div class="side-sub">актуально 2026-06-23</div>
+    <nav>
+<a href="index.html">▲ Главная</a>
+<a class="lead">Карта</a>
+<a href="index.html#spine"><span class="n">◆</span>Reference-spine</a>
+<a href="index.html#how"><span class="n">?</span>Как читать</a>
+<a class="lead">Уроки</a>
+<a href="lesson-01.html"><span class="n">01</span>Зрелость автономии</a>
+<a href="lesson-02.html"><span class="n">02</span>Примитивы и reference-spine</a>
+<a href="lesson-03.html"><span class="n">03</span>Task lifecycle и durable execution</a>
+<a href="lesson-04.html"><span class="n">04</span>Context engineering</a>
+<a href="lesson-05.html"><span class="n">05</span>Инструменты, права, policy</a>
+<a href="lesson-06.html"><span class="n">06</span>Evals, verifier, trajectory</a>
+<a href="lesson-07.html"><span class="n">07</span>Память и жизненный цикл знания</a>
+<a href="lesson-08.html" class="active"><span class="n">08</span>Retrieval: RAG, hybrid, GraphRAG</a>
+<a href="lesson-09.html"><span class="n">09</span>Observability и воспроизводимость</a>
+<a href="lesson-10.html"><span class="n">10</span>Безопасность: injection, threat model</a>
+<a href="lesson-11.html"><span class="n">11</span>Мультиагентность: MCP / A2A</a>
+<a href="lesson-12.html"><span class="n">12</span>Human-in-the-loop и operating model</a>
+<a href="lesson-13.html"><span class="n">13</span>Экономика и production readiness (capstone)</a>
+<a href="lesson-14.html"><span class="n">14</span>Фронт и горизонт-сканирование</a>
+<a class="lead">Конец</a>
+<a href="index.html#footer"><span class="n">§</span>Метод и источники</a>
+    </nav>
+  </aside>
+
+  <main>
+    <div class="crumb"><a href="index.html">← Все уроки</a></div>
+    <header class="lesson-head">
+      <div class="eyebrow">Урок 08<span class="badge b-emerging" style="margin-left:6px">[устоявшееся] vector; [формирующееся] GraphRAG</span></div>
+      <h1 class="title">Retrieval: RAG, hybrid, GraphRAG</h1>
+      <p class="lede">Доказуемость источника, не похожесть</p>
+      <div class="card-meta">
+        <div class="meta-item"><span class="k">Cold-open</span>Stanford: legal RAG галлюцинирует 17–33%</div>
+        <div class="meta-item"><span class="k">В spine</span>retrieval pipeline + source-grounding</div>
+      </div>
+    </header>
+    <div class="lesson-body">
+      <div class="status"><p><strong>Статус:</strong> актуально на 2026-06-23, пересмотреть до 2026-09.
+Векторный RAG и BM25 — <strong>[устоявшееся]</strong>. Hybrid search — <strong>[формирующееся]</strong>. GraphRAG —
+<strong>[формирующееся/спорное]</strong> (MSR 2024→; ROI обсуждается). Agentic RAG — <strong>[спорное/хайп]</strong>. RAG-метрики и
+security RAG — <strong>[формирующееся]</strong>. Это механизм за <code>memory.retrieve</code> (урок 7); поставляет <code>ContextItem</code>
+с provenance в context-builder (урок 4).</p></div>
+<hr />
+<h3>0. Зачем этот урок</h3>
+<p>Урок 7 объявил, что память умеет <code>retrieve</code>, но не сказал <em>как</em> — и почему это инженерная дисциплина, а не
+«достань похожее». RAG — это и есть <strong>внешняя память</strong> агента: механизм, наполняющий <code>memory.retrieve</code>.
+Этап разбирает, как доставать знание с <strong>источниками, связями и доказательствами</strong>, а не просто текст по
+похожести, — и почему наивный RAG не выполняет своё главное обещание (убрать галлюцинации).</p>
+<p>Две мысли, которые урок должен оставить:</p>
+<blockquote>
+<p><strong>(1)</strong> RAG не «убирает галлюцинации» автоматически — retrieval ломается на каждом этапе (нарезка,
+эмбеддинг, ранжирование, привязка к источнику), и измеренно даже специализированные RAG-системы
+галлюцинируют заметно.
+<strong>(2)</strong> Ценность retrieval — не «нашёл похожий текст», а <strong>source-grounding</strong>: каждое утверждение
+привязано к проверяемому фрагменту-источнику. Без provenance retrieval даёт уверенную ложь.</p>
+</blockquote>
+<hr />
+<h3>1. Cold-open: RAG, который должен был убрать галлюцинации — и не убрал</h3>
+<p>RAG продавали как лекарство от галлюцинаций: «дай модели реальные документы — и она перестанет выдумывать».
+Stanford измерил это в высокоставочном домене (юридический research, Magesh et al., «Assessing the
+Reliability of Leading AI Legal Research Tools»):</p>
+<ul>
+<li><strong>Lexis+ AI — 17%</strong> галлюцинаций, <strong>Westlaw AI-Assisted — 33%</strong>, при базовом <strong>GPT-4 — 43%</strong>.</li>
+</ul>
+<p>То есть специализированный, построенный на RAG юридический инструмент всё ещё ошибается <strong>в 1 из 6 — 1 из 3</strong>
+запросов. RAG снизил, но <strong>не устранил</strong>. Почему? Потому что retrieval ломается на каждом этапе. Конкретные
+задокументированные паттерны:</p>
+<ul>
+<li><strong>Chunk boundary problem</strong>: вопрос про «срок уведомления о расторжении»; нужная секция (Schedule B) попала
+  в <em>другой</em> чанк, который не извлёкся, — модель «догадалась» 30 дней вместо реальных 90.</li>
+<li><strong>Embedding drift</strong>: на вопрос «диагностический порог HbA1c» извлёкся фрагмент про <em>мониторинг</em> (тема
+  близка семантически, но не отвечает на вопрос) — уверенный, но нерелевантный ответ.</li>
+<li><strong>Stale index</strong>: индекс обновлён до дек-2022, вопрос про Basel III в 2024 → вернул устаревший коэффициент,
+  регуляторный риск.</li>
+<li><strong>Citation mismatch</strong>: ответ верен, но <strong>процитирован вторичный/обзорный источник</strong>, а не первоисточник —
+  иллюзия обоснованности (failure mode, описанный в KohakuRAG, arXiv 2603.07612).</li>
+</ul>
+<p>Отсюда тезис урока:</p>
+<blockquote>
+<p>Retrieval — это не «similarity search», а конвейер, который может провалиться на ingestion, chunking,
+embedding, ranking и attribution. Его задача — не «найти похожее», а <strong>обосновать ответ проверяемым
+источником</strong> (source-grounding). Метрика успеха — не «нашёл», а «нашёл <em>то самое</em> и доказал».</p>
+</blockquote>
+<p><em>(Карантин: «citation mismatch 23.6%» — рецидив фабрикованного числа (см. этап 1), не подтверждён; «6% vs
+35% медицинский корпус» — агрегат без источника. §9.)</em></p>
+<hr />
+<h3>2. Деривация: от «достань похожее» к доказуемому retrieval</h3>
+<h4>2.1 Наивно</h4>
+<pre><code class="language-python">chunks = vector_db.search(embed(query), k=5)   # top-5 по похожести
+answer = llm(query + &quot;\n&quot;.join(chunks))         # «вот документы, отвечай»
+</code></pre>
+<p>Это базовый RAG. Cold-open — список его отказов. Идём по этапам конвейера.</p>
+<h4>2.2 Боль → механизм (вывод конвейера RAG)</h4>
+<ul>
+<li><strong>Ingestion/chunking → chunk boundary problem.</strong> Нарезка по фиксированной длине рвёт смысловые единицы.
+  Решения: семантическое разбиение (по границам смысла), <strong>overlap</strong> между чанками, <strong>иерархическая
+  индексация</strong> (документ→раздел→предложение, как KohakuRAG) — чтобы критичная секция не терялась. Самый
+  популярный практический фикс — <strong>Contextual Retrieval</strong> (Anthropic): перед эмбеддингом каждому чанку
+  дописывается короткий контекст из документа (contextual embeddings + contextual BM25) — напрямую лечит и
+  chunk-boundary, и embedding-drift (на бенчмарках −49…67% промахов retrieval).</li>
+<li><strong>Embedding/vector search → embedding drift.</strong> Семантически близкое ≠ отвечающее на вопрос. Generic-
+  эмбеддинги тяготеют к «похожей теме». Решение — см. hybrid.</li>
+<li><strong>«Точные термины теряются».</strong> Чистый вектор пропускает точные совпадения (коды, имена, номера). Вводим
+  <strong>hybrid search</strong>: BM25 (лексика, recall по точным терминам) + вектор (семантика, precision), объединение
+  скоров.</li>
+<li><strong>«Top-k не отсортирован по релевантности».</strong> Вводим <strong>reranking</strong> (Cohere Rerank / BGE Reranker):
+  переоценка кандидатов обученной моделью. Плюс смычка с уроком 4: размещать критичные чанки <strong>к краям</strong>
+  окна (анти lost-in-the-middle), не в середину.</li>
+<li><strong>«Ответ верен, но источник не тот» (citation mismatch).</strong> Вводим <strong>evidence/provenance</strong>: каждый факт
+  привязан к конкретному фрагменту-источнику (id чанка, позиция). Это и есть source-grounding — мост к
+  verifier (урок 6: проверить, что цитата реально поддерживает утверждение).</li>
+<li><strong>«Индекс устарел».</strong> Вводим <strong>инкрементальную индексацию + TTL/versioning + drift-мониторинг</strong> (смычка с
+  decay памяти, урок 7).</li>
+<li><strong>«Вопрос про связи разрозненных фактов» (multi-hop).</strong> Векторный RAG ищет похожие чанки по отдельности и
+  <strong>не видит связей</strong>. Вводим <strong>GraphRAG</strong>: §2.3.</li>
+</ul>
+<h4>2.3 GraphRAG: когда нужны связи, а не похожесть</h4>
+<p>Если вопрос — «кто с кем связан», «какие глобальные темы в корпусе», «multi-hop» — похожесть чанков не
+помогает. <strong>GraphRAG</strong> (Microsoft Research, Larson &amp; Truitt, 2024): LLM извлекает из корпуса <strong>сущности и
+связи</strong>, строит <strong>knowledge graph</strong>, кластеризует в сообщества с пред-суммаризацией; запрос идёт по графу
+(локальный по сущности или глобальный по сообществам). Канонический пример MSR (датасет VIINA): на вопрос
+«что такое Новороссия?» базовый RAG вернул фрагменты <em>без</em> самого термина (провал), а GraphRAG опознал
+сущность, прошёл по связям и вернул обоснованный, привязанный к источнику факт.</p>
+<p><strong>Онтология</strong> задаёт схему графа (типы сущностей {Person, Org, Location, Event}, допустимые предикаты
+{leads, located_in, attacks}) — она же борется с дрейфом терминологии (одно понятие — один узел).
+<strong>Entity resolution</strong> связывает разные упоминания одной сущности в один узел.</p>
+<h4>2.4 Новая проблема (мост к §3 и связи назад)</h4>
+<p>GraphRAG дороже на порядок (entity extraction, кластеризация, граф-БД, Cypher/SPARQL). Оправдан ли выигрыш?
+И отдельно: может, проще закинуть всё в длинный контекст? Урок 4 (Du et al.) уже ответил: <strong>длинный контекст
+не спасает — деградирует от длины даже при идеальном retrieval</strong>. Значит, retrieval нужен, вопрос лишь —
+какой. Это §3.</p>
+<hr />
+<h3>3. Карта решений: какой retrieval под какой запрос</h3>
+<table>
+<thead>
+<tr>
+<th>Подход</th>
+<th>Идея</th>
+<th>Силён на</th>
+<th>Цена</th>
+<th>Зрелость</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Vector RAG</strong></td>
+<td>top-k по эмбеддингам</td>
+<td>явные тематические вопросы</td>
+<td>embedding drift; пропуск точных терминов</td>
+<td>[устоявшееся]</td>
+</tr>
+<tr>
+<td><strong>Hybrid (BM25+vector)</strong></td>
+<td>лексика + семантика</td>
+<td>технические тексты, коды, имена</td>
+<td>настройка весов/слияния скоров</td>
+<td>[формирующееся]</td>
+</tr>
+<tr>
+<td><strong>GraphRAG</strong></td>
+<td>KG: сущности, связи, сообщества</td>
+<td>multi-hop, «кто с кем», глобальные темы корпуса</td>
+<td>дорогое индексирование + граф-БД + навыки Cypher</td>
+<td>[формирующееся/спорное]</td>
+</tr>
+<tr>
+<td><strong>Agentic RAG</strong></td>
+<td>итерации: переписать запрос, искать снова, самокритика</td>
+<td>неоднозначные/составные вопросы</td>
+<td>латентность, нужны стоп-критерии; нестабильно без рамок</td>
+<td>[спорное/хайп]</td>
+</tr>
+<tr>
+<td><strong>Long context</strong></td>
+<td>положить всё в окно</td>
+<td>короткие корпуса</td>
+<td>деградация от длины (урок 4)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Нейтральные данные (верифицированы):</strong> систематическая оценка RAG vs GraphRAG (arXiv 2502.11371) находит,
+что GraphRAG выигрывает на <strong>multi-hop</strong> бенчмарках (HotPotQA, MultiHop-RAG) — порядка единиц–десятков
+пунктов точности; на простых фактологических запросах преимущество нивелируется. Правило: <strong>GraphRAG за свою
+цену оправдан там, где запросы про связи, а не про факт-в-чанке.</strong></p>
+<h4>3.1 Спорные точки (оставляем спорными)</h4>
+<ul>
+<li><strong>GraphRAG ROI vs сложность.</strong> Выигрыш на multi-hop реален, но индексирование дорого. Точку безубыточности
+  считать на своих данных (тип запросов × объём корпуса × частота обновления). Универсального ответа нет.</li>
+<li><strong>Vector-only vs hybrid.</strong> Чистый вектор проще/быстрее; hybrid поднимает recall на точных терминах. Зависит
+  от домена (технический текст → hybrid почти всегда).</li>
+<li><strong>Retrieval vs длинный контекст.</strong> Не «или-или»: длина деградирует (урок 4), но и RAG может не дать модели
+  использовать извлечённое. Граница размыта; нужны метрики сравнения на задаче.</li>
+<li><strong>Метрики retrieval.</strong> Precision/Recall недостаточны (Auepora-survey): надо отдельно мерить
+  <strong>retrieval-faithfulness</strong> (тот ли источник) и качество генерации, а не только E2E exact-match. Де-факто
+  инструмент — <strong>RAGAS</strong> (faithfulness, context precision/recall, answer relevance); им <code>ground</code>/faithfulness
+  меряют на практике (смычка с уроком 6).</li>
+<li><strong>Agentic RAG — хайп или метод?</strong> Не только хайп: академическая база — <strong>Self-RAG</strong> (Asai et al., 2310.11511:
+  reflection-токены решают, <em>когда</em> извлекать, и самокритикуют) и <strong>CRAG</strong> (corrective RAG). Реальный
+  tradeoff — латентность/нестабильность vs качество на составных вопросах; не дефолт, но и не пустой лозунг.</li>
+</ul>
+<hr />
+<h3>4. Failure modes retrieval</h3>
+<table>
+<thead>
+<tr>
+<th>Отказ</th>
+<th>Механизм</th>
+<th>Противоядие</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Chunk boundary</strong></td>
+<td>критичная инфа разрезана между чанками</td>
+<td>overlap, семантическое/иерархическое разбиение</td>
+</tr>
+<tr>
+<td><strong>Embedding drift</strong></td>
+<td>семантически близкое ≠ релевантное вопросу</td>
+<td>hybrid (BM25), reranking</td>
+</tr>
+<tr>
+<td><strong>Stale index</strong></td>
+<td>индекс не обновлён → старые факты</td>
+<td>инкрементальная индексация, TTL, drift-мониторинг</td>
+</tr>
+<tr>
+<td><strong>Citation mismatch</strong></td>
+<td>верный ответ, но цитирован вторичный источник</td>
+<td>evidence-объект + verifier проверяет поддержку</td>
+</tr>
+<tr>
+<td><strong>Lost-in-the-middle</strong></td>
+<td>важный чанк в центре окна не усвоен</td>
+<td>rerank критичного к краям (урок 4)</td>
+</tr>
+<tr>
+<td><strong>Conflicting averaging</strong></td>
+<td>перекрывающиеся документы → «усреднённый» неверный ответ</td>
+<td>conflict-aware (урок 7), дедуп источников</td>
+</tr>
+<tr>
+<td><strong>Source laundering</strong></td>
+<td>смешение/подмена источников, инъекция через retrieval</td>
+<td>проверка подписи/provenance (этап 10)</td>
+</tr>
+</tbody>
+</table>
+<p>Cold-open инстанцирует первые четыре строки реальными кейсами; legal-числа Stanford — эмпирическая база
+тезиса «RAG не убирает галлюцинации».</p>
+<hr />
+<h3>5. Вклад в reference-spine: retrieval pipeline за memory.retrieve</h3>
+<p><code>memory.retrieve</code> (урок 7) реализуется как конвейер, отдающий <strong>evidence-объекты</strong> (а не голый текст) с
+provenance/trust — ровно <code>ContextItem</code> для context-builder (урок 4).</p>
+<pre><code class="language-python">@dataclass
+class Evidence:
+    chunk_id: str            # точная привязка (provenance)
+    source: str              # документ/URL
+    text: str                # фрагмент-доказательство
+    score: float             # релевантность после reranking
+    trust: str               # verified | untrusted (урок 5/7)
+    is_critical: bool = False  # критичный фрагмент → разместить к краям окна (§6 тест)
+
+class RetrievalPipeline(Protocol):
+    def retrieve(self, query, *, k=5, mode=&quot;hybrid&quot;) -&gt; list[Evidence]:
+        ...
+        # этапы: (embed | bm25) -&gt; fuse(hybrid) -&gt; rerank -&gt; attach provenance
+        # ИНВАРИАНТЫ:
+        #  (1) каждый Evidence несёт chunk_id+source (нет provenance -&gt; не отдавать)
+        #  (2) reranked: критичное -&gt; к краям контекста (анти lost-in-the-middle, урок 4)
+        #  (3) stale -&gt; пометить/исключить (TTL); untrusted -&gt; trust-метка (урок 7)
+
+    def ground(self, claim, evidence: list[Evidence]) -&gt; bool:
+        ...
+        # source-grounding: утверждение должно ПОДДЕРЖИВАТЬСЯ цитируемым фрагментом
+        # citation mismatch -&gt; ground()=False (verifier урока 6 это тестирует)
+</code></pre>
+<p><strong>Контракт для следующих этапов:</strong> retrieval поставляет <code>Evidence</code> в context-builder (урок 4) как
+<code>ContextItem</code> с trust; verifier (урок 6) добавляет метрику <strong>retrieval-faithfulness</strong> (тот ли источник, и
+поддерживает ли он claim); security (этап 10) рассматривает source laundering / retrieval poisoning в threat
+model; memory (урок 7) — это хранилище, поверх которого работает retrieve. Cold-open = retrieval без
+source-grounding и без проверки поддержки цитаты.</p>
+<hr />
+<h3>6. Pset 8 — retrieval pipeline с source-grounding</h3>
+<p><strong>Задача.</strong> Реализовать <code>retrieve</code> (hybrid + rerank + provenance) и <code>ground</code> (source-grounding). Тестами
+воспроизвести реальные отказы: chunk-boundary миссится без иерархии; hybrid возвращает точный термин,
+который вектор пропускает; citation mismatch ловится; stale исключается.</p>
+<p><strong>Скелет</strong> (<code>retrieval.py</code>):</p>
+<pre><code class="language-python">def retrieve(query, k=5, mode=&quot;hybrid&quot;):
+    cand = []
+    if mode in (&quot;vector&quot;, &quot;hybrid&quot;): cand += vector_search(embed(query))
+    if mode in (&quot;bm25&quot;,  &quot;hybrid&quot;):  cand += bm25_search(query)      # точные термины
+    fused   = reciprocal_rank_fusion(cand)        # слияние скоров
+    ranked  = reranker.rerank(query, fused)[:k]   # обученный reranker
+    ev = [Evidence(c.chunk_id, c.source, c.text, c.score, c.trust)
+          for c in ranked if c.chunk_id and not is_stale(c)]   # инвариант (1),(3)
+    return place_critical_at_edges(ev)            # инвариант (2): анти lost-in-the-middle
+
+def ground(claim, evidence):
+    # source-grounding: claim верен ТОЛЬКО если поддержан текстом цитируемого фрагмента
+    return any(supports(claim, e.text) for e in evidence)
+</code></pre>
+<p><strong>Тесты:</strong></p>
+<pre><code class="language-python">def test_hybrid_recovers_exact_term_vector_misses():
+    # точный код &quot;Schedule B / 90 days&quot; вектор пропускает, BM25 находит
+    assert any(&quot;Schedule B&quot; in e.text for e in retrieve(q_contract, mode=&quot;hybrid&quot;))
+    assert not any(&quot;Schedule B&quot; in e.text for e in retrieve(q_contract, mode=&quot;vector&quot;))
+
+def test_citation_mismatch_is_caught():
+    # ответ верен, но цитируется вторичный обзор, не поддерживающий конкретный claim
+    assert ground(claim=&quot;notice period is 90 days&quot;,
+                  evidence=[secondary_review_chunk]) is False   # не поддержано
+    assert ground(claim=&quot;notice period is 90 days&quot;,
+                  evidence=[schedule_B_chunk]) is True
+
+def test_stale_chunk_excluded():
+    out = retrieve(q_basel_2024)
+    assert all(not is_stale(e) for e in out)        # устаревший индекс не цитируется
+
+def test_evidence_has_provenance():
+    out = retrieve(q_any)
+    assert all(e.chunk_id and e.source for e in out)  # инвариант (1): нет provenance — не отдаём
+
+def test_critical_chunk_not_in_middle():
+    out = retrieve(q_with_one_critical)
+    assert out[0].is_critical or out[-1].is_critical   # к краям (урок 4)
+</code></pre>
+<p><strong>Эталон.</strong> Главные мысли: (1) <code>ground</code> отделяет «ответ верен» от «источник поддерживает ответ» —
+<code>test_citation_mismatch</code> ловит cold-open (citation mismatch ≠ обоснованность); (2) hybrid восстанавливает
+точный термин, который вектор теряет (chunk-boundary/drift); (3) provenance обязателен — нет chunk_id, нет
+выдачи; (4) stale исключается; (5) reorder к краям — смычка с уроком 4.</p>
+<p><strong>Расширение.</strong> Добавь GraphRAG-ветку: для multi-hop запроса (<code>q_who_connected_to</code>) векторный retrieve даёт
+несвязанные чанки, а граф-обход возвращает связный путь; тест — на multi-hop graph-retrieve находит связь,
+которую vector miss (воспроизведение примера Novorossiya).</p>
+<hr />
+<h3>7. Диагностические вопросы (проверяют суждение)</h3>
+<ol>
+<li>Команда внедрила RAG «чтобы убрать галлюцинации» и удивлена, что бот всё равно врёт. По §1 (Stanford)
+   — почему ожидание неверно и на каких этапах конвейера (§2) теряется правда?</li>
+<li>Вопрос пользователя дал верный ответ, но цитирует обзорную статью, а не первоисточник. Это успех или
+   провал? Что в spine (§5) это ловит и почему «ответ верен» недостаточно?</li>
+<li>Для корпуса технических спек (коды деталей, номера версий) выберешь vector, hybrid или GraphRAG? Почему
+   чистый вектор здесь опасен (§2.2)?</li>
+<li>Когда GraphRAG оправдывает свою цену, а когда это оверинжиниринг (§3.1)? Какой признак запроса решает?</li>
+<li>Коллега предлагает «не возиться с RAG, а взять модель с окном 1M и закинуть весь корпус». Чем ответишь
+   (связь с уроком 4, Du et al.)?</li>
+<li><strong>Open question</strong> (§3.1): спроектируй метрику retrieval-faithfulness, отделяющую «нашёл нужный чанк» от
+   «модель реально на нём основала ответ». Чем её можно обмануть?</li>
+</ol>
+<hr />
+<h3>8. Глоссарий-дельта</h3>
+<ul>
+<li><strong>RAG</strong> — обогащение генерации извлечёнными внешними данными; механизм внешней памяти (урок 7).</li>
+<li><strong>Ingestion / Chunking</strong> — загрузка/разбор и нарезка документов; chunk boundary problem — критичная инфа
+  разрезана.</li>
+<li><strong>Embedding / Vector search</strong> — кодирование в вектор и поиск по похожести; embedding drift — близкое ≠
+  релевантное.</li>
+<li><strong>BM25 / Hybrid search</strong> — лексический поиск / комбинация с вектором (recall точных терминов + семантика).</li>
+<li><strong>Reranking</strong> — переоценка кандидатов обученной моделью (Cohere/BGE); + размещение критичного к краям.</li>
+<li><strong>Evidence / Provenance / Source-grounding</strong> — фрагмент-доказательство с привязкой к источнику; каждое
+  утверждение обосновано проверяемым источником.</li>
+<li><strong>Citation mismatch</strong> — верный ответ, но цитата на не тот (вторичный) источник.</li>
+<li><strong>Knowledge Graph / Ontology / Entity resolution</strong> — узлы+связи / схема типов и предикатов / связывание
+  упоминаний в один узел.</li>
+<li><strong>GraphRAG</strong> — RAG поверх KG; силён на multi-hop и глобальных темах; дорог.</li>
+<li><strong>Agentic RAG</strong> — итеративный retrieval (переписать запрос, искать снова); нестабилен без стоп-критериев.</li>
+<li><strong>Contextual Retrieval (Anthropic)</strong> — дописывание контекста к чанку до эмбеддинга (contextual embeddings</li>
+<li>BM25); лечит chunk-boundary/drift.</li>
+<li><strong>Self-RAG / CRAG</strong> — self-reflective / corrective RAG (reflection-токены: когда извлекать + самокритика);
+  академическая база agentic RAG.</li>
+<li><strong>RAGAS</strong> — де-факто фреймворк оценки RAG: faithfulness, context precision/recall, answer relevance.</li>
+<li><strong>Retrieval-faithfulness</strong> — метрика «тот ли источник и поддерживает ли он ответ», а не только E2E-точность.</li>
+<li><strong>Source laundering</strong> — скрытое смешение/подмена источников (угроза, этап 10).</li>
+</ul>
+<hr />
+<h3>9. Первоисточники (верифицированы 2026-06-23)</h3>
+<ol>
+<li><strong>Magesh et al. (Stanford) — «Assessing the Reliability of Leading AI Legal Research Tools»</strong>.
+   <a href="https://dho.stanford.edu/wp-content/uploads/Legal_RAG_Hallucinations.pdf" target="_blank" rel="noopener">https://dho.stanford.edu/wp-content/uploads/Legal_RAG_Hallucinations.pdf</a> ·
+   <a href="https://hai.stanford.edu/news/ai-trial-legal-models-hallucinate-1-out-6-or-more-benchmarking-queries" target="_blank" rel="noopener">https://hai.stanford.edu/news/ai-trial-legal-models-hallucinate-1-out-6-or-more-benchmarking-queries</a> —
+   cold-open: Lexis+ 17%, Westlaw 33%, GPT-4 43% галлюцинаций.</li>
+<li><strong>Larson &amp; Truitt (Microsoft Research) — «GraphRAG: Unlocking LLM discovery on narrative private data»</strong>
+   (2024-02-13). <a href="https://www.microsoft.com/en-us/research/blog/graphrag-unlocking-llm-discovery-on-narrative-private-data/" target="_blank" rel="noopener">https://www.microsoft.com/en-us/research/blog/graphrag-unlocking-llm-discovery-on-narrative-private-data/</a>
+   · код: <a href="https://github.com/microsoft/graphrag" target="_blank" rel="noopener">https://github.com/microsoft/graphrag</a> — KG-построение, пример Novorossiya/VIINA.</li>
+<li><strong>«RAG vs. GraphRAG: A Systematic Evaluation and Key Insights»</strong>, arXiv 2502.11371 (2025).
+   <a href="https://arxiv.org/html/2502.11371v3" target="_blank" rel="noopener">https://arxiv.org/html/2502.11371v3</a> — GraphRAG выигрывает на multi-hop (HotPotQA, MultiHop-RAG).</li>
+<li><strong>«KohakuRAG: A simple RAG framework with hierarchical document indexing»</strong>, arXiv 2603.07612 (2026).
+   <a href="https://arxiv.org/abs/2603.07612" target="_blank" rel="noopener">https://arxiv.org/abs/2603.07612</a> — иерархическая индексация; citation-mismatch как failure mode.</li>
+<li><strong>Xu et al. — «Evaluation of Retrieval-Augmented Generation: A Survey» (Auepora)</strong>, arXiv 2405.07437 (2024).
+   <a href="https://arxiv.org/abs/2405.07437" target="_blank" rel="noopener">https://arxiv.org/abs/2405.07437</a> — таксономия RAG-метрик (retrieval vs generation vs E2E).</li>
+<li><strong>Lewis et al. — «Retrieval-Augmented Generation»</strong> (2020). <a href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener">https://arxiv.org/abs/2005.11401</a> — парадигма RAG.</li>
+<li><strong>Liu et al. — «Lost in the Middle»</strong>, TACL 2023. <a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener">https://arxiv.org/abs/2307.03172</a> — позиционирование
+   критичных чанков (связь с уроком 4).</li>
+<li><strong>Anthropic — «Contextual Retrieval»</strong> (2024). <a href="https://www.anthropic.com/engineering/contextual-retrieval" target="_blank" rel="noopener">https://www.anthropic.com/engineering/contextual-retrieval</a>
+   — contextual embeddings + BM25; фикс chunk-boundary/drift (§2.2).</li>
+<li><strong>Asai et al. — «Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection»</strong>,
+   arXiv 2310.11511 (2023). <a href="https://arxiv.org/abs/2310.11511" target="_blank" rel="noopener">https://arxiv.org/abs/2310.11511</a> — академическая база agentic RAG (§3.1).</li>
+<li><strong>RAGAS</strong> — фреймворк оценки RAG. <a href="https://docs.ragas.io/" target="_blank" rel="noopener">https://docs.ragas.io/</a> — faithfulness / context precision/recall (§3.1; урок 6).</li>
+</ol>
+<blockquote class="quarantine">
+<p><strong>Карантин:</strong> «citation mismatch 23.6%» — рецидив фабрикованного числа этапа 1 (само KohakuRAG реально,
+конкретный процент не подтверждён); «6% спец-корпус vs 35% общий» — агрегат без источника; «text-to-Cypher</p>
+<blockquote>
+<p>90%» (Tadayon/«Graphs RAG at Scale») — не верифицировано, заменено систематикой arXiv 2502.11371.
+Concept-level failure modes (chunk boundary, embedding drift, stale, citation mismatch) — реальны и оставлены.</p>
+</blockquote>
+</blockquote>
+<hr />
+<p><em>Плотность — целевая. Этап средне-тяжёлый. Cold-open — верифицированная эмпирика Stanford (RAG не убирает
+галлюцинации: 17/33/43%) + конкретные паттерны отказа, выводящие конвейер RAG этап за этапом. Spine
+наполнил memory.retrieve конвейером, отдающим Evidence с provenance + source-grounding (<code>ground</code> ловит
+citation mismatch); связал retrieval с context-builder (урок 4), verifier (урок 6), memory (урок 7). Gate в
+третий раз подтвердил статьи/события и срезал агрегатные проценты (рецидив 23.6% — характерная подпись).</em></p>
+    </div>
+    <nav class="pager">
+      <a class="pg-prev" href="lesson-07.html"><span class="pk">← Урок 07</span>Память и жизненный цикл знания</a>
+      <a class="pg-next" href="lesson-09.html"><span class="pk">Урок 09 →</span>Observability и воспроизводимость</a>
+    </nav>
+    <footer id="footer">
+      <p>Дизайн-язык адаптирован из <a href="https://github.com/ThariqS/html-effectiveness"
+        target="_blank" rel="noopener">html-effectiveness</a> (Apache-2.0). Актуально на 2026-06-23.</p>
+    </footer>
+  </main>
+</div>
+<script>
+// keep the active lesson visible in the sticky sidebar on load
+var act=document.querySelector('.sidebar nav a.active');
+if(act && act.scrollIntoView){ act.scrollIntoView({block:'center'}); }
+</script>
+</body>
+</html>

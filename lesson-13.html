@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Урок 13. Экономика и production readiness (capstone) — L8+ Agentic Engineering</title>
+<!-- Design language adapted from ThariqS/html-effectiveness (Apache-2.0, (c) Anthropic PBC). -->
+<style>
+:root{
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413; --clay:#D97757; --clay-d:#B85C3E;
+  --oat:#E3DACC; --olive:#788C5D; --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5;
+  --g500:#87867F; --g700:#3D3D3A;
+  --serif:ui-serif,Georgia,"Times New Roman",Times,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Monaco,Consolas,monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--ivory);color:var(--slate);font-family:var(--sans);
+  line-height:1.6;-webkit-font-smoothing:antialiased;font-size:16.5px;}
+
+a{color:var(--clay-d);text-decoration-color:var(--oat);text-underline-offset:3px;}
+a:hover{text-decoration-color:var(--clay);}
+
+/* layout shell: sticky sidebar + reading column */
+.shell{max-width:1180px;margin:0 auto;padding:0 28px;display:grid;
+  grid-template-columns:236px minmax(0,1fr);gap:48px;align-items:start;}
+@media(max-width:900px){.shell{grid-template-columns:1fr;gap:0;padding:0 20px;}}
+
+/* sidebar */
+.sidebar{position:sticky;top:0;max-height:100vh;overflow-y:auto;padding:34px 0 40px;}
+@media(max-width:900px){.sidebar{position:static;max-height:none;border-bottom:1.5px solid var(--g300);
+  margin-bottom:8px;padding-bottom:18px;}}
+.side-brand{font-family:var(--serif);font-size:19px;font-weight:600;letter-spacing:-.01em;margin-bottom:2px;}
+.side-brand em{font-style:italic;color:var(--clay);}
+.side-sub{font-family:var(--mono);font-size:10.5px;color:var(--g500);text-transform:uppercase;
+  letter-spacing:.1em;margin-bottom:20px;}
+.sidebar nav{display:flex;flex-direction:column;gap:1px;}
+.sidebar nav a{display:flex;gap:9px;align-items:baseline;text-decoration:none;color:var(--g700);
+  font-size:13px;line-height:1.35;padding:5px 9px;border-radius:7px;border-left:2px solid transparent;}
+.sidebar nav a .n{font-family:var(--mono);font-size:10px;color:var(--g500);min-width:16px;}
+.sidebar nav a:hover{background:var(--g100);color:var(--slate);}
+.sidebar nav a.active{background:var(--paper);border-left-color:var(--clay);color:var(--slate);
+  box-shadow:0 1px 0 var(--g200);}
+.sidebar nav a.active .n{color:var(--clay);}
+.sidebar nav a.lead{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--g500);margin-top:14px;padding-bottom:2px;pointer-events:none;}
+
+/* main reading column */
+main{max-width:840px;padding:0 0 140px;min-width:0;}
+
+/* masthead */
+header.masthead{padding:54px 0 34px;border-bottom:1.5px solid var(--g300);margin-bottom:8px;}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--g500);margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+.eyebrow::before{content:"";width:24px;height:1.5px;background:var(--clay);}
+h1.title{font-family:var(--serif);font-weight:500;font-size:clamp(36px,5vw,58px);line-height:1.07;
+  letter-spacing:-.018em;margin:0 0 6px;max-width:18ch;}
+h1.title em{font-style:italic;color:var(--clay);}
+.lede{font-size:17px;color:var(--g700);margin:20px 0 0;max-width:640px;}
+.disclaimer{margin:22px 0 0;padding:14px 18px;background:var(--g100);border-radius:12px;
+  border:1.5px solid var(--g200);font-size:13.5px;color:var(--g700);max-width:660px;}
+.disclaimer b{color:var(--slate);}
+
+/* feature panel (spine) */
+.panel{margin:40px 0 0;background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;
+  padding:26px 28px;scroll-margin-top:16px;}
+.panel h2,.howto h2{font-family:var(--serif);font-weight:500;font-size:25px;margin:0 0 4px;letter-spacing:-.01em;}
+.panel .sub{color:var(--g700);font-size:14px;margin:0 0 18px;}
+.flow{font-family:var(--mono);font-size:12.5px;line-height:1.7;background:var(--g100);border-radius:10px;
+  padding:14px 16px;overflow-x:auto;color:var(--g700);white-space:pre-wrap;border:1px solid var(--g200);}
+ol.inv{margin:18px 0 0;padding-left:0;counter-reset:inv;list-style:none;display:grid;gap:7px;}
+ol.inv li{position:relative;padding-left:30px;font-size:14px;color:var(--g700);}
+ol.inv li::before{counter-increment:inv;content:counter(inv);position:absolute;left:0;top:0;
+  font-family:var(--mono);font-size:11px;color:var(--clay);font-weight:600;
+  border:1.5px solid var(--oat);border-radius:6px;width:21px;height:21px;display:flex;
+  align-items:center;justify-content:center;}
+ol.inv li b{color:var(--slate);font-weight:600;}
+
+.howto{margin:34px 0 0;scroll-margin-top:16px;}
+.howto ul{margin:10px 0 0;padding-left:20px;}
+.howto li{margin:6px 0;color:var(--g700);font-size:14.5px;}
+
+.section-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--g500);margin:64px 0 6px;display:flex;align-items:center;gap:10px;}
+.section-label::before{content:"";width:20px;height:1.5px;background:var(--clay);}
+
+/* lessons / accordion */
+section.lesson{margin-top:18px;scroll-margin-top:14px;}
+details.les{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;overflow:hidden;
+  transition:border-color 150ms,box-shadow 150ms;}
+details.les[open]{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);}
+details.les summary{list-style:none;cursor:pointer;padding:20px 22px;display:block;}
+details.les summary::-webkit-details-marker{display:none;}
+.sec-head{display:flex;align-items:baseline;gap:14px;}
+.sec-head .idx{font-family:var(--mono);font-size:13px;color:var(--clay);font-weight:600;min-width:26px;}
+.sec-head h2{font-family:var(--serif);font-weight:500;font-size:23px;margin:0;letter-spacing:-.01em;flex:1;}
+.tagline{color:var(--g700);font-size:14px;margin:3px 0 0 40px;}
+.card-meta{margin:13px 0 0 40px;display:grid;gap:5px;}
+.meta-item{font-size:13px;color:var(--g700);}
+.meta-item .k{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--g500);margin-right:8px;}
+.expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(--mono);font-size:11px;
+  color:var(--clay);}
+details.les[open] .expand-hint{display:none;}
+
+/* maturity badges */
+.badge{font-family:var(--mono);font-size:10.5px;padding:3px 9px;border-radius:999px;white-space:nowrap;
+  border:1.5px solid var(--g300);color:var(--g700);align-self:flex-start;}
+.badge.b-core{background:#EEF1E9;border-color:#C3D1AE;color:#3f5430;}
+.badge.b-emerging{background:#FBEDE6;border-color:#EBC3AE;color:var(--clay-d);}
+.badge.b-disputed{background:#FAF3E2;border-color:#E6D08C;color:#8a6d1f;}
+.badge.b-hype{background:#FBE9E6;border-color:#E9B4A8;color:#a23b28;}
+.badge.b-special{background:#ECEAF3;border-color:#C7C0DE;color:#4b4080;}
+
+/* lesson body (rendered markdown) */
+.lesson-body{padding:4px 26px 28px;border-top:1px solid var(--g100);}
+.lesson-body .status{font-size:13px;color:var(--g700);background:var(--g100);border-radius:10px;
+  padding:12px 15px;margin:18px 0 8px;border:1px solid var(--g200);}
+.lesson-body h3{font-family:var(--serif);font-weight:600;font-size:21px;margin:32px 0 8px;letter-spacing:-.008em;}
+.lesson-body h4{font-family:var(--serif);font-weight:600;font-size:17px;margin:22px 0 6px;color:var(--g700);}
+.lesson-body h5{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--g500);margin:18px 0 6px;}
+.lesson-body p{margin:11px 0;}
+.lesson-body ul,.lesson-body ol{margin:11px 0;padding-left:22px;}
+.lesson-body li{margin:5px 0;}
+.lesson-body code{font-family:var(--mono);font-size:.86em;background:var(--g100);padding:1.5px 5px;
+  border-radius:5px;border:1px solid var(--g200);}
+.lesson-body pre{background:#2b2a27;color:#eceae3;border-radius:12px;padding:16px 18px;overflow-x:auto;
+  font-size:12.7px;line-height:1.5;margin:14px 0;}
+.lesson-body pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit;}
+.lesson-body blockquote{margin:14px 0;padding:12px 18px;border-left:3px solid var(--clay);
+  background:var(--paper);border-radius:0 10px 10px 0;color:var(--g700);}
+.lesson-body blockquote.quarantine{border-left-color:#c98a2e;background:#FAF3E2;}
+.lesson-body table{border-collapse:collapse;width:100%;margin:16px 0;font-size:13px;display:block;
+  overflow-x:auto;}
+.lesson-body th,.lesson-body td{border:1px solid var(--g300);padding:7px 10px;text-align:left;
+  vertical-align:top;}
+.lesson-body th{background:var(--g100);font-weight:600;font-family:var(--sans);}
+.lesson-body tr:nth-child(even) td{background:#fcfbf8;}
+.lesson-body hr{border:none;border-top:1.5px solid var(--g200);margin:26px 0;}
+.lesson-body a{word-break:break-word;}
+.lesson-body em{color:var(--g700);}
+
+/* footer */
+footer{margin:80px 0 0;border-top:1.5px solid var(--g300);padding-top:30px;font-size:13px;
+  color:var(--g500);scroll-margin-top:16px;}
+footer .k{font-family:var(--serif);font-style:italic;color:var(--g700);font-size:15px;}
+footer p{margin:8px 0;max-width:680px;}
+
+.toolbar{display:flex;gap:10px;margin:22px 0 0 40px;}
+.toolbar button{font-family:var(--mono);font-size:11px;background:var(--paper);border:1.5px solid var(--g300);
+  color:var(--g700);border-radius:999px;padding:6px 13px;cursor:pointer;}
+.toolbar button:hover{border-color:var(--slate);color:var(--slate);}
+
+/* ---- multipage: lesson cards on index + lesson pages ---- */
+.side-brand-link{text-decoration:none;color:inherit;display:block;}
+.lcards{display:grid;gap:14px;margin-top:18px;}
+a.lcard{display:block;text-decoration:none;color:inherit;background:var(--paper);border:1.5px solid var(--g300);
+  border-radius:14px;padding:20px 22px;transition:border-color .15s,box-shadow .15s,transform .15s;}
+a.lcard:hover{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);transform:translateY(-1px);}
+a.lcard .sec-head h2{color:var(--slate);}
+a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(--mono);font-size:11px;color:var(--clay);}
+.crumb{margin:30px 0 2px;}
+.crumb a{font-family:var(--mono);font-size:12px;color:var(--g500);text-decoration:none;}
+.crumb a:hover{color:var(--clay-d);}
+.lesson-head{padding:12px 0 24px;border-bottom:1.5px solid var(--g300);margin-bottom:4px;}
+.lesson-head .eyebrow{margin-bottom:13px;}
+.lesson-head h1.title{font-size:clamp(29px,4vw,44px);max-width:22ch;margin:0;}
+.lesson-head .lede{margin-top:13px;}
+.pager{display:flex;justify-content:space-between;align-items:stretch;gap:14px;margin:54px 0 0;
+  border-top:1.5px solid var(--g300);padding-top:22px;}
+.pager a{text-decoration:none;color:var(--g700);font-size:13.5px;border:1.5px solid var(--g300);border-radius:11px;
+  padding:11px 15px;max-width:49%;transition:.15s;line-height:1.4;}
+.pager a:hover{border-color:var(--slate);color:var(--slate);}
+.pager a .pk{font-family:var(--mono);font-size:10px;color:var(--g500);display:block;margin-bottom:2px;}
+.pager .pg-next{margin-left:auto;text-align:right;}
+.sidebar nav a.active{background:var(--paper);border-left-color:var(--clay);color:var(--slate);box-shadow:0 1px 0 var(--g200);}
+.sidebar nav a.active .n{color:var(--clay);}
+
+/* ---- interactive course widgets (.cw) ---- */
+.cw{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;margin:28px 0;overflow:hidden;}
+.cw-head{display:flex;align-items:center;gap:10px;padding:13px 20px;border-bottom:1px solid var(--g200);background:var(--g100);}
+.cw-head .tag{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--clay);
+  border:1.5px solid var(--oat);border-radius:999px;padding:2px 9px;}
+.cw-head .ttl{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--slate);}
+.cw-body{padding:18px 20px;display:flex;flex-direction:column;gap:15px;}
+.cw-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+.cw-grid{display:grid;gap:10px;}
+.cw .lbl{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--g500);margin-bottom:7px;}
+.cw .metric{background:var(--g100);border:1px solid var(--g200);border-radius:10px;padding:9px 13px;}
+.cw .metric .mk{font-size:12px;color:var(--g500);}
+.cw .metric .mv{font-size:21px;font-weight:600;font-family:var(--serif);color:var(--slate);line-height:1.2;}
+.cw button{font-family:var(--sans);cursor:pointer;border-radius:8px;border:1.5px solid var(--g300);background:var(--paper);
+  color:var(--g700);font-size:13px;padding:7px 12px;transition:.12s;line-height:1.3;}
+.cw button:hover{border-color:var(--slate);color:var(--slate);}
+.cw .act{background:var(--clay);border-color:var(--clay);color:#fff;font-weight:600;}
+.cw .act:hover{background:var(--clay-d);border-color:var(--clay-d);color:#fff;}
+.cw .chip{font-family:var(--mono);font-size:11px;padding:5px 10px;border-radius:999px;}
+.cw .chip.sel{background:var(--slate);border-color:var(--slate);color:var(--ivory);}
+.cw .tog{display:flex;align-items:center;gap:8px;text-align:left;}
+.cw .tog.on-bad{background:#FBE9E6;border-color:#E9B4A8;color:#a23b28;}
+.cw .tog.on-good{background:#EEF1E9;border-color:#C3D1AE;color:#3f5430;}
+.cw input[type=range]{width:100%;accent-color:var(--clay);margin:2px 0;}
+.cw .slabel{display:flex;justify-content:space-between;font-size:12.5px;color:var(--g700);margin-bottom:2px;}
+.cw .slabel b{font-weight:600;color:var(--slate);}
+.cw .bar{display:flex;height:40px;border-radius:9px;overflow:hidden;border:1px solid var(--g300);}
+.cw .seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;overflow:hidden;
+  white-space:nowrap;border-right:1px solid var(--paper);}
+.cw .seg.c{background:#EEF1E9;color:#3f5430;}
+.cw .seg.u{background:#FAF3E2;color:#8a6d1f;}
+.cw .trace{display:flex;flex-direction:column;gap:6px;}
+.cw .trow{border-left:3px solid var(--g300);background:var(--g100);border-radius:0 8px 8px 0;padding:7px 12px;
+  font-family:var(--mono);font-size:12.5px;}
+.cw .trow .th{font-weight:600;color:var(--slate);}
+.cw .trow .tb{color:var(--g700);white-space:pre-wrap;word-break:break-word;margin-top:2px;}
+.cw .t-obs{border-color:var(--olive);}
+.cw .t-think{border-color:#c98a2e;}
+.cw .t-act{border-color:var(--g500);}
+.cw .t-block{border-color:#6f9152;}
+.cw .t-leak{border-color:var(--clay-d);}
+.cw .verdict{border-radius:10px;padding:12px 15px;font-size:14px;}
+.cw .v-safe{background:#EEF1E9;color:#3f5430;border:1px solid #C3D1AE;}
+.cw .v-leak{background:#FBE9E6;color:#a23b28;border:1px solid #E9B4A8;}
+.cw .verdict .vt{font-weight:700;}
+.cw .verdict .vd{margin-top:3px;line-height:1.5;}
+.cw .note{font-size:11.5px;color:var(--g500);line-height:1.6;}
+.cw .dot{display:inline-block;width:10px;height:10px;border-radius:3px;vertical-align:middle;margin-right:4px;}
+.cw textarea{width:100%;font-family:var(--mono);font-size:12.5px;border:1.5px solid var(--g300);border-radius:8px;
+  padding:8px 10px;background:var(--paper);color:var(--slate);resize:vertical;}
+.cw .runs{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;max-width:420px;}
+.cw .evd{aspect-ratio:1;border-radius:3px;background:var(--g200);}
+.cw .evd.ok{background:#9cbf6e;}
+.cw .evd.no{background:#e0a99c;}
+.cw .mlist{display:flex;flex-direction:column;gap:7px;}
+.cw .mitem{display:flex;align-items:center;gap:10px;border:1px solid var(--g200);border-radius:9px;padding:8px 11px;
+  font-size:13px;background:var(--g100);}
+.cw .mitem .mt{color:var(--slate);}
+.cw .mitem .src{font-family:var(--mono);font-size:10.5px;color:var(--g500);}
+.cw .pill{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:999px;margin-left:auto;white-space:nowrap;}
+.cw .pill.w{background:#EEF1E9;color:#3f5430;}
+.cw .pill.q{background:#FAF3E2;color:#8a6d1f;}
+.cw .pill.r{background:#FBE9E6;color:#a23b28;}
+.cw .stepc{font-family:var(--mono);font-size:11px;color:var(--g500);}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="top">
+    <a class="side-brand-link" href="index.html"><div class="side-brand">L8+ <em>Agentic</em></div></a>
+    <div class="side-sub">актуально 2026-06-23</div>
+    <nav>
+<a href="index.html">▲ Главная</a>
+<a class="lead">Карта</a>
+<a href="index.html#spine"><span class="n">◆</span>Reference-spine</a>
+<a href="index.html#how"><span class="n">?</span>Как читать</a>
+<a class="lead">Уроки</a>
+<a href="lesson-01.html"><span class="n">01</span>Зрелость автономии</a>
+<a href="lesson-02.html"><span class="n">02</span>Примитивы и reference-spine</a>
+<a href="lesson-03.html"><span class="n">03</span>Task lifecycle и durable execution</a>
+<a href="lesson-04.html"><span class="n">04</span>Context engineering</a>
+<a href="lesson-05.html"><span class="n">05</span>Инструменты, права, policy</a>
+<a href="lesson-06.html"><span class="n">06</span>Evals, verifier, trajectory</a>
+<a href="lesson-07.html"><span class="n">07</span>Память и жизненный цикл знания</a>
+<a href="lesson-08.html"><span class="n">08</span>Retrieval: RAG, hybrid, GraphRAG</a>
+<a href="lesson-09.html"><span class="n">09</span>Observability и воспроизводимость</a>
+<a href="lesson-10.html"><span class="n">10</span>Безопасность: injection, threat model</a>
+<a href="lesson-11.html"><span class="n">11</span>Мультиагентность: MCP / A2A</a>
+<a href="lesson-12.html"><span class="n">12</span>Human-in-the-loop и operating model</a>
+<a href="lesson-13.html" class="active"><span class="n">13</span>Экономика и production readiness (capstone)</a>
+<a href="lesson-14.html"><span class="n">14</span>Фронт и горизонт-сканирование</a>
+<a class="lead">Конец</a>
+<a href="index.html#footer"><span class="n">§</span>Метод и источники</a>
+    </nav>
+  </aside>
+
+  <main>
+    <div class="crumb"><a href="index.html">← Все уроки</a></div>
+    <header class="lesson-head">
+      <div class="eyebrow">Урок 13<span class="badge b-disputed" style="margin-left:6px">[спорное] unit-экономика</span></div>
+      <h1 class="title">Экономика и production readiness (capstone)</h1>
+      <p class="lede">Настоящая цена = inference + verification + failure</p>
+      <div class="card-meta">
+        <div class="meta-item"><span class="k">Cold-open</span>Amazon Q: 6.3 млн потерянных заказов</div>
+        <div class="meta-item"><span class="k">В spine</span>полный L8+ blueprint + cost model + readiness gate</div>
+      </div>
+    </header>
+    <div class="lesson-body">
+      <div class="status"><p><strong>Статус:</strong> актуально на 2026-06-23, пересмотреть до 2026-09.
+Архитектурные паттерны и tooling — <strong>[формирующееся/устоявшееся]</strong>. Unit-экономика агентов и оценка
+надёжности/ROI — <strong>[спорное]</strong> (нет отраслевого стандарта). Регуляция полного цикла — <strong>[формирующееся]</strong>.
+Это интеграционный этап: собирает весь spine уроков 2–12 в единый blueprint и добавляет экономический слой
++ production-readiness gate. Замыкает вопрос урока 1 («чем прод отличается от демо»).</p></div>
+<hr />
+<h3>0. Зачем этот урок</h3>
+<p>Двенадцать этапов мы собирали примитивы. Урок 1 задал вопрос: <strong>чем работающая в проде L8-система
+отличается от демо?</strong> Теперь, имея весь spine, мы отвечаем — через <strong>экономику</strong> (сколько на самом деле
+стоит агент) и <strong>production readiness</strong> (что должно присутствовать, чтобы запускать). Это capstone: здесь
+spine становится единым blueprint, а не набором тем.</p>
+<p>Две мысли, которые урок должен оставить:</p>
+<blockquote>
+<p><strong>(1)</strong> Настоящая цена агента — <strong>не стоимость инференса</strong>, а <code>cost-of-inference + cost-of-verification +
+cost-of-failure</code>. Дешёвый агент, который дорого ошибается (Amazon Q: 6.3 млн потерянных заказов), —
+экономически отрицателен. Считать надо <strong>cost-per-successful-task</strong>, не cost-per-task.
+<strong>(2)</strong> Узкое место масштабирования — <strong>верифицируемость</strong>, а не интеллект. «Последние 5% надёжности
+даются как первые 95%». Поэтому 95% пилотов не доходят до ROI (MIT) и 40% agentic-проектов отменят
+(Gartner): они умирают в разрыве «демо→прод», и разрыв этот — экономический и верификационный.</p>
+</blockquote>
+<hr />
+<h3>1. Cold-open: агент сработал на демо — и потерял 6.3 миллиона заказов</h3>
+<p>Декабрь 2025. Внутренний AI-агент Amazon (Amazon Q) <strong>не написал плохой код</strong> — он дал <strong>уверенно неверный
+совет</strong>, неправильно поняв <strong>устаревшую внутреннюю документацию</strong>. Результат: каскад ошибок, <strong>~6.3 млн
+потерянных заказов</strong> и многочасовой простой клиентского сервиса.
+<em>Источники: Wharton Accountable AI Lab; vectara/awesome-agent-failures (case study).</em></p>
+<p>Ключевое для этого этапа: агент был <strong>дёшев в инференсе</strong> и <strong>отлично работал на демо</strong>. Катастрофа пришла
+не от стоимости токенов, а от <strong>cost-of-failure</strong> при масштабе. И это не единичный случай — это <strong>системная
+закономерность</strong>, подтверждённая верифицированными данными прошлых этапов:</p>
+<ul>
+<li><strong>95% корпоративных GenAI-пилотов не дают ROI</strong> (MIT, урок 12) — умирают в разрыве демо→прод.</li>
+<li><strong>&gt;40% agentic-проектов отменят к 2027</strong> (Gartner, урок 11) — стоимость, неясная ценность, риски.</li>
+<li>На реалистичных бенчмарках агенты решают <strong>14%</strong> (WebArena) — <strong>&lt;50%</strong> (tau-bench) задач (урок 6), и
+  надёжность падает на повторах (pass^k). Демо ≠ прод.</li>
+<li>Мультиагент стоит <strong>≈15× токенов</strong> (Anthropic, уроки 2, 11).</li>
+<li>Cost-of-failure реален и крупен: Air Canada (юр. ответственность, урок 12), Step Finance ($27M, урок 5),
+  Replit (удаление прод-БД, урок 1).</li>
+</ul>
+<p>Отсюда тезис урока (и ответ на вопрос урока 1):</p>
+<blockquote>
+<p>Прод отличается от демо не качеством модели, а тем, что в проде доминируют <strong>cost-of-failure</strong> и
+<strong>cost-of-verification</strong>, а не cost-of-inference. L8-система — это не «умный агент», а <strong>проверяемая,
+экономически положительная, безопасно откатываемая</strong> система, где каждый примитив spine присутствует со
+своим инвариантом. Узкое место — верифицируемость, и она же ставит экономический потолок автономии.</p>
+</blockquote>
+<p><em>(Карантин: «$6.3M loss» — на деле 6.3 млн ЗАКАЗОВ; ChatDev «Microsoft 33%» — это Tsinghua; «$47K loop»,
+«PocketOS Cursor 9s» — единичные/непроверенные; конкретные cost-числа ($636–1996, 2.4 req $0.018) —
+practitioner-оценки, поданы как иллюстрация. §9.)</em></p>
+<hr />
+<h3>2. Деривация: от «сколько стоят токены» к unit-экономике надёжности</h3>
+<h4>2.1 Наивная модель стоимости</h4>
+<pre><code>cost ≈ model_price × steps          # «дешёвая модель + мало шагов = дёшево»
+</code></pre>
+<p>Это <strong>только cost-of-inference</strong>. Полезно как фреймворк (стоимость растёт с числом шагов; мультиагент 15×),
+но это не настоящая цена. Cold-open: инференс был копеечным, а потеряли 6.3 млн заказов.</p>
+<h4>2.2 Боль → компонент настоящей стоимости</h4>
+<ul>
+<li><strong>«Дешёвый агент дорого ошибается».</strong> Вводим <strong>cost-of-failure</strong>: ожидаемая стоимость ошибки × частота
+  ошибок. При низкой надёжности доминирует над инференсом (Amazon Q, Step Finance). Следствие: мерить
+  <strong>cost-per-successful-task = total_cost / success_rate</strong>, а не cost-per-task. Агент с 50% успеха стоит ×2
+  за успех — плюс cost-of-failure за вторую половину.</li>
+<li><strong>«Проверять дорого, но не проверять — катастрофа».</strong> Вводим <strong>cost-of-verification</strong>: evals (урок 6),
+  verifier, HITL-латентность (урок 12). Это растущая статья: чем выше автономия/масштаб, тем дороже
+  убедиться, что система права. Pass^k (урок 6) показывает, почему «проверить один раз» недостаточно.</li>
+<li><strong>«Где автоматизация окупается?»</strong> ROI = (экономия ручного труда) − (inference + verification + failure +
+  разработка/инфра). Точка безубыточности зависит от cost-of-failure домена: в финансах/медицине порог
+  надёжности кардинально выше, чем в SRE-логах.</li>
+<li><strong>«Почему 95% не доходят до прода».</strong> Потому что <strong>верифицируемость — узкое место масштабирования</strong>:
+  «последние 5% надёжности даются как первые 95%». Нельзя дёшево довести агента до прод-надёжности там, где
+  cost-of-failure высок. Это <strong>экономический потолок автономии</strong> (связь с осью B урока 1). У тезиса есть имя —
+  <strong>Verifier's Law</strong> (Jason Wei, 2025): лёгкость обучить ИИ задаче пропорциональна её верифицируемости; где
+  проверка дешева (код, математика) — прогресс быстр, где дорога — застой.</li>
+</ul>
+<h4>2.3 Production readiness = весь spine присутствует (ответ уроку 1)</h4>
+<p>Урок 1 спросил, чем прод отличается от демо. Ответ операционализируется как <strong>чеклист</strong>: прод-готовность =
+каждый примитив spine присутствует <strong>со своим инвариантом</strong>, плюс rollback/kill-switch, FMEA, SLO, cost
+model. Демо — это spine с дырами (нет verifier'а, нет policy, нет trace, нет стоп-критерия).</p>
+<h4>2.4 Новая проблема (мост к этапу 14)</h4>
+<p>Всё, что мы собрали (этапы 1–13) — <strong>устойчивое ядро</strong>. Но фронт движется: agentic RL, RLM, cost-tiered
+флоты, обученные verifier-модели могут сдвинуть экономику и верификацию. Как отличать сигнал от хайпа и
+обновлять blueprint, не переписывая его каждый квартал — этап 14 (особый: не список трендов, а
+<strong>протокол сканирования</strong>).</p>
+<hr />
+<h3>3. Карта решений: лестница стоимости и production-выборы</h3>
+<table>
+<thead>
+<tr>
+<th>Решение</th>
+<th>Когда</th>
+<th>Цена</th>
+<th>Надёжность</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Один вызов LLM</strong></td>
+<td>одностадийное (классификация, суммаризация)</td>
+<td>минимальная</td>
+<td>нет действий, нет верификации пути</td>
+</tr>
+<tr>
+<td><strong>Один агент + tools</strong></td>
+<td>динамика в одном домене</td>
+<td>средняя; проще отлаживать</td>
+<td>управляемая, domin-цель</td>
+</tr>
+<tr>
+<td><strong>Мультиагент</strong></td>
+<td>параллельная широта, разделение зон</td>
+<td><strong>≈15×</strong> токенов + координация (37% отказов, урок 11)</td>
+<td>выше на правильной задаче, новый класс отказов</td>
+</tr>
+<tr>
+<td><strong>Framework</strong> (LangGraph/AutoGen/CrewAI)</td>
+<td>гибкость, контроль</td>
+<td>свой CI/CD, observability, security</td>
+<td>зависит от команды</td>
+</tr>
+<tr>
+<td><strong>Platform</strong> (Bedrock Agents, Azure, Vertex)</td>
+<td>скорость запуска, готовые controls</td>
+<td>vendor-зависимость</td>
+<td>готовые аудит/масштаб</td>
+</tr>
+</tbody>
+</table>
+<p><strong>SLO по критичности (practitioner-ориентиры, не стандарт):</strong> критические сервисы тяготеют к высокой
+успешности и низкой доле отказов; менее критичные допускают ~85–95% с акцентом на скорость; выход из пилота
+обычно требует стабильных ~85–95% success + низкого intervention rate. Конкретные пороги — под домен и
+cost-of-failure.</p>
+<h4>3.1 Спорные точки (оставляем спорными)</h4>
+<ul>
+<li><strong>Порог окупаемости ROI.</strong> Одни: агент должен быть в 2–3× дешевле ручного; другие: за надёжность/скорость
+  можно платить премию. Где порог — бизнес-суждение, зависит от cost-of-failure. Эмпирический ориентир «где
+  AI реально помогает» — <strong>«Navigating the Jagged Technological Frontier»</strong> (Dell'Acqua et al., HBS+BCG,
+  1000+ консультантов): внутри «зубчатой границы» возможностей AI резко повышает качество/скорость, снаружи —
+  <strong>вредит</strong> (centaur/cyborg-паттерны). ROI зависит не только от цены, но и от того, по какую сторону границы
+  лежит задача.</li>
+<li><strong>«Достаточно хорошо»: 90%? 99%?</strong> Граница приемлемой надёжности доменна. В критичных областях даже 99%
+  может быть мало (cost-of-failure × объём).</li>
+<li><strong>Верифицируемость как потолок.</strong> Многие практики: проверка корректности в реальном масштабе
+  <strong>недостижима</strong> → отсюда HITL + ретро-аудит. Это фундаментальное ограничение масштабирования, не временное.</li>
+<li><strong>Красивая архитектура vs работающая.</strong> Сложные многоагентные схемы академии часто не выдерживают
+  прод-требований (latency, cost, reliability). В проде ценится простота и предсказуемость — начинать с
+  простого (один агент с ролями), усложнять по необходимости (эхо урока 11).</li>
+<li><strong>Регуляция полного цикла.</strong> Нет норм, задающих весь цикл agentic-систем (архитектура→аудит). AI Act —
+  про high-risk надзор (урок 12), но не покрывает специфику агентов целиком. Пробел.</li>
+</ul>
+<hr />
+<h3>4. Failure modes готовности (синтез всего курса)</h3>
+<table>
+<thead>
+<tr>
+<th>Отказ</th>
+<th>Механизм</th>
+<th>Чем закрывается (примитив spine)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Confident-wrong at scale</strong></td>
+<td>уверенно неверно из устаревших данных (Amazon Q, 6.3M заказов)</td>
+<td>verifier (6) + memory decay/provenance (7) + retrieval grounding (8)</td>
+</tr>
+<tr>
+<td><strong>Cost-of-failure игнорирован</strong></td>
+<td>дёшев в инференсе, дорог в ошибке</td>
+<td>unit-экономика: cost-per-successful-task</td>
+</tr>
+<tr>
+<td><strong>Verification gap</strong></td>
+<td>нельзя проверить в масштабе → тихий брак</td>
+<td>evals/pass^k (6), HITL на критичном (12)</td>
+</tr>
+<tr>
+<td><strong>Нет kill-switch/rollback</strong></td>
+<td>нечем остановить/откатить (Replit, Step Finance)</td>
+<td>стоп-критерий (3), policy (5), компенсация (3)</td>
+</tr>
+<tr>
+<td><strong>Demo-to-prod cliff</strong></td>
+<td>spine с дырами выдан за готовый</td>
+<td>production-readiness checklist (§5)</td>
+</tr>
+<tr>
+<td><strong>No accountability/audit</strong></td>
+<td>«виноват агент» (Air Canada)</td>
+<td>RACI + audit trail (9, 12)</td>
+</tr>
+</tbody>
+</table>
+<p>Cold-open (Amazon Q) — строка 1+5: confident-wrong при дырявой готовности (нет verifier фактов, нет свежести
+данных) масштабируется в 6.3M заказов.</p>
+<hr />
+<h3>5. Вклад в reference-spine: полный L8+ blueprint + экономика + readiness gate</h3>
+<p>Capstone — здесь spine собирается целиком. Каждый примитив со своим инвариантом + сквозные контракты +
+экономический слой.</p>
+<pre><code class="language-python"># === L8+ REFERENCE BLUEPRINT (сборка уроков 2–13) ===
+#
+# Поток задачи (урок 2):
+#   intake -&gt; classifier -&gt; planner -&gt; router -&gt; context-builder -&gt; executor(+tool-registry)
+#             -&gt; verifier(+critic) -&gt; memory-manager ; сквозь всё: policy, trace, escalation
+#
+# Сквозные контракты (инварианты, накопленные по курсу):
+#   ось B автономии (1)         : уровень = f(права, надзор), не способности
+#   lifecycle (3)               : машина состояний + idempotency + event log + replay (9)
+#   context (4)                 : бюджет внимания + provenance/trust + 4 операции
+#   policy (5)                  : agent proposes / system decides; allowlist; least privilege
+#   evals (6)                   : pass^k, trajectory, cost-aware, judge bias-control
+#   memory (7)                  : write-gate + trust + conflict без overwrite
+#   retrieval (8)               : Evidence + source-grounding (ground() против citation-mismatch)
+#   security (10)               : threat model + Rule of Two (≤2 из {untrusted, sensitive, egress})
+#   multi-agent (11)            : role boundaries, MCP(верт.)/A2A(гориз.), Rule of Two на субагента
+#   HITL (12)                   : escalation + RACI(accountable=human) + анти-fatigue
+
+@dataclass
+class CostModel:
+    inference: float            # model_price × steps (фреймворк §2.1); мультиагент ×15
+    verification: float         # evals + verifier + HITL-латентность (растёт с автономией)
+    expected_failure: float     # P(fail) × cost_of_failure_per_incident
+
+    def cost_per_successful_task(self, success_rate: float) -&gt; float:
+        total = self.inference + self.verification + self.expected_failure
+        return total / max(success_rate, 1e-9)     # НЕ cost_per_task
+
+class ProductionReadinessGate(Protocol):
+    def check(self, system) -&gt; list[&quot;Gap&quot;]:
+        ...
+        # READY только если присутствуют (с инвариантами):
+        #  lifecycle+idempotency(3), context-budget(4), policy+RuleOfTwo(5,10),
+        #  verifier+eval-suite+pass^k(6), memory write-gate(7), retrieval grounding(8),
+        #  trace+replay(9), HITL+RACI+fallback(12), kill-switch + rollback, FMEA, SLO, CostModel.
+        # Любая дыра -&gt; НЕ production-ready (это «демо», урок 1).
+</code></pre>
+<p><strong>Контракт capstone:</strong> это и есть собранная система — ответ на вопрос урока 1. Экономика (cost-per-successful-task)
+и readiness gate — финальные проверки перед запуском. Cold-open = система прошла бы демо, но провалила бы
+этот gate (нет verifier фактов, нет свежести памяти).</p>
+<hr />
+<h3>6. Pset 13 — cost model + production-readiness gate</h3>
+<p><strong>Задача.</strong> Реализовать (а) cost-per-successful-task с учётом verification + failure; (б) readiness gate,
+блокирующий деплой при дырах в spine. Доказать: дешёвый-ненадёжный агент проигрывает дорогому-надёжному;
+без kill-switch/verifier система не production-ready.</p>
+<p><strong>Скелет</strong> (<code>production.py</code>):</p>
+<pre><code class="language-python">def cost_per_successful_task(cm: CostModel, success_rate: float) -&gt; float:
+    total = cm.inference + cm.verification + cm.expected_failure
+    return total / max(success_rate, 1e-9)          # ключ: на УСПЕХ, не на задачу
+
+def readiness_gaps(system) -&gt; list[str]:
+    required = [&quot;lifecycle_idempotency&quot;, &quot;context_budget&quot;, &quot;policy_rule_of_two&quot;,
+                &quot;verifier_eval_passk&quot;, &quot;memory_write_gate&quot;, &quot;retrieval_grounding&quot;,
+                &quot;trace_replay&quot;, &quot;hitl_raci_fallback&quot;, &quot;kill_switch&quot;, &quot;rollback&quot;, &quot;fmea&quot;, &quot;slo&quot;]
+    return [r for r in required if not system.has(r)]
+
+def is_production_ready(system) -&gt; bool:
+    return readiness_gaps(system) == []             # любая дыра =&gt; демо, не прод (урок 1)
+</code></pre>
+<p><strong>Тесты:</strong></p>
+<pre><code class="language-python">def test_cheap_unreliable_loses_to_expensive_reliable():
+    cheap = CostModel(inference=0.01, verification=0.0, expected_failure=5.0)   # дорогой провал
+    robust = CostModel(inference=0.10, verification=0.05, expected_failure=0.1)
+    assert cost_per_successful_task(cheap, 0.5) &gt; cost_per_successful_task(robust, 0.95)
+
+def test_cost_of_failure_can_flip_roi_negative():
+    cm = CostModel(inference=0.02, verification=0.0, expected_failure=100.0)   # Amazon-Q-класс
+    assert cost_per_successful_task(cm, 0.9) &gt; manual_baseline_cost            # автоматизация невыгодна
+
+def test_missing_kill_switch_blocks_deploy():
+    sys = System(has_all_except=&quot;kill_switch&quot;)
+    assert is_production_ready(sys) is False        # анти Replit/Step Finance
+
+def test_missing_verifier_blocks_deploy():
+    sys = System(has_all_except=&quot;verifier_eval_passk&quot;)
+    assert &quot;verifier_eval_passk&quot; in readiness_gaps(sys)   # анти Amazon Q (confident-wrong)
+
+def test_full_spine_is_production_ready():
+    assert is_production_ready(System(has_all=True)) is True
+</code></pre>
+<p><strong>Эталон.</strong> Главные мысли: (1) <code>cost_per_successful_task</code> делит на success_rate и включает failure —
+<code>test_cheap_unreliable_loses</code> показывает, почему дешёвый инференс ≠ дешёвая система; (2)
+<code>test_cost_of_failure_can_flip_roi_negative</code> — Amazon-Q-класс: дорогой провал делает автоматизацию
+убыточной; (3) readiness gate = весь spine присутствует, иначе это демо (<code>test_missing_*</code> — ответ уроку 1).</p>
+<p><strong>Расширение.</strong> Добавь FMEA-таблицу: для каждого примитива — режим отказа × последствие × вероятность ×
+смягчение; gate требует, чтобы все high-severity отказы имели смягчение. Это превращает readiness в
+доказуемый артефакт.</p>
+<hr />
+<h3>7. Диагностические вопросы (проверяют суждение)</h3>
+<ol>
+<li>Агент дёшев ($0.02/задача), но ошибается в 10% и каждая ошибка стоит дорого (Amazon-Q-класс). По §2 —
+   как посчитать настоящую цену и почему cost-per-task вводит в заблуждение?</li>
+<li>Почему 95% пилотов не дают ROI и 40% проектов отменят (§1)? Где именно демо превращается в провал — и
+   какой компонент стоимости это ловит?</li>
+<li>Тебя просят «довести агента с 95% до 99.9% надёжности — это же всего 5%». Почему это может стоить как
+   первые 95% (§2.2) и как это ограничивает автономию экономически (связь с осью B урока 1)?</li>
+<li>Система прошла демо и красиво выглядит. Какие пункты readiness-чеклиста (§5) ты проверишь, прежде чем
+   пустить в прод? Какой минимальный набор делает её «не демо»?</li>
+<li>Финансовый агент: SLO 99% «достаточно»? Как cost-of-failure × объём меняет ответ по сравнению с
+   агентом-суммаризатором логов (§3.1)?</li>
+<li><strong>Open question</strong> (§3.1): если верификация в масштабе недостижима, какие задачи в принципе нельзя
+   доверять автономному агенту при любой цене? Где проходит экономическая граница автоматизации?</li>
+</ol>
+<hr />
+<h3>8. Глоссарий-дельта</h3>
+<ul>
+<li><strong>Cost-of-inference / -verification / -failure</strong> — три компонента настоящей цены: токены × шаги / проверка
+  (evals+HITL) / P(fail)×ущерб. Доминирует не первый.</li>
+<li><strong>Cost-per-successful-task</strong> — total_cost / success_rate; правильная unit-метрика (не cost-per-task).</li>
+<li><strong>Cost ≈ model × steps</strong> — фреймворк оценки инференса (не измерение); мультиагент ×15.</li>
+<li><strong>Production readiness</strong> — весь spine присутствует со своими инвариантами + kill-switch + rollback + FMEA</li>
+<li>SLO + cost model. Демо = spine с дырами (ответ уроку 1).</li>
+<li><strong>Kill-switch / rollback / compensation</strong> — «красная кнопка» + откат (анти Replit/Step Finance).</li>
+<li><strong>FMEA</strong> — таблица режимов отказа × последствие × вероятность × смягчение.</li>
+<li><strong>SLO</strong> — целевые уровни (success rate, latency, intervention rate) по критичности.</li>
+<li><strong>ROI / точка безубыточности</strong> — экономия − (inference+verification+failure+разработка); порог зависит от
+  cost-of-failure домена.</li>
+<li><strong>Verifiability bottleneck</strong> — верификация — узкое место масштабирования; «последние 5% как первые 95%»;
+  экономический потолок автономии.</li>
+<li><strong>Verifier's Law (Jason Wei)</strong> — лёгкость обучить ИИ задаче ∝ её верифицируемости; экономическая
+  формулировка потолка автономии.</li>
+<li><strong>Jagged frontier (Dell'Acqua et al.)</strong> — AI помогает внутри «зубчатой границы» возможностей и вредит
+  снаружи; centaur/cyborg-паттерны использования.</li>
+<li><strong>Framework vs Platform</strong> — строительные блоки (свой CI/CD) vs готовая инфраструктура.</li>
+</ul>
+<hr />
+<h3>9. Первоисточники (верифицированы 2026-06-23)</h3>
+<ol>
+<li><strong>Amazon Q retail outages</strong> — Wharton Accountable AI Lab + vectara/awesome-agent-failures (case study):
+   confident-wrong из устаревшей документации → ~6.3 млн потерянных заказов, многочасовой простой.
+   <a href="https://ai-analytics.wharton.upenn.edu/wharton-accountable-ai-lab/governing-ai-agents-what-the-amazon-outage-reveals-about-enterprise-risk/" target="_blank" rel="noopener">https://ai-analytics.wharton.upenn.edu/wharton-accountable-ai-lab/governing-ai-agents-what-the-amazon-outage-reveals-about-enterprise-risk/</a>
+   · <a href="https://github.com/vectara/awesome-agent-failures" target="_blank" rel="noopener">https://github.com/vectara/awesome-agent-failures</a> — cold-open + каталог режимов отказа.</li>
+<li><strong>Mata v. Avianca, Inc.</strong>, 678 F.Supp.3d 443 (S.D.N.Y. 2023) — санкции за фейковые ChatGPT-цитаты.
+   <a href="https://www.law.berkeley.edu/wp-content/uploads/archive/2025/12/Mata-v-Avianca-Inc.pdf" target="_blank" rel="noopener">https://www.law.berkeley.edu/wp-content/uploads/archive/2025/12/Mata-v-Avianca-Inc.pdf</a> — cost-of-failure (юр.).</li>
+<li><strong>Anthropic — «How we built our multi-agent research system»</strong> (≈15× токенов) — уроки 2, 11.
+   <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank" rel="noopener">https://www.anthropic.com/engineering/multi-agent-research-system</a></li>
+<li><strong>MIT — «95% of enterprise GenAI pilots fail to deliver ROI»</strong> (2025) — урок 12.
+   <a href="https://fortune.com/2025/08/18/mit-report-95-percent-generative-ai-pilots-at-companies-failing-cfo/" target="_blank" rel="noopener">https://fortune.com/2025/08/18/mit-report-95-percent-generative-ai-pilots-at-companies-failing-cfo/</a></li>
+<li><strong>Gartner — «Over 40% of Agentic AI Projects Will Be Canceled by End of 2027»</strong> — урок 11.
+   <a href="https://www.gartner.com/en/newsroom/press-releases/2025-06-25-gartner-predicts-over-40-percent-of-agentic-ai-projects-will-be-canceled-by-end-of-2027" target="_blank" rel="noopener">https://www.gartner.com/en/newsroom/press-releases/2025-06-25-gartner-predicts-over-40-percent-of-agentic-ai-projects-will-be-canceled-by-end-of-2027</a></li>
+<li><strong>tau-bench / WebArena</strong> (демо-vs-прод разрыв, pass^k) — урок 6. <a href="https://arxiv.org/abs/2406.12045" target="_blank" rel="noopener">https://arxiv.org/abs/2406.12045</a> ·
+   <a href="https://arxiv.org/abs/2307.13854" target="_blank" rel="noopener">https://arxiv.org/abs/2307.13854</a></li>
+<li><strong>Cost-of-failure кейсы</strong> (верифицированы ранее): Air Canada (урок 12), Step Finance $27M (урок 5),
+   Replit (уроки 1, 3).</li>
+<li><strong>Jason Wei — «Asymmetry of verification and verifier's law»</strong> (2025), jasonwei.net — имя тезиса §2.2
+   (верифицируемость как потолок).</li>
+<li><strong>Dell'Acqua et al. — «Navigating the Jagged Technological Frontier»</strong> (HBS + BCG, 2023). SSRN 4573321:
+   <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4573321" target="_blank" rel="noopener">https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4573321</a> — где AI помогает vs вредит (§3.1).</li>
+</ol>
+<blockquote class="quarantine">
+<p><strong>Карантин / правки:</strong> «$6.3M loss» → на деле 6.3 млн ЗАКАЗОВ (Amazon Q), не долларов; ChatDev «Microsoft,
+33%» → Tsinghua/OpenBMB, число не подтверждено; «PocketOS Cursor стер бэкап за 9с» — не верифицировано;
+«$47K loop за 11 дней» — единичный блог, иллюстративно. <strong>Practitioner-оценки (не факт, поданы как
+иллюстрация/framework):</strong> «$0.05–0.50/задача», «$636–1996/мес», «2.4 req $0.018 / 8.2 шагов 18с», «LLM-API
+60–80% стоимости», «72% buy vs build», «debug 3–5×». «cost ≈ model × steps» используется как фреймворк.</p>
+</blockquote>
+<hr />
+<h3>Замыкание курса (этапы 1–13)</h3>
+<p>Курс прошёл полную деривацию: автономия = права+надзор (1) → примитивы оркестратора (2) → надёжный lifecycle
+(3) → инженерия контекста (4) → права и policy (5) → измеримость evals (6) → память (7) → retrieval (8) →
+наблюдаемость (9) → безопасность (10) → мультиагентность (11) → человек в петле (12) → экономика и сборка
+(13). Каждый этап давал примитив с контрактом интерфейса и инвариантом «что ломается без него». Capstone
+собрал их в L8+ blueprint, где <strong>прод отличается от демо</strong> наличием всех инвариантов + положительной
+unit-экономикой + проходимым readiness gate. Остаётся этап 14 — <strong>как не отстать от фронта</strong>, не переписывая
+это ядро каждый квартал.</p>
+<p><em>Плотность — целевая. Capstone, длинный закономерно. Cold-open (Amazon Q, 6.3M заказов) — верифицированный,
+показывает доминирование cost-of-failure над cost-of-inference. Этап собрал весь spine в blueprint, ввёл
+unit-экономику (cost-per-successful-task) и production-readiness gate как ответ на вопрос урока 1. Gate
+подтвердил Amazon Q и Mata v. Avianca, оперся на уже верифицированные MIT/Gartner/Anthropic/бенчмарки и
+срезал practitioner-числа без источника + поправил «6.3M заказов ≠ $6.3M» и ChatDev-атрибуцию.</em></p>
+    </div>
+    <nav class="pager">
+      <a class="pg-prev" href="lesson-12.html"><span class="pk">← Урок 12</span>Human-in-the-loop и operating model</a>
+      <a class="pg-next" href="lesson-14.html"><span class="pk">Урок 14 →</span>Фронт и горизонт-сканирование</a>
+    </nav>
+    <footer id="footer">
+      <p>Дизайн-язык адаптирован из <a href="https://github.com/ThariqS/html-effectiveness"
+        target="_blank" rel="noopener">html-effectiveness</a> (Apache-2.0). Актуально на 2026-06-23.</p>
+    </footer>
+  </main>
+</div>
+<script>
+// keep the active lesson visible in the sticky sidebar on load
+var act=document.querySelector('.sidebar nav a.active');
+if(act && act.scrollIntoView){ act.scrollIntoView({block:'center'}); }
+</script>
+</body>
+</html>

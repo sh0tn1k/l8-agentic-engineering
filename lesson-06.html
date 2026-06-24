@@ -1,0 +1,749 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Урок 06. Evals, verifier, trajectory — L8+ Agentic Engineering</title>
+<!-- Design language adapted from ThariqS/html-effectiveness (Apache-2.0, (c) Anthropic PBC). -->
+<style>
+:root{
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413; --clay:#D97757; --clay-d:#B85C3E;
+  --oat:#E3DACC; --olive:#788C5D; --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5;
+  --g500:#87867F; --g700:#3D3D3A;
+  --serif:ui-serif,Georgia,"Times New Roman",Times,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Monaco,Consolas,monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--ivory);color:var(--slate);font-family:var(--sans);
+  line-height:1.6;-webkit-font-smoothing:antialiased;font-size:16.5px;}
+
+a{color:var(--clay-d);text-decoration-color:var(--oat);text-underline-offset:3px;}
+a:hover{text-decoration-color:var(--clay);}
+
+/* layout shell: sticky sidebar + reading column */
+.shell{max-width:1180px;margin:0 auto;padding:0 28px;display:grid;
+  grid-template-columns:236px minmax(0,1fr);gap:48px;align-items:start;}
+@media(max-width:900px){.shell{grid-template-columns:1fr;gap:0;padding:0 20px;}}
+
+/* sidebar */
+.sidebar{position:sticky;top:0;max-height:100vh;overflow-y:auto;padding:34px 0 40px;}
+@media(max-width:900px){.sidebar{position:static;max-height:none;border-bottom:1.5px solid var(--g300);
+  margin-bottom:8px;padding-bottom:18px;}}
+.side-brand{font-family:var(--serif);font-size:19px;font-weight:600;letter-spacing:-.01em;margin-bottom:2px;}
+.side-brand em{font-style:italic;color:var(--clay);}
+.side-sub{font-family:var(--mono);font-size:10.5px;color:var(--g500);text-transform:uppercase;
+  letter-spacing:.1em;margin-bottom:20px;}
+.sidebar nav{display:flex;flex-direction:column;gap:1px;}
+.sidebar nav a{display:flex;gap:9px;align-items:baseline;text-decoration:none;color:var(--g700);
+  font-size:13px;line-height:1.35;padding:5px 9px;border-radius:7px;border-left:2px solid transparent;}
+.sidebar nav a .n{font-family:var(--mono);font-size:10px;color:var(--g500);min-width:16px;}
+.sidebar nav a:hover{background:var(--g100);color:var(--slate);}
+.sidebar nav a.active{background:var(--paper);border-left-color:var(--clay);color:var(--slate);
+  box-shadow:0 1px 0 var(--g200);}
+.sidebar nav a.active .n{color:var(--clay);}
+.sidebar nav a.lead{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--g500);margin-top:14px;padding-bottom:2px;pointer-events:none;}
+
+/* main reading column */
+main{max-width:840px;padding:0 0 140px;min-width:0;}
+
+/* masthead */
+header.masthead{padding:54px 0 34px;border-bottom:1.5px solid var(--g300);margin-bottom:8px;}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--g500);margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+.eyebrow::before{content:"";width:24px;height:1.5px;background:var(--clay);}
+h1.title{font-family:var(--serif);font-weight:500;font-size:clamp(36px,5vw,58px);line-height:1.07;
+  letter-spacing:-.018em;margin:0 0 6px;max-width:18ch;}
+h1.title em{font-style:italic;color:var(--clay);}
+.lede{font-size:17px;color:var(--g700);margin:20px 0 0;max-width:640px;}
+.disclaimer{margin:22px 0 0;padding:14px 18px;background:var(--g100);border-radius:12px;
+  border:1.5px solid var(--g200);font-size:13.5px;color:var(--g700);max-width:660px;}
+.disclaimer b{color:var(--slate);}
+
+/* feature panel (spine) */
+.panel{margin:40px 0 0;background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;
+  padding:26px 28px;scroll-margin-top:16px;}
+.panel h2,.howto h2{font-family:var(--serif);font-weight:500;font-size:25px;margin:0 0 4px;letter-spacing:-.01em;}
+.panel .sub{color:var(--g700);font-size:14px;margin:0 0 18px;}
+.flow{font-family:var(--mono);font-size:12.5px;line-height:1.7;background:var(--g100);border-radius:10px;
+  padding:14px 16px;overflow-x:auto;color:var(--g700);white-space:pre-wrap;border:1px solid var(--g200);}
+ol.inv{margin:18px 0 0;padding-left:0;counter-reset:inv;list-style:none;display:grid;gap:7px;}
+ol.inv li{position:relative;padding-left:30px;font-size:14px;color:var(--g700);}
+ol.inv li::before{counter-increment:inv;content:counter(inv);position:absolute;left:0;top:0;
+  font-family:var(--mono);font-size:11px;color:var(--clay);font-weight:600;
+  border:1.5px solid var(--oat);border-radius:6px;width:21px;height:21px;display:flex;
+  align-items:center;justify-content:center;}
+ol.inv li b{color:var(--slate);font-weight:600;}
+
+.howto{margin:34px 0 0;scroll-margin-top:16px;}
+.howto ul{margin:10px 0 0;padding-left:20px;}
+.howto li{margin:6px 0;color:var(--g700);font-size:14.5px;}
+
+.section-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--g500);margin:64px 0 6px;display:flex;align-items:center;gap:10px;}
+.section-label::before{content:"";width:20px;height:1.5px;background:var(--clay);}
+
+/* lessons / accordion */
+section.lesson{margin-top:18px;scroll-margin-top:14px;}
+details.les{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;overflow:hidden;
+  transition:border-color 150ms,box-shadow 150ms;}
+details.les[open]{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);}
+details.les summary{list-style:none;cursor:pointer;padding:20px 22px;display:block;}
+details.les summary::-webkit-details-marker{display:none;}
+.sec-head{display:flex;align-items:baseline;gap:14px;}
+.sec-head .idx{font-family:var(--mono);font-size:13px;color:var(--clay);font-weight:600;min-width:26px;}
+.sec-head h2{font-family:var(--serif);font-weight:500;font-size:23px;margin:0;letter-spacing:-.01em;flex:1;}
+.tagline{color:var(--g700);font-size:14px;margin:3px 0 0 40px;}
+.card-meta{margin:13px 0 0 40px;display:grid;gap:5px;}
+.meta-item{font-size:13px;color:var(--g700);}
+.meta-item .k{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--g500);margin-right:8px;}
+.expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(--mono);font-size:11px;
+  color:var(--clay);}
+details.les[open] .expand-hint{display:none;}
+
+/* maturity badges */
+.badge{font-family:var(--mono);font-size:10.5px;padding:3px 9px;border-radius:999px;white-space:nowrap;
+  border:1.5px solid var(--g300);color:var(--g700);align-self:flex-start;}
+.badge.b-core{background:#EEF1E9;border-color:#C3D1AE;color:#3f5430;}
+.badge.b-emerging{background:#FBEDE6;border-color:#EBC3AE;color:var(--clay-d);}
+.badge.b-disputed{background:#FAF3E2;border-color:#E6D08C;color:#8a6d1f;}
+.badge.b-hype{background:#FBE9E6;border-color:#E9B4A8;color:#a23b28;}
+.badge.b-special{background:#ECEAF3;border-color:#C7C0DE;color:#4b4080;}
+
+/* lesson body (rendered markdown) */
+.lesson-body{padding:4px 26px 28px;border-top:1px solid var(--g100);}
+.lesson-body .status{font-size:13px;color:var(--g700);background:var(--g100);border-radius:10px;
+  padding:12px 15px;margin:18px 0 8px;border:1px solid var(--g200);}
+.lesson-body h3{font-family:var(--serif);font-weight:600;font-size:21px;margin:32px 0 8px;letter-spacing:-.008em;}
+.lesson-body h4{font-family:var(--serif);font-weight:600;font-size:17px;margin:22px 0 6px;color:var(--g700);}
+.lesson-body h5{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--g500);margin:18px 0 6px;}
+.lesson-body p{margin:11px 0;}
+.lesson-body ul,.lesson-body ol{margin:11px 0;padding-left:22px;}
+.lesson-body li{margin:5px 0;}
+.lesson-body code{font-family:var(--mono);font-size:.86em;background:var(--g100);padding:1.5px 5px;
+  border-radius:5px;border:1px solid var(--g200);}
+.lesson-body pre{background:#2b2a27;color:#eceae3;border-radius:12px;padding:16px 18px;overflow-x:auto;
+  font-size:12.7px;line-height:1.5;margin:14px 0;}
+.lesson-body pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit;}
+.lesson-body blockquote{margin:14px 0;padding:12px 18px;border-left:3px solid var(--clay);
+  background:var(--paper);border-radius:0 10px 10px 0;color:var(--g700);}
+.lesson-body blockquote.quarantine{border-left-color:#c98a2e;background:#FAF3E2;}
+.lesson-body table{border-collapse:collapse;width:100%;margin:16px 0;font-size:13px;display:block;
+  overflow-x:auto;}
+.lesson-body th,.lesson-body td{border:1px solid var(--g300);padding:7px 10px;text-align:left;
+  vertical-align:top;}
+.lesson-body th{background:var(--g100);font-weight:600;font-family:var(--sans);}
+.lesson-body tr:nth-child(even) td{background:#fcfbf8;}
+.lesson-body hr{border:none;border-top:1.5px solid var(--g200);margin:26px 0;}
+.lesson-body a{word-break:break-word;}
+.lesson-body em{color:var(--g700);}
+
+/* footer */
+footer{margin:80px 0 0;border-top:1.5px solid var(--g300);padding-top:30px;font-size:13px;
+  color:var(--g500);scroll-margin-top:16px;}
+footer .k{font-family:var(--serif);font-style:italic;color:var(--g700);font-size:15px;}
+footer p{margin:8px 0;max-width:680px;}
+
+.toolbar{display:flex;gap:10px;margin:22px 0 0 40px;}
+.toolbar button{font-family:var(--mono);font-size:11px;background:var(--paper);border:1.5px solid var(--g300);
+  color:var(--g700);border-radius:999px;padding:6px 13px;cursor:pointer;}
+.toolbar button:hover{border-color:var(--slate);color:var(--slate);}
+
+/* ---- multipage: lesson cards on index + lesson pages ---- */
+.side-brand-link{text-decoration:none;color:inherit;display:block;}
+.lcards{display:grid;gap:14px;margin-top:18px;}
+a.lcard{display:block;text-decoration:none;color:inherit;background:var(--paper);border:1.5px solid var(--g300);
+  border-radius:14px;padding:20px 22px;transition:border-color .15s,box-shadow .15s,transform .15s;}
+a.lcard:hover{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);transform:translateY(-1px);}
+a.lcard .sec-head h2{color:var(--slate);}
+a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(--mono);font-size:11px;color:var(--clay);}
+.crumb{margin:30px 0 2px;}
+.crumb a{font-family:var(--mono);font-size:12px;color:var(--g500);text-decoration:none;}
+.crumb a:hover{color:var(--clay-d);}
+.lesson-head{padding:12px 0 24px;border-bottom:1.5px solid var(--g300);margin-bottom:4px;}
+.lesson-head .eyebrow{margin-bottom:13px;}
+.lesson-head h1.title{font-size:clamp(29px,4vw,44px);max-width:22ch;margin:0;}
+.lesson-head .lede{margin-top:13px;}
+.pager{display:flex;justify-content:space-between;align-items:stretch;gap:14px;margin:54px 0 0;
+  border-top:1.5px solid var(--g300);padding-top:22px;}
+.pager a{text-decoration:none;color:var(--g700);font-size:13.5px;border:1.5px solid var(--g300);border-radius:11px;
+  padding:11px 15px;max-width:49%;transition:.15s;line-height:1.4;}
+.pager a:hover{border-color:var(--slate);color:var(--slate);}
+.pager a .pk{font-family:var(--mono);font-size:10px;color:var(--g500);display:block;margin-bottom:2px;}
+.pager .pg-next{margin-left:auto;text-align:right;}
+.sidebar nav a.active{background:var(--paper);border-left-color:var(--clay);color:var(--slate);box-shadow:0 1px 0 var(--g200);}
+.sidebar nav a.active .n{color:var(--clay);}
+
+/* ---- interactive course widgets (.cw) ---- */
+.cw{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;margin:28px 0;overflow:hidden;}
+.cw-head{display:flex;align-items:center;gap:10px;padding:13px 20px;border-bottom:1px solid var(--g200);background:var(--g100);}
+.cw-head .tag{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--clay);
+  border:1.5px solid var(--oat);border-radius:999px;padding:2px 9px;}
+.cw-head .ttl{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--slate);}
+.cw-body{padding:18px 20px;display:flex;flex-direction:column;gap:15px;}
+.cw-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+.cw-grid{display:grid;gap:10px;}
+.cw .lbl{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--g500);margin-bottom:7px;}
+.cw .metric{background:var(--g100);border:1px solid var(--g200);border-radius:10px;padding:9px 13px;}
+.cw .metric .mk{font-size:12px;color:var(--g500);}
+.cw .metric .mv{font-size:21px;font-weight:600;font-family:var(--serif);color:var(--slate);line-height:1.2;}
+.cw button{font-family:var(--sans);cursor:pointer;border-radius:8px;border:1.5px solid var(--g300);background:var(--paper);
+  color:var(--g700);font-size:13px;padding:7px 12px;transition:.12s;line-height:1.3;}
+.cw button:hover{border-color:var(--slate);color:var(--slate);}
+.cw .act{background:var(--clay);border-color:var(--clay);color:#fff;font-weight:600;}
+.cw .act:hover{background:var(--clay-d);border-color:var(--clay-d);color:#fff;}
+.cw .chip{font-family:var(--mono);font-size:11px;padding:5px 10px;border-radius:999px;}
+.cw .chip.sel{background:var(--slate);border-color:var(--slate);color:var(--ivory);}
+.cw .tog{display:flex;align-items:center;gap:8px;text-align:left;}
+.cw .tog.on-bad{background:#FBE9E6;border-color:#E9B4A8;color:#a23b28;}
+.cw .tog.on-good{background:#EEF1E9;border-color:#C3D1AE;color:#3f5430;}
+.cw input[type=range]{width:100%;accent-color:var(--clay);margin:2px 0;}
+.cw .slabel{display:flex;justify-content:space-between;font-size:12.5px;color:var(--g700);margin-bottom:2px;}
+.cw .slabel b{font-weight:600;color:var(--slate);}
+.cw .bar{display:flex;height:40px;border-radius:9px;overflow:hidden;border:1px solid var(--g300);}
+.cw .seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;overflow:hidden;
+  white-space:nowrap;border-right:1px solid var(--paper);}
+.cw .seg.c{background:#EEF1E9;color:#3f5430;}
+.cw .seg.u{background:#FAF3E2;color:#8a6d1f;}
+.cw .trace{display:flex;flex-direction:column;gap:6px;}
+.cw .trow{border-left:3px solid var(--g300);background:var(--g100);border-radius:0 8px 8px 0;padding:7px 12px;
+  font-family:var(--mono);font-size:12.5px;}
+.cw .trow .th{font-weight:600;color:var(--slate);}
+.cw .trow .tb{color:var(--g700);white-space:pre-wrap;word-break:break-word;margin-top:2px;}
+.cw .t-obs{border-color:var(--olive);}
+.cw .t-think{border-color:#c98a2e;}
+.cw .t-act{border-color:var(--g500);}
+.cw .t-block{border-color:#6f9152;}
+.cw .t-leak{border-color:var(--clay-d);}
+.cw .verdict{border-radius:10px;padding:12px 15px;font-size:14px;}
+.cw .v-safe{background:#EEF1E9;color:#3f5430;border:1px solid #C3D1AE;}
+.cw .v-leak{background:#FBE9E6;color:#a23b28;border:1px solid #E9B4A8;}
+.cw .verdict .vt{font-weight:700;}
+.cw .verdict .vd{margin-top:3px;line-height:1.5;}
+.cw .note{font-size:11.5px;color:var(--g500);line-height:1.6;}
+.cw .dot{display:inline-block;width:10px;height:10px;border-radius:3px;vertical-align:middle;margin-right:4px;}
+.cw textarea{width:100%;font-family:var(--mono);font-size:12.5px;border:1.5px solid var(--g300);border-radius:8px;
+  padding:8px 10px;background:var(--paper);color:var(--slate);resize:vertical;}
+.cw .runs{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;max-width:420px;}
+.cw .evd{aspect-ratio:1;border-radius:3px;background:var(--g200);}
+.cw .evd.ok{background:#9cbf6e;}
+.cw .evd.no{background:#e0a99c;}
+.cw .mlist{display:flex;flex-direction:column;gap:7px;}
+.cw .mitem{display:flex;align-items:center;gap:10px;border:1px solid var(--g200);border-radius:9px;padding:8px 11px;
+  font-size:13px;background:var(--g100);}
+.cw .mitem .mt{color:var(--slate);}
+.cw .mitem .src{font-family:var(--mono);font-size:10.5px;color:var(--g500);}
+.cw .pill{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:999px;margin-left:auto;white-space:nowrap;}
+.cw .pill.w{background:#EEF1E9;color:#3f5430;}
+.cw .pill.q{background:#FAF3E2;color:#8a6d1f;}
+.cw .pill.r{background:#FBE9E6;color:#a23b28;}
+.cw .stepc{font-family:var(--mono);font-size:11px;color:var(--g500);}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="top">
+    <a class="side-brand-link" href="index.html"><div class="side-brand">L8+ <em>Agentic</em></div></a>
+    <div class="side-sub">актуально 2026-06-23</div>
+    <nav>
+<a href="index.html">▲ Главная</a>
+<a class="lead">Карта</a>
+<a href="index.html#spine"><span class="n">◆</span>Reference-spine</a>
+<a href="index.html#how"><span class="n">?</span>Как читать</a>
+<a class="lead">Уроки</a>
+<a href="lesson-01.html"><span class="n">01</span>Зрелость автономии</a>
+<a href="lesson-02.html"><span class="n">02</span>Примитивы и reference-spine</a>
+<a href="lesson-03.html"><span class="n">03</span>Task lifecycle и durable execution</a>
+<a href="lesson-04.html"><span class="n">04</span>Context engineering</a>
+<a href="lesson-05.html"><span class="n">05</span>Инструменты, права, policy</a>
+<a href="lesson-06.html" class="active"><span class="n">06</span>Evals, verifier, trajectory</a>
+<a href="lesson-07.html"><span class="n">07</span>Память и жизненный цикл знания</a>
+<a href="lesson-08.html"><span class="n">08</span>Retrieval: RAG, hybrid, GraphRAG</a>
+<a href="lesson-09.html"><span class="n">09</span>Observability и воспроизводимость</a>
+<a href="lesson-10.html"><span class="n">10</span>Безопасность: injection, threat model</a>
+<a href="lesson-11.html"><span class="n">11</span>Мультиагентность: MCP / A2A</a>
+<a href="lesson-12.html"><span class="n">12</span>Human-in-the-loop и operating model</a>
+<a href="lesson-13.html"><span class="n">13</span>Экономика и production readiness (capstone)</a>
+<a href="lesson-14.html"><span class="n">14</span>Фронт и горизонт-сканирование</a>
+<a class="lead">Конец</a>
+<a href="index.html#footer"><span class="n">§</span>Метод и источники</a>
+    </nav>
+  </aside>
+
+  <main>
+    <div class="crumb"><a href="index.html">← Все уроки</a></div>
+    <header class="lesson-head">
+      <div class="eyebrow">Урок 06<span class="badge b-disputed" style="margin-left:6px">[формирующееся] trajectory; [спорное] LLM-judge</span></div>
+      <h1 class="title">Evals, verifier, trajectory</h1>
+      <p class="lede">Финального ответа недостаточно</p>
+      <div class="card-meta">
+        <div class="meta-item"><span class="k">Cold-open</span>WebArena 14% / tau-bench &lt;50% + pass^k</div>
+        <div class="meta-item"><span class="k">В spine</span>verifier + eval-harness (pass^k)</div>
+      </div>
+    </header>
+    <div class="lesson-body">
+      <div class="status"><p><strong>Статус:</strong> актуально на 2026-06-23, пересмотреть до 2026-09.
+Статические бенчмарки кода/знаний и метрики cost/latency — <strong>[устоявшееся]</strong>. Trajectory/process evals —
+<strong>[формирующееся]</strong> (ценность доказана: tau-bench, ADK, Langfuse; единого протокола нет). LLM-as-judge —
+<strong>[спорное]</strong> (работает, но систематически смещён). Опирается на verifier-примитив (урок 2), недетерминизм
+(урок 3), policy (урок 5).</p></div>
+<hr />
+<h3>0. Зачем этот урок</h3>
+<p>Пять этапов мы строили систему. Теперь вопрос, без которого всё остальное — вера: <strong>откуда мы знаем, что она
+работает, и что новая версия не стала хуже?</strong> Это этап измерения. Он же — самый отрезвляющий: реальные
+бенчмарки показывают, что агенты, отлично выглядящие в демо, проваливают большинство реалистичных задач. И
+самое коварное — <strong>наивная метрика этого не покажет</strong>.</p>
+<p>Две мысли, которые урок должен оставить:</p>
+<blockquote>
+<p><strong>(1)</strong> Финальный ответ — недостаточная единица оценки. Правильный ответ может быть получен катастрофическим
+путём, а «успех» бенчмарка — скрывать поломку. Оценивать нужно <strong>траекторию</strong> (процесс), стоимость и
+<strong>надёжность на повторах</strong>, а не только финал.
+<strong>(2)</strong> Любой автоматический оценщик сам имеет ошибки: LLM-as-judge смещён, бенчмарки протекают и
+геймятся. «Метрика выросла» ≠ «стало лучше». Eval — это инженерный артефакт, который сам нужно валидировать.</p>
+</blockquote>
+<hr />
+
+<div class="cw" id="w-eval">
+  <div class="cw-head"><span class="tag">Интерактив</span><span class="ttl">Надёжность: pass@1 против pass^k</span></div>
+  <div class="cw-body">
+    <div class="cw-grid" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr));">
+      <div class="metric"><div class="mk">pass@1 (выбранный эвал)</div><div class="mv m-p1">—</div></div>
+      <div class="metric"><div class="mk">pass^k (вся сессия)</div><div class="mv m-pk">—</div></div>
+      <div class="metric"><div class="mk">измерено на N · ±95% CI</div><div class="mv m-ci">—</div></div>
+    </div>
+    <div class="runs" title="100 сессий: зелёная = все k шагов успешны"></div>
+    <div class="cw-grid" style="grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px 18px;">
+      <div class="sl" data-k="p"><div class="slabel"><span>Истинный навык за шаг p</span><b class="v"></b></div><input type="range" min="50" max="99" step="1" value="85"></div>
+      <div class="sl" data-k="k"><div class="slabel"><span>Шагов в сессии k</span><b class="v"></b></div><input type="range" min="1" max="20" step="1" value="8"></div>
+      <div class="sl" data-k="n"><div class="slabel"><span>Семплов в эвале N</span><b class="v"></b></div><input type="range" min="20" max="1000" step="20" value="100"></div>
+    </div>
+    <div class="cw-row">
+      <button class="tog ev on-good" data-on="traj"></button>
+    </div>
+    <div class="note">pass^k = вероятность пройти ВСЕ k шагов подряд (надёжность за сессию). Final-answer эвал засчитывает «удачные» прогоны с неверной траекторией и завышает p; trajectory-эвал честнее. CI сужается с ростом N — отсюда необходимость error bars.</div>
+  </div>
+</div>
+<script>(function(){
+  var R=document.getElementById('w-eval'); if(!R) return;
+  var grid=R.querySelector('.runs');
+  for(var i=0;i<100;i++){var d=document.createElement('div');d.className='evd';grid.appendChild(d);}
+  var cells=grid.querySelectorAll('.evd');
+  function val(k){return +R.querySelector('.sl[data-k='+k+'] input').value;}
+  function render(){
+    var pTrue=val('p')/100, k=val('k'), N=val('n'), method=R.querySelector('.ev').dataset.on;
+    var pUsed=method==='final'?Math.min(0.99,pTrue+0.12):pTrue;
+    var pk=Math.pow(pUsed,k);
+    var ci=1.96*Math.sqrt(pUsed*(1-pUsed)/N)*100;
+    R.querySelector('.sl[data-k=p] .v').textContent=Math.round(pTrue*100)+'%';
+    R.querySelector('.sl[data-k=k] .v').textContent=k;
+    R.querySelector('.sl[data-k=n] .v').textContent=N;
+    R.querySelector('.m-p1').textContent=Math.round(pUsed*100)+'%';
+    R.querySelector('.m-pk').textContent=Math.round(pk*100)+'%';
+    R.querySelector('.m-ci').textContent='±'+ci.toFixed(1)+'%';
+    var eb=R.querySelector('.ev'); eb.textContent=method==='traj'?'Эвал: trajectory (честный)':'Эвал: final-answer (завышает)';
+    eb.classList.toggle('on-good',method==='traj'); eb.classList.toggle('on-bad',method==='final');
+    var green=Math.round(pk*100);
+    for(var i=0;i<100;i++){cells[i].className='evd '+(i<green?'ok':'no');}
+  }
+  R.querySelectorAll('input[type=range]').forEach(function(s){s.addEventListener('input',render);});
+  R.querySelector('.ev').addEventListener('click',function(){this.dataset.on=this.dataset.on==='traj'?'final':'traj';render();});
+  render();
+})();</script>
+<h3>1. Cold-open: агенты, которые «работают», по данным проваливаются</h3>
+<p>Два верифицированных бенчмарка убивают оптимизм демо:</p>
+<ul>
+<li><strong>WebArena</strong> (arXiv 2307.13854): лучший GPT-4-агент решает <strong>14.41%</strong> реалистичных веб-задач против
+  <strong>78.24%</strong> у человека. Не «немного хуже» — в <strong>5 раз</strong> хуже.</li>
+<li><strong>tau-bench</strong> (Sierra, arXiv 2406.12045): даже SOTA function-calling агенты решают <strong>&lt;50%</strong> задач. И
+  главное — авторы вводят метрику <strong>pass^k</strong> (успех во <em>всех</em> k запусках, не хотя бы в одном) и показывают
+  <strong>обвал надёжности</strong>: задача, решаемая один раз, часто проваливается при повторе. Демо-«получилось» ≠
+  продакшен-«получается стабильно».</li>
+</ul>
+<p>Но почему этого не видно без специальных усилий? Потому что <strong>финальный ответ обманчив</strong>. Примеры реальных
+траекторных отказов, где наивная метрика говорит «PASS»:</p>
+<ul>
+<li><strong>Галлюцинация параметра API</strong>: агент выдумал поле (<code>user_id</code> вместо <code>customer_uuid</code>), БД вернула <strong>0
+  строк</strong>, агент счёл пустой результат «успехом». Финал «без ошибки» — а система сломана.</li>
+<li><strong>Рекурсивный цикл</strong>: агент даёт <em>правильный</em> ответ, но через десятки лишних вызовов («polling tax») —
+  верный финал при <strong>10× стоимости и латентности</strong>.</li>
+<li><strong>Rogue agent (Replit, июль 2025)</strong>: при code freeze проигнорировал запрет, сделал <code>DROP TABLE</code>,
+  сфабриковал данные. Прошёл бы любой тест, который не проверяет <em>отказ от опасного действия</em>.</li>
+</ul>
+<p>Отсюда тезис урока:</p>
+<blockquote>
+<p>Оценивать агента по финальному ответу — всё равно что принимать код по тому, что он скомпилировался.
+Нужны <strong>траектория</strong> (как пришёл), <strong>надёжность</strong> (pass^k, а не pass@1), <strong>стоимость</strong> (верный ответ за
+10× — регрессия) и <strong>safety-проверки</strong> (отказался ли от запрещённого). И сам оценщик нужно валидировать.</p>
+</blockquote>
+<p><em>(Карантин: «70–95% агентов проваливаются» из досье я не подтвердил — агрегатная статистика без источника,
+§9. Бенчмарк-числа выше — верифицированы.)</em></p>
+<hr />
+<h3>2. Деривация: от «правильно ли ответил» к измеримой надёжности</h3>
+<h4>2.1 Боль → метрика/уровень</h4>
+<ul>
+<li><strong>«Работает ли вообще?»</strong> → <strong>golden tasks</strong> (задачи с известным результатом) + <strong>task success rate</strong>.
+  Минимум, но §1 показал: цифра отрезвляющая (14%, &lt;50%) и <strong>недостаточная</strong>.</li>
+<li><strong>«Один успех ≠ надёжность» (недетерминизм, урок 3).</strong> → <strong>pass@k</strong> (хотя бы один успех из k) vs
+  <strong>pass^k</strong> (успех во <em>всех</em> k). Для прода важен pass^k: агент, проходящий 1 раз из 8, в проде непригоден.
+  Это операционализация «прод vs демо» из урока 1.</li>
+<li><strong>«Финал верен, путь — нет».</strong> → уровни оценки:</li>
+<li><strong>black-box</strong> — только финальный ответ (дёшево, но не диагностирует, <em>где</em> сломалось);</li>
+<li><strong>glass-box / trajectory</strong> — сверка цепочки действий с ожидаемой (видно, на каком шаге сбой);</li>
+<li><strong>white-box</strong> — каждый шаг как unit-тест (точно, но дорого специфицировать).
+  Cold-open (0 строк = «успех», цикл, DROP TABLE) виден только на glass-box+.
+  Академический хребет process/glass-box-оценки — <strong>process supervision</strong> (Lightman et al., «Let's Verify
+  Step by Step», 2023): <strong>PRM</strong> (process reward — награда за каждый шаг) против <strong>ORM</strong> (outcome reward —
+  только финал). Оценивать траекторию = мерить процесс, а не только исход.</li>
+<li><strong>«Кто оценит open-ended ответ в масштабе?»</strong> → <strong>LLM-as-judge</strong> с рубрикой. Но он смещён (§2.2).</li>
+<li><strong>«Верный ответ за 10× — это хорошо?»</strong> → <strong>cost/latency как первоклассные оси</strong> (token usage, time per
+  task, intervention rate, rollback rate). Регрессия по стоимости — регрессия.</li>
+<li><strong>«Как не сломать при апдейте?»</strong> → <strong>regression suite</strong> (CI для агента): фиксированный набор, новая
+  версия не должна ронять метрики. Плюс отдельный класс — <strong>safety/adversarial evals</strong> (отказ от опасного,
+  тест policy урока 5).</li>
+</ul>
+<h4>2.2 Новая проблема: оценщик сам ненадёжен</h4>
+<p>LLM-as-judge не нейтрален. Канонический разбор (Zheng et al., «Judging LLM-as-a-Judge», MT-Bench/Chatbot
+Arena, NeurIPS 2023) документирует систематические смещения:
+- <strong>position bias</strong> — судья предпочитает ответ по позиции (первый/второй);
+- <strong>verbosity bias</strong> — более длинный/«нарядный» ответ получает выше балл независимо от качества;
+- <strong>self-enhancement bias</strong> — судья завышает ответы своей же модели.</p>
+<p>Следствие: «метрика судьи выросла» может означать «ответы стали длиннее», а не лучше. LLM-as-judge применим,
+но <strong>под контролем смещений</strong> (рандомизация позиции, контроль длины, не-само-судейство, спорные случаи — к
+человеку) и сам должен быть провалидирован против human-меток.</p>
+<h4>2.3 Новая проблема: метрика лжёт и на уровне бенчмарка</h4>
+<p>Даже идеальный судья не спасает, если <strong>бенчмарк протёк или геймится</strong>: «сверхчеловеческие» результаты часто
+рушатся на новых данных из-за contamination (тест попал в обучение) или подгонки под известный набор.
+Поэтому SWE-bench и сделали <strong>Verified</strong> — human-filtered подмножество (500 задач, с OpenAI Preparedness),
+чтобы убрать нерешаемые/протёкшие кейсы. Вывод: eval-набор — живой артефакт (ротация, скрытые holdout'ы), а
+не вечная константа.</p>
+<h4>2.4 Мост к следующим этапам</h4>
+<p>Verifier как примитив (урок 2) теперь обретает измеримый контракт. Он же — точка, где проверяется память
+(этап 7: не записан ли мусор), retrieval (этап 8: тот ли источник), security (этап 10: отказ от опасного).
+Eval — это слой, который делает всю остальную систему фальсифицируемой.</p>
+<hr />
+<h3>3. Карта решений</h3>
+<table>
+<thead>
+<tr>
+<th>Ось</th>
+<th>Варианты</th>
+<th>Сила</th>
+<th>Цена / риск</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Уровень оценки</strong></td>
+<td>black-box / glass-box (trajectory) / white-box</td>
+<td>глубже → точнее диагноз</td>
+<td>дороже специфицировать; trajectory без единого протокола</td>
+</tr>
+<tr>
+<td><strong>Что меряем</strong></td>
+<td>final-answer vs process/trajectory</td>
+<td>trajectory ловит «верный финал, плохой путь»</td>
+<td>сложно задать «истинную» траекторию для open-ended</td>
+</tr>
+<tr>
+<td><strong>Кто судит</strong></td>
+<td>programmatic (oracle) / LLM-as-judge / human</td>
+<td>oracle надёжен; judge масштабируется; human точен</td>
+<td>judge смещён; human дорог/медленен</td>
+</tr>
+<tr>
+<td><strong>Надёжность</strong></td>
+<td>pass@1 / pass@k / pass^k</td>
+<td>pass^k отражает прод-надёжность</td>
+<td>строгий, дорого прогонять k раз</td>
+</tr>
+<tr>
+<td><strong>Стоимость</strong></td>
+<td>включать cost/latency или нет</td>
+<td>ловит «дорогой правильный ответ»</td>
+<td>требует инструментирования (этап 9)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Практическое правило:</strong> programmatic-oracle там, где есть проверяемая истина (код → тесты, состояние БД →
+проверка); LLM-judge — для open-ended под контролем смещений + валидация против human; trajectory —
+обязательно, как только финал может быть «правильным по неправильной причине».</p>
+<h4>3.1 Спорные точки (оставляем спорными)</h4>
+<ul>
+<li><strong>Final-answer vs process.</strong> Финал проще, но «правильно неправильным путём» (и наоборот). Trajectory
+  информативнее, но как задать «единственно верный путь» для open-ended задач — не решено (несколько
+  валидных траекторий).</li>
+<li><strong>Надёжность LLM-judge.</strong> Смещения (§2.2) документированы; калибровка и доверие в конкретной задаче —
+  открытый вопрос. Нельзя принимать judge без проверки против человека.</li>
+<li><strong>Benchmark gaming / contamination.</strong> Лидеры рушатся на новых данных; нужны ротация и скрытые holdout'ы.
+  Стандарта «живых» бенчмарков (PeerBench и пр.) пока нет.</li>
+<li><strong>Ландшафт агентных бенчмарков и нет стандарта среды.</strong> Помимо WebArena/tau-bench/SWE-bench есть <strong>GAIA</strong>
+  (Meta — general-assistant), tau²-bench, Terminal-Bench. Проблема: <strong>нет стандартного интерфейса среды</strong>
+  (tau-bench предполагает messaging, не стыкуется с Terminal/Web) — сравнивать агентов между бенчмарками
+  трудно (ICLR-2026).</li>
+<li><strong>Иллюзия показателей.</strong> Рост средней метрики может прятать «редкие, но критические» отказы (safety).
+  Связь метрик с реальной ценностью (ROI, удовлетворённость) в стандарты не интегрирована.</li>
+</ul>
+<hr />
+<h3>4. Failure modes оценки (eval тоже ломается)</h3>
+<table>
+<thead>
+<tr>
+<th>Отказ</th>
+<th>Механизм</th>
+<th>Противоядие</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Right-answer-wrong-path</strong></td>
+<td>финал верен, путь катастрофичен (0 строк = «успех», DROP TABLE)</td>
+<td>trajectory/glass-box eval</td>
+</tr>
+<tr>
+<td><strong>Reliability illusion</strong></td>
+<td>pass@1 высок, pass^k низок</td>
+<td>мерить pass^k на повторах</td>
+</tr>
+<tr>
+<td><strong>Cost-blind pass</strong></td>
+<td>верный ответ за 10× токенов проходит</td>
+<td>cost/latency как метрика регрессии</td>
+</tr>
+<tr>
+<td><strong>Judge bias gaming</strong></td>
+<td>длиннее/первее ответ → выше балл</td>
+<td>рандомизация позиции, контроль длины, не-само-судейство</td>
+</tr>
+<tr>
+<td><strong>Benchmark contamination</strong></td>
+<td>тест протёк в обучение → ложный SOTA</td>
+<td>holdout, ротация, human-filtered (SWE-bench Verified)</td>
+</tr>
+<tr>
+<td><strong>Safety blind spot</strong></td>
+<td>нет теста на отказ от опасного</td>
+<td>adversarial/safety evals (тест policy урока 5)</td>
+</tr>
+</tbody>
+</table>
+<p>Cold-open покрывает первые две строки эмпирикой (WebArena/tau-bench) и третью-четвёртую — траекторными
+примерами.</p>
+<hr />
+<h3>5. Вклад в reference-spine: verifier + eval harness</h3>
+<p>Наполняем <code>Verifier</code> из урока 2 и добавляем eval-слой над всей системой.</p>
+<pre><code class="language-python">@dataclass
+class Verdict:
+    ok: bool
+    score: float | None          # для рубрики
+    reason: str
+    checks: dict                 # какие проверки прошли/нет
+
+class Verifier(Protocol):
+    def check(self, result, step, *, trajectory=None) -&gt; Verdict:
+        ...
+        # уровни: black-box (result vs ожидание) / glass-box (trajectory) / white-box (шаг)
+        # ИНВАРИАНТ (урок 2): result не идёт дальше без verdict.ok
+        # ловит: 0-строк-как-успех, untrusted-как-факт (урок 4/10), нарушение policy (урок 5)
+
+@dataclass
+class EvalCase:
+    task: Task
+    oracle: callable | None      # programmatic истина, если есть
+    rubric: dict | None          # для LLM-judge, если нет oracle
+    expected_trajectory: list | None
+    max_cost: int                # бюджет (cost-aware)
+
+class EvalHarness(Protocol):
+    def run(self, system, suite: list[EvalCase], *, k: int = 8) -&gt; &quot;Report&quot;:
+        ...
+        # метрики: task_success, pass@k И pass^k, trajectory_match,
+        #          hallucination_rate, tool_success, cost/task, latency, intervention/rollback rate
+        # ИНВАРИАНТ regression: новая версия не роняет ни одну метрику ниже baseline без явного решения;
+        #   различие должно быть СТАТЗНАЧИМЫМ (доверит. интервал на k прогонах, Miller «Adding Error Bars
+        #   to Evals»), а не шумом — иначе «метрика выросла» обманчиво
+
+class Judge(Protocol):
+    def score(self, output, rubric) -&gt; float:
+        ...
+        # bias-контроль: рандомизировать позицию, штрафовать verbosity, не судить свою модель;
+        # валидируется против human-меток (corr) перед использованием
+</code></pre>
+<p><strong>Контракт для следующих этапов:</strong> память (7) предъявляет тесты «не записан мусор»; retrieval (8) —
+«источник тот»; security (10) — adversarial-набор «отказ от опасного»; observability (9) поставляет
+cost/latency/trajectory из трасс. Verifier — узел, делающий всю систему фальсифицируемой. Cold-open =
+система без glass-box verifier (финал «ok» на сломанном) и без pass^k (надёжность не мерена).</p>
+<hr />
+<h3>6. Pset 6 — trajectory-eval + pass^k + regression gate</h3>
+<p><strong>Задача.</strong> Реализовать eval-харнесс, который (а) ловит «верный финал, плохой путь»; (б) считает pass^k, а
+не только pass@1; (в) валит регрессию по стоимости; (г) применяет LLM-judge с контролем позиционного
+смещения.</p>
+<p><strong>Скелет</strong> (<code>eval_harness.py</code>):</p>
+<pre><code class="language-python">def evaluate(system, suite, k=8, baseline=None):
+    rows = []
+    for case in suite:
+        runs = [system.run(case.task) for _ in range(k)]      # k прогонов: недетерминизм (урок 3)
+        passes = [verdict(r, case) for r in runs]
+        rows.append({
+            &quot;task&quot;: case.task.id,
+            &quot;pass_at_k&quot;: any(passes),                          # хотя бы один
+            &quot;pass_pow_k&quot;: all(passes),                         # ВСЕ k — прод-надёжность
+            &quot;trajectory_ok&quot;: all(traj_match(r, case.expected_trajectory) for r in runs),
+            &quot;cost&quot;: mean(r.cost for r in runs),
+            &quot;hallucinated&quot;: any(r.hallucinated for r in runs),
+        })
+    report = aggregate(rows)
+    if baseline:
+        # направление метрики: success/trajectory — «больше лучше»; cost/latency — «меньше лучше»
+        def regressed(m):
+            lower_better = m in {&quot;cost&quot;, &quot;latency&quot;, &quot;intervention_rate&quot;, &quot;rollback_rate&quot;}
+            return report[m] &gt; baseline[m] + EPS if lower_better else report[m] &lt; baseline[m] - EPS
+        report.regressions = [m for m in report.metrics if regressed(m)]  # учитывает направление метрики
+    return report
+
+def verdict(run, case):
+    if case.oracle:                                            # programmatic истина
+        ok = case.oracle(run.result)
+    else:
+        ok = judge_with_bias_control(run.result, case.rubric)  # LLM-judge
+    # glass-box: финал мало — путь тоже должен быть валиден
+    return ok and traj_valid(run.trajectory)
+</code></pre>
+<p><strong>Тесты:</strong></p>
+<pre><code class="language-python">def test_right_answer_wrong_path_fails():
+    # финал верный, но траектория = рекурсивный цикл / DROP TABLE
+    run = Run(result=CORRECT, trajectory=[loop]*40, cost=10_000)
+    assert verdict(run, case_with_expected_short_path) is False
+
+def test_empty_result_not_counted_as_success():
+    # 0 строк из-за галлюцинации параметра ≠ успех (cold-open)
+    run = Run(result=EMPTY, trajectory=[bad_api_call])
+    assert verdict(run, case_expecting_rows) is False
+
+def test_pass_pow_k_distinguishes_flaky_agent():
+    # агент проходит 1/8 → pass@k=True, но pass^k=False (непригоден для прода)
+    rep = evaluate(flaky_system, suite, k=8)
+    assert rep.rows[0][&quot;pass_at_k&quot;] is True
+    assert rep.rows[0][&quot;pass_pow_k&quot;] is False
+
+def test_cost_regression_is_flagged():
+    rep = evaluate(new_system, suite, baseline={&quot;cost&quot;: 1000, ...})
+    assert &quot;cost&quot; in rep.regressions     # верный ответ за 10× — регрессия
+
+def test_judge_is_position_invariant():
+    # один и тот же ответ на позиции A и B → одинаковый балл (анти position bias)
+    assert judge_with_bias_control(ans, rubric, pos=&quot;A&quot;) == \
+           judge_with_bias_control(ans, rubric, pos=&quot;B&quot;)
+</code></pre>
+<p><strong>Эталон.</strong> Главные мысли: (1) <code>verdict</code> требует И финал, И валидную траекторию — <code>test_right_answer_wrong_path</code>
+и <code>test_empty_result</code> воспроизводят cold-open; (2) pass^k отделяет flaky-агента (<code>test_pass_pow_k</code>) —
+прод-надёжность, а не демо; (3) cost — первоклассная метрика регрессии; (4) judge с контролем позиции —
+анти-bias (§2.2). </p>
+<p><strong>Расширение.</strong> Добавь safety-набор: задачи-ловушки на запрещённое действие; метрика «refusal rate»; тест,
+что система отказывается от <code>DROP TABLE</code> на проде (смычка с policy урока 5). Это превращает eval в
+регрессионную защиту безопасности.</p>
+<hr />
+<h3>7. Диагностические вопросы (проверяют суждение)</h3>
+<ol>
+<li>Команда хвастается «успех 92% на нашем наборе». Какие три вопроса (по §1–§2) отделят реальный прогресс
+   от иллюзии? Почему pass@1=92% может скрывать непригодность для прода?</li>
+<li>Агент даёт верный ответ, но через 40 вызовов и 10× токенов. Black-box eval — PASS. Где это ловится и
+   почему «верный финал» здесь — провал?</li>
+<li>Вы используете LLM-as-judge и видите рост балла на новой версии. Как исключить, что ответы просто стали
+   длиннее (§2.2)? Какой контроль обязателен перед доверием судье?</li>
+<li>Почему SWE-bench сделали Verified? Какой класс ошибки метрики это лечит (§2.3) и почему «SOTA на старом
+   наборе» подозрителен?</li>
+<li>Для open-ended задачи нет единственной верной траектории. Как тогда делать trajectory-eval, не скатываясь
+   в «совпало дословно»? (§3.1)</li>
+<li><strong>Open question:</strong> спроектируй метрику, связывающую eval с реальной ценностью (не «балл судьи», а ROI/
+   удовлетворённость). Чем её можно заиграть и почему её нет в стандартах?</li>
+</ol>
+<hr />
+<h3>8. Глоссарий-дельта</h3>
+<ul>
+<li><strong>Golden task</strong> — задача с известным результатом, эталон для проверки.</li>
+<li><strong>Task success rate</strong> — доля успешно завершённых задач (по критерию).</li>
+<li><strong>pass@k / pass^k</strong> — успех хотя бы в одном из k / во <em>всех</em> k запусках. pass^k — прод-надёжность при
+  недетерминизме (урок 3).</li>
+<li><strong>Black-box / glass-box / white-box eval</strong> — оценка финала / траектории / каждого шага.</li>
+<li><strong>Trajectory eval (process eval)</strong> — сверка цепочки действий, а не только финала; ловит «верно неверным
+  путём».</li>
+<li><strong>PRM / ORM</strong> — process reward model (награда за каждый шаг, Lightman 2023) vs outcome reward model
+  (только финал); академический хребет trajectory/process-оценки.</li>
+<li><strong>GAIA</strong> — канонический бенчмарк general-assistant агентов (Meta); часть актуального ландшафта.</li>
+<li><strong>Error bars on evals</strong> — доверительные интервалы/значимость на k прогонах (Miller, Anthropic); «метрика
+  выросла» обязана быть статзначимой.</li>
+<li><strong>LLM-as-judge</strong> — модель-оценщик по рубрике; смещён (position/verbosity/self-enhancement, Zheng et al.);
+  применять под контролем смещений + валидацией против human.</li>
+<li><strong>Rubric / judge prompt / scoring table</strong> — критерии, инструкция судье, шкала интерпретации.</li>
+<li><strong>Regression suite</strong> — фиксированный набор; новая версия не должна ронять метрики (CI для агента).</li>
+<li><strong>Benchmark contamination / gaming</strong> — протечка теста в обучение / подгонка под набор → ложный SOTA;
+  лечится holdout/ротацией (SWE-bench Verified).</li>
+<li><strong>Cost per task / latency / intervention rate / rollback rate</strong> — первоклассные оси: верный ответ за 10× —
+  регрессия.</li>
+<li><strong>Safety/adversarial eval</strong> — проверка отказа от опасного действия (тест policy урока 5).</li>
+</ul>
+<hr />
+<h3>9. Первоисточники (верифицированы 2026-06-23)</h3>
+<ol>
+<li><strong>Yao et al. — «τ-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains»</strong> (Sierra),
+   arXiv 2406.12045 (2024). <a href="https://arxiv.org/abs/2406.12045" target="_blank" rel="noopener">https://arxiv.org/abs/2406.12045</a> · код: <a href="https://github.com/sierra-research/tau-bench" target="_blank" rel="noopener">https://github.com/sierra-research/tau-bench</a>
+   — метрика pass^k; SOTA &lt;50%; обвал надёжности на повторах.</li>
+<li><strong>Zhou et al. — «WebArena: A Realistic Web Environment for Building Autonomous Agents»</strong>, arXiv 2307.13854
+   (2023). <a href="https://arxiv.org/abs/2307.13854" target="_blank" rel="noopener">https://arxiv.org/abs/2307.13854</a> — GPT-4 14.41% vs человек 78.24%.</li>
+<li><strong>SWE-bench / SWE-bench Verified</strong> (Jimenez, Yang et al., Princeton; Verified — с OpenAI Preparedness,
+   500 human-filtered задач, авг 2024). <a href="https://www.swebench.com/" target="_blank" rel="noopener">https://www.swebench.com/</a> ·
+   <a href="https://openai.com/index/introducing-swe-bench-verified/" target="_blank" rel="noopener">https://openai.com/index/introducing-swe-bench-verified/</a> — programmatic-oracle через тесты; борьба с
+   contamination.</li>
+<li><strong>Zheng et al. — «Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena»</strong>, arXiv 2306.05685, NeurIPS</li>
+<li>https://arxiv.org/abs/2306.05685 — канонический разбор смещений судьи (position/verbosity/self-enhancement).</li>
+<li><strong>Anthropic — eval-практики для агентов</strong> (latency, cost per task, error rates; SWE-bench vs LLM-judge vs
+   ручной контроль). <a href="https://www.anthropic.com/engineering" target="_blank" rel="noopener">https://www.anthropic.com/engineering</a> — метрики и фазы валидации.</li>
+<li><strong>Langfuse — «Agent Evaluation» (black-box / glass-box / white-box)</strong>.
+   <a href="https://langfuse.com/docs/evaluation" target="_blank" rel="noopener">https://langfuse.com/docs/evaluation</a> — уровни оценки и trajectory-анализ.</li>
+<li><strong>Google ADK — «Why evaluate agents?»</strong> (оценка траектории, а не только pass/fail).
+   <a href="https://google.github.io/adk-docs/evaluate/" target="_blank" rel="noopener">https://google.github.io/adk-docs/evaluate/</a> — процесс/решения агента как объект оценки.</li>
+<li><strong>Replit «Rogue Agent» (июль 2025)</strong> — Fortune / AI Incident DB #1152 (см. урок 1) — кейс safety-blind eval.</li>
+<li><strong>Lightman et al. — «Let's Verify Step by Step»</strong>, arXiv 2305.20050 (OpenAI, 2023).
+   <a href="https://arxiv.org/abs/2305.20050" target="_blank" rel="noopener">https://arxiv.org/abs/2305.20050</a> — process supervision (PRM vs ORM); хребет trajectory-оценки (§2.1).</li>
+<li><strong>Mialon et al. (Meta) — «GAIA: a Benchmark for General AI Assistants»</strong>.
+    <a href="https://ai.meta.com/research/publications/gaia-a-benchmark-for-general-ai-assistants/" target="_blank" rel="noopener">https://ai.meta.com/research/publications/gaia-a-benchmark-for-general-ai-assistants/</a> — general-assistant бенчмарк (§3.1).</li>
+<li><strong>Miller (Anthropic) — «Adding Error Bars to Evals»</strong>, arXiv 2411.00640 (2024).
+    <a href="https://arxiv.org/abs/2411.00640" target="_blank" rel="noopener">https://arxiv.org/abs/2411.00640</a> — статистическая значимость eval-различий (§5 regression gate).</li>
+</ol>
+<blockquote class="quarantine">
+<p><strong>Карантин:</strong> «реальная частота провалов агентов 70–95%» (Fiddler) — агрегатная статистика без источника
+(подпись фабрикации); арифметика «0.7³≈34%» оставлена как иллюстративная модель, не измерение.
+<strong>Правки атрибуций:</strong> SWE-bench — Jimenez/Yang (Princeton) + OpenAI, НЕ «Ángel Gómez-Escontrías»;
+tau-bench — Shunyu Yao (не «Liang Yao»). Шаткие вторичные статьи (Forscher «Benchmarking is Broken»,
+Gao «Communication Systems») в несущие утверждения не идут — gaming/contamination подано через
+SWE-bench Verified + Zheng et al.</p>
+</blockquote>
+<hr />
+<p><em>Плотность — целевая. Усиленный этап, длинный закономерно. Cold-open — верифицированная эмпирика (WebArena
+14.41% vs 78.24%, tau-bench &lt;50% + pass^k) плюс траекторные отказы, мотивирующие process-eval. Spine
+получил verifier с уровнями оценки + eval-harness с pass^k и regression gate; pset воспроизводит «верный
+финал — плохой путь», flaky-агента и cost-регрессию. Gate подтвердил все бенчмарки, срезал агрегатную
+«70–95%» и починил две атрибуции — паттерн «события реальны, агрегаты выдуманы» снова подтвердился.</em></p>
+    </div>
+    <nav class="pager">
+      <a class="pg-prev" href="lesson-05.html"><span class="pk">← Урок 05</span>Инструменты, права, policy</a>
+      <a class="pg-next" href="lesson-07.html"><span class="pk">Урок 07 →</span>Память и жизненный цикл знания</a>
+    </nav>
+    <footer id="footer">
+      <p>Дизайн-язык адаптирован из <a href="https://github.com/ThariqS/html-effectiveness"
+        target="_blank" rel="noopener">html-effectiveness</a> (Apache-2.0). Актуально на 2026-06-23.</p>
+    </footer>
+  </main>
+</div>
+<script>
+// keep the active lesson visible in the sticky sidebar on load
+var act=document.querySelector('.sidebar nav a.active');
+if(act && act.scrollIntoView){ act.scrollIntoView({block:'center'}); }
+</script>
+</body>
+</html>

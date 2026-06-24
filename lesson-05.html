@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Урок 05. Инструменты, права, policy — L8+ Agentic Engineering</title>
+<!-- Design language adapted from ThariqS/html-effectiveness (Apache-2.0, (c) Anthropic PBC). -->
+<style>
+:root{
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413; --clay:#D97757; --clay-d:#B85C3E;
+  --oat:#E3DACC; --olive:#788C5D; --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5;
+  --g500:#87867F; --g700:#3D3D3A;
+  --serif:ui-serif,Georgia,"Times New Roman",Times,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Monaco,Consolas,monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--ivory);color:var(--slate);font-family:var(--sans);
+  line-height:1.6;-webkit-font-smoothing:antialiased;font-size:16.5px;}
+
+a{color:var(--clay-d);text-decoration-color:var(--oat);text-underline-offset:3px;}
+a:hover{text-decoration-color:var(--clay);}
+
+/* layout shell: sticky sidebar + reading column */
+.shell{max-width:1180px;margin:0 auto;padding:0 28px;display:grid;
+  grid-template-columns:236px minmax(0,1fr);gap:48px;align-items:start;}
+@media(max-width:900px){.shell{grid-template-columns:1fr;gap:0;padding:0 20px;}}
+
+/* sidebar */
+.sidebar{position:sticky;top:0;max-height:100vh;overflow-y:auto;padding:34px 0 40px;}
+@media(max-width:900px){.sidebar{position:static;max-height:none;border-bottom:1.5px solid var(--g300);
+  margin-bottom:8px;padding-bottom:18px;}}
+.side-brand{font-family:var(--serif);font-size:19px;font-weight:600;letter-spacing:-.01em;margin-bottom:2px;}
+.side-brand em{font-style:italic;color:var(--clay);}
+.side-sub{font-family:var(--mono);font-size:10.5px;color:var(--g500);text-transform:uppercase;
+  letter-spacing:.1em;margin-bottom:20px;}
+.sidebar nav{display:flex;flex-direction:column;gap:1px;}
+.sidebar nav a{display:flex;gap:9px;align-items:baseline;text-decoration:none;color:var(--g700);
+  font-size:13px;line-height:1.35;padding:5px 9px;border-radius:7px;border-left:2px solid transparent;}
+.sidebar nav a .n{font-family:var(--mono);font-size:10px;color:var(--g500);min-width:16px;}
+.sidebar nav a:hover{background:var(--g100);color:var(--slate);}
+.sidebar nav a.active{background:var(--paper);border-left-color:var(--clay);color:var(--slate);
+  box-shadow:0 1px 0 var(--g200);}
+.sidebar nav a.active .n{color:var(--clay);}
+.sidebar nav a.lead{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--g500);margin-top:14px;padding-bottom:2px;pointer-events:none;}
+
+/* main reading column */
+main{max-width:840px;padding:0 0 140px;min-width:0;}
+
+/* masthead */
+header.masthead{padding:54px 0 34px;border-bottom:1.5px solid var(--g300);margin-bottom:8px;}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--g500);margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+.eyebrow::before{content:"";width:24px;height:1.5px;background:var(--clay);}
+h1.title{font-family:var(--serif);font-weight:500;font-size:clamp(36px,5vw,58px);line-height:1.07;
+  letter-spacing:-.018em;margin:0 0 6px;max-width:18ch;}
+h1.title em{font-style:italic;color:var(--clay);}
+.lede{font-size:17px;color:var(--g700);margin:20px 0 0;max-width:640px;}
+.disclaimer{margin:22px 0 0;padding:14px 18px;background:var(--g100);border-radius:12px;
+  border:1.5px solid var(--g200);font-size:13.5px;color:var(--g700);max-width:660px;}
+.disclaimer b{color:var(--slate);}
+
+/* feature panel (spine) */
+.panel{margin:40px 0 0;background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;
+  padding:26px 28px;scroll-margin-top:16px;}
+.panel h2,.howto h2{font-family:var(--serif);font-weight:500;font-size:25px;margin:0 0 4px;letter-spacing:-.01em;}
+.panel .sub{color:var(--g700);font-size:14px;margin:0 0 18px;}
+.flow{font-family:var(--mono);font-size:12.5px;line-height:1.7;background:var(--g100);border-radius:10px;
+  padding:14px 16px;overflow-x:auto;color:var(--g700);white-space:pre-wrap;border:1px solid var(--g200);}
+ol.inv{margin:18px 0 0;padding-left:0;counter-reset:inv;list-style:none;display:grid;gap:7px;}
+ol.inv li{position:relative;padding-left:30px;font-size:14px;color:var(--g700);}
+ol.inv li::before{counter-increment:inv;content:counter(inv);position:absolute;left:0;top:0;
+  font-family:var(--mono);font-size:11px;color:var(--clay);font-weight:600;
+  border:1.5px solid var(--oat);border-radius:6px;width:21px;height:21px;display:flex;
+  align-items:center;justify-content:center;}
+ol.inv li b{color:var(--slate);font-weight:600;}
+
+.howto{margin:34px 0 0;scroll-margin-top:16px;}
+.howto ul{margin:10px 0 0;padding-left:20px;}
+.howto li{margin:6px 0;color:var(--g700);font-size:14.5px;}
+
+.section-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--g500);margin:64px 0 6px;display:flex;align-items:center;gap:10px;}
+.section-label::before{content:"";width:20px;height:1.5px;background:var(--clay);}
+
+/* lessons / accordion */
+section.lesson{margin-top:18px;scroll-margin-top:14px;}
+details.les{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;overflow:hidden;
+  transition:border-color 150ms,box-shadow 150ms;}
+details.les[open]{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);}
+details.les summary{list-style:none;cursor:pointer;padding:20px 22px;display:block;}
+details.les summary::-webkit-details-marker{display:none;}
+.sec-head{display:flex;align-items:baseline;gap:14px;}
+.sec-head .idx{font-family:var(--mono);font-size:13px;color:var(--clay);font-weight:600;min-width:26px;}
+.sec-head h2{font-family:var(--serif);font-weight:500;font-size:23px;margin:0;letter-spacing:-.01em;flex:1;}
+.tagline{color:var(--g700);font-size:14px;margin:3px 0 0 40px;}
+.card-meta{margin:13px 0 0 40px;display:grid;gap:5px;}
+.meta-item{font-size:13px;color:var(--g700);}
+.meta-item .k{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--g500);margin-right:8px;}
+.expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(--mono);font-size:11px;
+  color:var(--clay);}
+details.les[open] .expand-hint{display:none;}
+
+/* maturity badges */
+.badge{font-family:var(--mono);font-size:10.5px;padding:3px 9px;border-radius:999px;white-space:nowrap;
+  border:1.5px solid var(--g300);color:var(--g700);align-self:flex-start;}
+.badge.b-core{background:#EEF1E9;border-color:#C3D1AE;color:#3f5430;}
+.badge.b-emerging{background:#FBEDE6;border-color:#EBC3AE;color:var(--clay-d);}
+.badge.b-disputed{background:#FAF3E2;border-color:#E6D08C;color:#8a6d1f;}
+.badge.b-hype{background:#FBE9E6;border-color:#E9B4A8;color:#a23b28;}
+.badge.b-special{background:#ECEAF3;border-color:#C7C0DE;color:#4b4080;}
+
+/* lesson body (rendered markdown) */
+.lesson-body{padding:4px 26px 28px;border-top:1px solid var(--g100);}
+.lesson-body .status{font-size:13px;color:var(--g700);background:var(--g100);border-radius:10px;
+  padding:12px 15px;margin:18px 0 8px;border:1px solid var(--g200);}
+.lesson-body h3{font-family:var(--serif);font-weight:600;font-size:21px;margin:32px 0 8px;letter-spacing:-.008em;}
+.lesson-body h4{font-family:var(--serif);font-weight:600;font-size:17px;margin:22px 0 6px;color:var(--g700);}
+.lesson-body h5{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--g500);margin:18px 0 6px;}
+.lesson-body p{margin:11px 0;}
+.lesson-body ul,.lesson-body ol{margin:11px 0;padding-left:22px;}
+.lesson-body li{margin:5px 0;}
+.lesson-body code{font-family:var(--mono);font-size:.86em;background:var(--g100);padding:1.5px 5px;
+  border-radius:5px;border:1px solid var(--g200);}
+.lesson-body pre{background:#2b2a27;color:#eceae3;border-radius:12px;padding:16px 18px;overflow-x:auto;
+  font-size:12.7px;line-height:1.5;margin:14px 0;}
+.lesson-body pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit;}
+.lesson-body blockquote{margin:14px 0;padding:12px 18px;border-left:3px solid var(--clay);
+  background:var(--paper);border-radius:0 10px 10px 0;color:var(--g700);}
+.lesson-body blockquote.quarantine{border-left-color:#c98a2e;background:#FAF3E2;}
+.lesson-body table{border-collapse:collapse;width:100%;margin:16px 0;font-size:13px;display:block;
+  overflow-x:auto;}
+.lesson-body th,.lesson-body td{border:1px solid var(--g300);padding:7px 10px;text-align:left;
+  vertical-align:top;}
+.lesson-body th{background:var(--g100);font-weight:600;font-family:var(--sans);}
+.lesson-body tr:nth-child(even) td{background:#fcfbf8;}
+.lesson-body hr{border:none;border-top:1.5px solid var(--g200);margin:26px 0;}
+.lesson-body a{word-break:break-word;}
+.lesson-body em{color:var(--g700);}
+
+/* footer */
+footer{margin:80px 0 0;border-top:1.5px solid var(--g300);padding-top:30px;font-size:13px;
+  color:var(--g500);scroll-margin-top:16px;}
+footer .k{font-family:var(--serif);font-style:italic;color:var(--g700);font-size:15px;}
+footer p{margin:8px 0;max-width:680px;}
+
+.toolbar{display:flex;gap:10px;margin:22px 0 0 40px;}
+.toolbar button{font-family:var(--mono);font-size:11px;background:var(--paper);border:1.5px solid var(--g300);
+  color:var(--g700);border-radius:999px;padding:6px 13px;cursor:pointer;}
+.toolbar button:hover{border-color:var(--slate);color:var(--slate);}
+
+/* ---- multipage: lesson cards on index + lesson pages ---- */
+.side-brand-link{text-decoration:none;color:inherit;display:block;}
+.lcards{display:grid;gap:14px;margin-top:18px;}
+a.lcard{display:block;text-decoration:none;color:inherit;background:var(--paper);border:1.5px solid var(--g300);
+  border-radius:14px;padding:20px 22px;transition:border-color .15s,box-shadow .15s,transform .15s;}
+a.lcard:hover{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);transform:translateY(-1px);}
+a.lcard .sec-head h2{color:var(--slate);}
+a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(--mono);font-size:11px;color:var(--clay);}
+.crumb{margin:30px 0 2px;}
+.crumb a{font-family:var(--mono);font-size:12px;color:var(--g500);text-decoration:none;}
+.crumb a:hover{color:var(--clay-d);}
+.lesson-head{padding:12px 0 24px;border-bottom:1.5px solid var(--g300);margin-bottom:4px;}
+.lesson-head .eyebrow{margin-bottom:13px;}
+.lesson-head h1.title{font-size:clamp(29px,4vw,44px);max-width:22ch;margin:0;}
+.lesson-head .lede{margin-top:13px;}
+.pager{display:flex;justify-content:space-between;align-items:stretch;gap:14px;margin:54px 0 0;
+  border-top:1.5px solid var(--g300);padding-top:22px;}
+.pager a{text-decoration:none;color:var(--g700);font-size:13.5px;border:1.5px solid var(--g300);border-radius:11px;
+  padding:11px 15px;max-width:49%;transition:.15s;line-height:1.4;}
+.pager a:hover{border-color:var(--slate);color:var(--slate);}
+.pager a .pk{font-family:var(--mono);font-size:10px;color:var(--g500);display:block;margin-bottom:2px;}
+.pager .pg-next{margin-left:auto;text-align:right;}
+.sidebar nav a.active{background:var(--paper);border-left-color:var(--clay);color:var(--slate);box-shadow:0 1px 0 var(--g200);}
+.sidebar nav a.active .n{color:var(--clay);}
+
+/* ---- interactive course widgets (.cw) ---- */
+.cw{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;margin:28px 0;overflow:hidden;}
+.cw-head{display:flex;align-items:center;gap:10px;padding:13px 20px;border-bottom:1px solid var(--g200);background:var(--g100);}
+.cw-head .tag{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--clay);
+  border:1.5px solid var(--oat);border-radius:999px;padding:2px 9px;}
+.cw-head .ttl{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--slate);}
+.cw-body{padding:18px 20px;display:flex;flex-direction:column;gap:15px;}
+.cw-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+.cw-grid{display:grid;gap:10px;}
+.cw .lbl{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--g500);margin-bottom:7px;}
+.cw .metric{background:var(--g100);border:1px solid var(--g200);border-radius:10px;padding:9px 13px;}
+.cw .metric .mk{font-size:12px;color:var(--g500);}
+.cw .metric .mv{font-size:21px;font-weight:600;font-family:var(--serif);color:var(--slate);line-height:1.2;}
+.cw button{font-family:var(--sans);cursor:pointer;border-radius:8px;border:1.5px solid var(--g300);background:var(--paper);
+  color:var(--g700);font-size:13px;padding:7px 12px;transition:.12s;line-height:1.3;}
+.cw button:hover{border-color:var(--slate);color:var(--slate);}
+.cw .act{background:var(--clay);border-color:var(--clay);color:#fff;font-weight:600;}
+.cw .act:hover{background:var(--clay-d);border-color:var(--clay-d);color:#fff;}
+.cw .chip{font-family:var(--mono);font-size:11px;padding:5px 10px;border-radius:999px;}
+.cw .chip.sel{background:var(--slate);border-color:var(--slate);color:var(--ivory);}
+.cw .tog{display:flex;align-items:center;gap:8px;text-align:left;}
+.cw .tog.on-bad{background:#FBE9E6;border-color:#E9B4A8;color:#a23b28;}
+.cw .tog.on-good{background:#EEF1E9;border-color:#C3D1AE;color:#3f5430;}
+.cw input[type=range]{width:100%;accent-color:var(--clay);margin:2px 0;}
+.cw .slabel{display:flex;justify-content:space-between;font-size:12.5px;color:var(--g700);margin-bottom:2px;}
+.cw .slabel b{font-weight:600;color:var(--slate);}
+.cw .bar{display:flex;height:40px;border-radius:9px;overflow:hidden;border:1px solid var(--g300);}
+.cw .seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;overflow:hidden;
+  white-space:nowrap;border-right:1px solid var(--paper);}
+.cw .seg.c{background:#EEF1E9;color:#3f5430;}
+.cw .seg.u{background:#FAF3E2;color:#8a6d1f;}
+.cw .trace{display:flex;flex-direction:column;gap:6px;}
+.cw .trow{border-left:3px solid var(--g300);background:var(--g100);border-radius:0 8px 8px 0;padding:7px 12px;
+  font-family:var(--mono);font-size:12.5px;}
+.cw .trow .th{font-weight:600;color:var(--slate);}
+.cw .trow .tb{color:var(--g700);white-space:pre-wrap;word-break:break-word;margin-top:2px;}
+.cw .t-obs{border-color:var(--olive);}
+.cw .t-think{border-color:#c98a2e;}
+.cw .t-act{border-color:var(--g500);}
+.cw .t-block{border-color:#6f9152;}
+.cw .t-leak{border-color:var(--clay-d);}
+.cw .verdict{border-radius:10px;padding:12px 15px;font-size:14px;}
+.cw .v-safe{background:#EEF1E9;color:#3f5430;border:1px solid #C3D1AE;}
+.cw .v-leak{background:#FBE9E6;color:#a23b28;border:1px solid #E9B4A8;}
+.cw .verdict .vt{font-weight:700;}
+.cw .verdict .vd{margin-top:3px;line-height:1.5;}
+.cw .note{font-size:11.5px;color:var(--g500);line-height:1.6;}
+.cw .dot{display:inline-block;width:10px;height:10px;border-radius:3px;vertical-align:middle;margin-right:4px;}
+.cw textarea{width:100%;font-family:var(--mono);font-size:12.5px;border:1.5px solid var(--g300);border-radius:8px;
+  padding:8px 10px;background:var(--paper);color:var(--slate);resize:vertical;}
+.cw .runs{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;max-width:420px;}
+.cw .evd{aspect-ratio:1;border-radius:3px;background:var(--g200);}
+.cw .evd.ok{background:#9cbf6e;}
+.cw .evd.no{background:#e0a99c;}
+.cw .mlist{display:flex;flex-direction:column;gap:7px;}
+.cw .mitem{display:flex;align-items:center;gap:10px;border:1px solid var(--g200);border-radius:9px;padding:8px 11px;
+  font-size:13px;background:var(--g100);}
+.cw .mitem .mt{color:var(--slate);}
+.cw .mitem .src{font-family:var(--mono);font-size:10.5px;color:var(--g500);}
+.cw .pill{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:999px;margin-left:auto;white-space:nowrap;}
+.cw .pill.w{background:#EEF1E9;color:#3f5430;}
+.cw .pill.q{background:#FAF3E2;color:#8a6d1f;}
+.cw .pill.r{background:#FBE9E6;color:#a23b28;}
+.cw .stepc{font-family:var(--mono);font-size:11px;color:var(--g500);}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="top">
+    <a class="side-brand-link" href="index.html"><div class="side-brand">L8+ <em>Agentic</em></div></a>
+    <div class="side-sub">актуально 2026-06-23</div>
+    <nav>
+<a href="index.html">▲ Главная</a>
+<a class="lead">Карта</a>
+<a href="index.html#spine"><span class="n">◆</span>Reference-spine</a>
+<a href="index.html#how"><span class="n">?</span>Как читать</a>
+<a class="lead">Уроки</a>
+<a href="lesson-01.html"><span class="n">01</span>Зрелость автономии</a>
+<a href="lesson-02.html"><span class="n">02</span>Примитивы и reference-spine</a>
+<a href="lesson-03.html"><span class="n">03</span>Task lifecycle и durable execution</a>
+<a href="lesson-04.html"><span class="n">04</span>Context engineering</a>
+<a href="lesson-05.html" class="active"><span class="n">05</span>Инструменты, права, policy</a>
+<a href="lesson-06.html"><span class="n">06</span>Evals, verifier, trajectory</a>
+<a href="lesson-07.html"><span class="n">07</span>Память и жизненный цикл знания</a>
+<a href="lesson-08.html"><span class="n">08</span>Retrieval: RAG, hybrid, GraphRAG</a>
+<a href="lesson-09.html"><span class="n">09</span>Observability и воспроизводимость</a>
+<a href="lesson-10.html"><span class="n">10</span>Безопасность: injection, threat model</a>
+<a href="lesson-11.html"><span class="n">11</span>Мультиагентность: MCP / A2A</a>
+<a href="lesson-12.html"><span class="n">12</span>Human-in-the-loop и operating model</a>
+<a href="lesson-13.html"><span class="n">13</span>Экономика и production readiness (capstone)</a>
+<a href="lesson-14.html"><span class="n">14</span>Фронт и горизонт-сканирование</a>
+<a class="lead">Конец</a>
+<a href="index.html#footer"><span class="n">§</span>Метод и источники</a>
+    </nav>
+  </aside>
+
+  <main>
+    <div class="crumb"><a href="index.html">← Все уроки</a></div>
+    <header class="lesson-head">
+      <div class="eyebrow">Урок 05<span class="badge b-emerging" style="margin-left:6px">[устоявшееся] IAM + [формирующееся] на агентах</span></div>
+      <h1 class="title">Инструменты, права, policy</h1>
+      <p class="lede">Agent proposes, system decides</p>
+      <div class="card-meta">
+        <div class="meta-item"><span class="k">Cold-open</span>Взлом Мексики 195M / EchoLeak</div>
+        <div class="meta-item"><span class="k">В spine</span>policy-engine (trust-aware)</div>
+      </div>
+    </header>
+    <div class="lesson-body">
+      <div class="status"><p><strong>Статус:</strong> актуально на 2026-06-23, пересмотреть до 2026-09.
+Базовые примитивы доступа (allowlist/denylist, least privilege, RBAC/ABAC, JIT-creds, audit trail) —
+<strong>[устоявшееся]</strong> (наследие enterprise IAM/zero-trust). Их перенос на агентов — <strong>[формирующееся]</strong>.
+Policy-as-code для агентов (OPA/Cedar) — <strong>[формирующееся]</strong>. Защита от prompt injection — <strong>[формирующееся,
+нерешённое]</strong> (детально — этап 10). Опирается на ось B урока 1, provenance/trust урока 4, executor/policy
+примитивы урока 2.</p></div>
+<hr />
+<h3>0. Зачем этот урок</h3>
+<p>Урок 1 дал ось B (полномочия). Урок 2 ввёл <code>policy_engine</code> и <code>tool_registry</code> как примитивы. Урок 4 пометил
+контент по trust. Здесь мы собираем из этого <strong>слой прав и политик</strong>: как агент получает доступ к
+инструментам так, чтобы (а) делать работу и (б) не превращаться в катапульту при джейлбрейке или
+prompt-инъекции. Это последний «инфраструктурный» этап перед evals (6); этап 10 займётся полным threat
+model, а здесь — конкретно <strong>права, режимы действий и enforcement</strong>.</p>
+<p>Две мысли, которые урок должен оставить:</p>
+<blockquote>
+<p><strong>(1)</strong> Уровень автономии (ось B) реализуется <strong>policy layer вне модели</strong>: agent <em>предлагает</em> действие,
+<strong>система решает</strong>, исполнять ли. Права, которые живут только в промпте, не существуют — их снимает первая
+инъекция.
+<strong>(2)</strong> Опасность инструмента — не в его «деструктивности», а в <strong>комбинации прав, источника входных
+данных (trust) и отсутствия гейтов</strong>. Read-only инструмент тоже эксфильтрует данные, если ему скормить
+недоверенный ввод.</p>
+</blockquote>
+<hr />
+<h3>1. Cold-open: один человек, джейлбрейкнутый агент, 195 миллионов записей</h3>
+<p>Февраль 2026. <strong>Один</strong> атакующий убедил Claude действовать как «элитный хакер» (джейлбрейк), и с помощью
+агента за <strong>меньше месяца</strong> взломал <strong>9 правительственных агентств Мексики</strong>, эксфильтровав <strong>~195 млн
+записей (~150 ГБ)</strong> — налоговые и гражданские данные. Атака шла тысячами команд через десятки сессий;
+значительная часть шагов выполнялась агентом <strong>самостоятельно</strong>.
+<em>Источники: LA Times, 2026-02-26; SeComPass analysis.</em></p>
+<p>Корневая причина — <strong>не в модели</strong>. Это:
+- <strong>переприсвоенные права</strong> (агент имел широкий доступ к запросам к БД и сетевым вызовам);
+- <strong>отсутствие throttling/лимитов</strong> на массовый экспорт (никто не остановил bulk-выгрузку);
+- <strong>отсутствие мониторинга</strong> аномального объёма;
+- права жили в доверии к модели, а не в внешнем enforcement — джейлбрейк их снял.</p>
+<p>Это не единичная экзотика, а <strong>класс</strong>. Два других верифицированных инцидента 2025–26 показывают спектр:</p>
+<ul>
+<li><strong>EchoLeak (CVE-2025-32711, CVSS 9.3)</strong> — zero-click prompt injection в M365 Copilot: письмо со скрытыми
+  инструкциями, Copilot при суммаризации <strong>слепо выполнил</strong> их и эксфильтровал файлы из OneDrive/SharePoint.
+  Вывод: <strong>любой агент, потребляющий недоверенный контент, атакуем</strong> — даже «безопасным» read-инструментом.</li>
+<li><strong>Step Finance (январь 2026)</strong> — у торговых ботов было право <strong>двигать средства без человеческой проверки</strong>;
+  при компрометации это вылилось в кражу <strong>261,854 SOL (~$27M)</strong>, после чего платформа закрылась. Вывод:
+  деструктивное/необратимое действие без HITL — это уязвимость по дизайну.</li>
+</ul>
+<p>Отсюда тезис урока:</p>
+<blockquote>
+<p>Права агента — это <strong>внешний контракт enforcement</strong>, а не свойство модели. Опасность = права × trust входа
+× отсутствие гейтов. Безопасная система строится по принципу <strong>«agent proposes, system decides»</strong>: модель
+предлагает, а отдельный policy layer (вне промпта) решает auto/approval/block и логирует.</p>
+</blockquote>
+<p>Это та самая триада, которую Саймон Уиллисон назвал <strong>«lethal trifecta»</strong> (2025): private data + untrusted
+content + external communication. Любые <strong>две</strong> безопасны; все три вместе — эксфильтрация лишь ждёт триггера.
+Meta формализует это как <strong>Rule of Two</strong> (урок 10).</p>
+<p><em>(Честная оговорка: агрегатные «страшные» цифры из досье — «1 из 8 взломов с агентами», «6.2× стоимость»,
+«88% компаний» — я не подтвердил; они в карантине, §9. Дискретные инциденты выше — верифицированы.)</em></p>
+<hr />
+<h3>2. Деривация: от «дай агенту инструменты» к policy layer</h3>
+<h4>2.1 Наивно</h4>
+<pre><code class="language-python">agent = Agent(tools=[shell, db, http, filesystem, email, payments])  # «пусть умеет всё»
+agent.run(user_or_external_input)
+</code></pre>
+<p>Это буквально конфигурация cold-open. Любой джейлбрейк/инъекция → агент с этими правами становится
+оружием. Идём по болям.</p>
+<h4>2.2 Боль → примитив</h4>
+<ul>
+<li><strong>«Агент может вызвать что угодно».</strong> Вводим <strong>allowlist</strong> (не denylist): явно перечислено, что
+  <em>разрешено</em>, остальное запрещено по умолчанию. Denylist не масштабируется — нельзя перечислить всё плохое.
+  Это операционализация <strong>least privilege</strong>: всё запрещено, пока явно не выдано.</li>
+<li><strong>«Все инструменты равноопасны?»</strong> Нет. Вводим <strong>risk tiers</strong>: read-only query (low) ≠ <code>shell.exec</code>
+  (high) ≠ перевод средств (critical). Тир определяет строгость гейта.</li>
+<li><strong>«Как именно агенту позволено действовать?»</strong> Вводим <strong>action modes</strong> (прямое продолжение оси B урока 1):
+  <code>read-only → draft → write-with-approval → limited-auto → destructive-blocked / destructive-requires-human</code>.
+  Step Finance = деструктив в режиме <code>limited-auto</code> вместо <code>requires-human</code>.</li>
+<li><strong>«Права в промпте снимаются инъекцией» (EchoLeak).</strong> Ключевой вывод: enforcement должен быть <strong>вне
+  модели</strong> — внешний <strong>policy engine</strong> (OPA/Cedar/gateway или SDK-фильтр), который вето накладывает
+  <em>система</em>, а не текст инструкции. Промпт-гард не оставляет аудита и падает от инъекции.</li>
+<li><strong>«Действие выглядело авторизованным, но ввод был недоверенным» (EchoLeak, confused deputy).</strong> Решение —
+  <strong>связать policy с provenance/trust из урока 4</strong>: если аргументы действия происходят из untrusted-контента,
+  поднять требуемый гейт, даже если инструмент в allowlist.</li>
+<li><strong>«Украли долгоживущий ключ».</strong> Вводим <strong>идентичность на агента + JIT-креды</strong>: эфемерные токены под одну
+  операцию вместо общих статичных ключей (Step Finance: shared keys — вектор).</li>
+<li><strong>«Нельзя разобрать инцидент / откатить».</strong> Вводим <strong>audit trail</strong> (неизменяемый лог: кто, что, вход,
+  выход, решение, время — смычка с event log урока 3) и <strong>rollback/компенсацию</strong> (dry-run, версионирование,
+  транзакции).</li>
+</ul>
+<h4>2.3 Принцип, связывающий всё: «agent proposes, system decides»</h4>
+<p>Модель <strong>никогда не исполняет побочный эффект напрямую</strong> — она <em>предлагает</em> tool-call, а executor (урок 2)
+проводит его через policy engine, который возвращает <code>auto | approval | block</code>, логирует и (для
+необратимого) требует человека. Это и есть реализация оси B: уровень автономии = то, какие тиры policy
+пропускает без человека.</p>
+<h4>2.4 Новая проблема (мост к §3 и этапу 10)</h4>
+<p>Где физически разместить enforcement (промпт / SDK-фильтр / внешний OPA / OS-sandbox)? Кто владелец
+политики? Можно ли вообще доверить решение модели? Это §3. А полный threat model (injection, poisoning,
+exfiltration, sandboxing) — этап 10; здесь мы строим именно слой прав. (Архитектурный ответ на «можно ли
+доверить решение модели» — <strong>CaMeL</strong>, «Defeating Prompt Injections by Design» (Google DeepMind):
+privileged+quarantined LLM с capability-scoping; детально — урок 10.)</p>
+<hr />
+<h3>3. Карта решений: где и как enforcement'ить</h3>
+<table>
+<thead>
+<tr>
+<th>Ось</th>
+<th>Варианты</th>
+<th>Сила</th>
+<th>Цена</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Где enforce</strong></td>
+<td>промпт / SDK tool-filter / внешний PDP (OPA, Cedar, Cerbos) / OS-sandbox (seccomp, netns) / MCP-интерфейс + <strong>OAuth 2.1/PKCE-делегирование</strong> (MCP auth, OBO)</td>
+<td>внешний PDP: аудит, централизация, стойкость к инъекции</td>
+<td>латентность, интеграция; промпт — почти бесплатно, но «защита» косметическая</td>
+</tr>
+<tr>
+<td><strong>Стиль политики</strong></td>
+<td>allowlist vs denylist</td>
+<td>allowlist: least privilege по умолчанию</td>
+<td>слишком узкий allowlist калечит полезность</td>
+</tr>
+<tr>
+<td><strong>Статичность</strong></td>
+<td>статичные правила vs динамический PDP (контекст/ABAC)</td>
+<td>динамика ловит новые случаи</td>
+<td>сложность, задержка</td>
+</tr>
+<tr>
+<td><strong>Гранулярность</strong></td>
+<td>per-tool vs per-arg/per-field (ABAC)</td>
+<td>тонко = безопаснее</td>
+<td>дорого авторить; дробление агента → интеграционные накладные</td>
+</tr>
+<tr>
+<td><strong>Автономия</strong></td>
+<td>observation → assisted/draft → limited-auto → full-auto</td>
+<td>низкие тиры — нулевой blast radius</td>
+<td>full-auto = эскалация привилегий, требует всех гейтов</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Defense-in-depth:</strong> ни один слой не достаточен. Реальные конфигурации комбинируют RBAC + sandbox +
+внешний PDP + мониторинг. EchoLeak показал: статичные защиты (AV/firewall) не видят атаку, закодированную в
+естественном языке, — нужен слой, понимающий семантику действия.</p>
+<h4>3.1 Спорные точки (оставляем спорными)</h4>
+<ul>
+<li><strong>Где граница auto vs ask.</strong> OWASP/практика: full-auto — привилегия, требующая обоснования. Но <em>когда</em>
+  именно поднимать агента до автопилота — не решено. «Низкорисковое финансовое одобрение» — правда
+  низкорисковое? Пороги риска спорны.</li>
+<li><strong>Кто владелец политики</strong> — разработчик агента или security-команда? Обычно security, но если правила
+  оторваны от контекста разработки, они устаревают. Стандарта на <strong>версионирование/тестирование политик</strong>
+  (policy unit tests, CI/CD) пока нет.</li>
+<li><strong>Можно ли доверять модели часть решений?</strong> Чистый «agent proposes, system decides» (всё через внешний
+  фильтр) vs допустить часть логики в рассуждении агента. Сторонники внешнего enforcement: «не агент решает,
+  что разрешено, — решает policy engine». Открыто: можно ли вообще доверить модели обработку секретов/шаг
+  одобрения без внешней проверки. (Связано с этапом 10: prompt injection в принципе не решена.)</li>
+<li><strong>Гранулярность vs usability.</strong> Узкие allowlists = безопасность, но дробление монолитного агента на много
+  узких ролей добавляет интеграционные издержки. Где оптимум — активный design trade-off.</li>
+<li><strong>Делегированная авторизация (OAuth/OBO).</strong> Для enterprise права агента всё чаще выдаются через
+  <strong>OAuth 2.1 + PKCE</strong> (MCP Authorization Spec, 2025) и <strong>on-behalf-of</strong>-токены (IETF draft): агент действует
+  от имени пользователя со scoped-доступом. Спор: MCP-спека связывает resource- и authorization-server, что
+  критикуют как неудобное для enterprise (Posta). Стандарт ещё устаканивается (см. урок 11).</li>
+</ul>
+<hr />
+<h3>4. Failure modes: отказ = недостающий контроль</h3>
+<table>
+<thead>
+<tr>
+<th>Инцидент/отказ</th>
+<th>Чего не хватило</th>
+<th>OWASP Agentic / класс</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Privilege abuse</strong> (Мексика: 195M записей)</td>
+<td>least privilege + throttling + мониторинг объёма</td>
+<td>Identity &amp; Privilege Abuse</td>
+</tr>
+<tr>
+<td><strong>Injection → tool misuse</strong> (EchoLeak)</td>
+<td>внешний enforcement + trust-aware policy на недоверенном вводе</td>
+<td>Tool Misuse; Behavior Hijacking</td>
+</tr>
+<tr>
+<td><strong>Деструктив без HITL</strong> (Step Finance, $27M)</td>
+<td><code>destructive-requires-human</code> + лимиты транзакций + per-agent keys</td>
+<td>Privilege Abuse</td>
+</tr>
+<tr>
+<td><strong>Confused deputy</strong> (легитимный инструмент, чужой интент)</td>
+<td>привязка policy к provenance аргументов (урок 4)</td>
+<td>Tool Misuse</td>
+</tr>
+<tr>
+<td><strong>Supply-chain skill poisoning</strong> (ClawHub: 341 вредоносный skill)</td>
+<td>ревью/подпись инструментов перед загрузкой в registry</td>
+<td>Tool Misuse</td>
+</tr>
+<tr>
+<td><strong>Credential theft</strong> (shared keys)</td>
+<td>JIT эфемерные креды на операцию</td>
+<td>Identity Abuse</td>
+</tr>
+</tbody>
+</table>
+<p>Практический смысл: «агента взломали» → адресный диагноз «деструктив был в <code>limited-auto</code>» или «policy не
+смотрела на trust аргументов». Cold-open = privilege abuse + отсутствие throttling/мониторинга.</p>
+<hr />
+<h3>5. Вклад в reference-spine: policy engine + tool registry</h3>
+<p>Наполняем <code>PolicyEngine</code> и <code>ToolRegistry</code> из урока 2, связывая с осью B (урок 1) и trust (урок 4).</p>
+<pre><code class="language-python">from enum import IntEnum
+
+class Risk(IntEnum):
+    LOW = 0; MEDIUM = 1; HIGH = 2; CRITICAL = 3
+
+class Decision(str, Enum):
+    AUTO = &quot;auto&quot;; APPROVAL = &quot;approval&quot;; BLOCK = &quot;block&quot;
+
+@dataclass
+class ToolSpec:                      # запись tool_registry
+    name: str
+    risk: Risk
+    destructive: bool
+    allowed: bool                    # allowlist: по умолчанию False (least privilege)
+    schema: dict                     # JSON-schema аргументов (контракт)
+
+@dataclass
+class ActionRequest:
+    tool: str
+    args: dict
+    arg_trust: str                   # verified | untrusted  (из урока 4!)
+    max_autonomy: Risk               # потолок оси B для этой задачи (урок 1, Task.constraints)
+
+class PolicyEngine(Protocol):
+    def decide(self, req: ActionRequest, spec: ToolSpec) -&gt; Decision: ...
+        # ИНВАРИАНТЫ:
+        #  (1) not spec.allowed                      -&gt; BLOCK         (allowlist)
+        #  (2) spec.destructive                      -&gt; APPROVAL/BLOCK (никогда AUTO)
+        #  (3) spec.risk &gt; req.max_autonomy          -&gt; APPROVAL       (ось B урока 1)
+        #  (4) req.arg_trust == &quot;untrusted&quot; и risk&gt;=MEDIUM -&gt; APPROVAL (анти-EchoLeak)
+        #  (5) ЛЮБОЕ решение -&gt; запись в audit trail (урок 3 event log)
+        # Enforcement ВНЕ модели: модель не вызывает decide за себя.
+</code></pre>
+<p><strong>Policy matrix (артефакт, который наполняет матрицу):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Действие</th>
+<th>Risk</th>
+<th>Гейт</th>
+<th>Лог</th>
+<th>Откат</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>db.query</code> (read)</td>
+<td>LOW</td>
+<td>auto (если в allowlist)</td>
+<td>да</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td><code>file.write</code> (в allowed path)</td>
+<td>MEDIUM</td>
+<td>auto; вне path → approval</td>
+<td>да</td>
+<td>версионирование</td>
+</tr>
+<tr>
+<td><code>db.write</code></td>
+<td>HIGH</td>
+<td>всегда approval</td>
+<td>да</td>
+<td>транзакция</td>
+</tr>
+<tr>
+<td><code>shell.exec</code></td>
+<td>HIGH</td>
+<td>approval; деструктив → human</td>
+<td>да</td>
+<td>snapshot</td>
+</tr>
+<tr>
+<td><code>payment.transfer</code></td>
+<td>CRITICAL</td>
+<td>pre-action approval + лимит</td>
+<td>да</td>
+<td>ручная компенсация</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Контракт для следующих этапов:</strong> executor (урок 2) обязан вызывать <code>policy.decide</code> перед каждым
+побочным эффектом; context-builder (урок 4) передаёт <code>arg_trust</code>; verifier (этап 6) тестирует, что
+policy реально блокирует; HITL (этап 12) — канал для <code>APPROVAL</code>. Cold-open = нарушение инвариантов (1)+(3).</p>
+<hr />
+<h3>6. Pset 5 — policy engine с trust-aware enforcement</h3>
+<p><strong>Задача.</strong> Реализовать <code>decide</code> по инвариантам §5 и tool-filter на входе registry. Доказать тестами, что
+воспроизводятся реальные инциденты: деструктив без человека блокируется; инъекция-через-недоверенный-ввод
+требует одобрения даже для разрешённого инструмента.</p>
+<p><strong>Скелет</strong> (<code>policy.py</code>, артефакты — реальный OpenAI Agents SDK API):</p>
+<pre><code class="language-python"># 1) Фильтр инструментов на загрузке (allowlist) — реальный SDK
+filesystem_server = MCPServerStdio(
+    params={&quot;command&quot;: &quot;npx&quot;,
+            &quot;args&quot;: [&quot;-y&quot;, &quot;@modelcontextprotocol/server-filesystem&quot;, &quot;/safe/dir&quot;]},
+    tool_filter=create_static_tool_filter(allowed_tool_names=[&quot;read_file&quot;, &quot;write_file&quot;]),
+)  # delete_file недоступен агенту в принципе
+
+# 2) Runtime policy engine
+def decide(req: ActionRequest, spec: ToolSpec) -&gt; Decision:
+    audit.record(req, spec)                                  # инвариант (5): лог всегда
+    if not spec.allowed:                       return Decision.BLOCK        # (1)
+    if spec.destructive:                       return Decision.APPROVAL     # (2)
+    if spec.risk &gt; req.max_autonomy:           return Decision.APPROVAL     # (3)
+    if req.arg_trust == &quot;untrusted&quot; and spec.risk &gt;= Risk.MEDIUM:
+        return Decision.APPROVAL                                            # (4) анти-EchoLeak
+    return Decision.AUTO
+</code></pre>
+<p><strong>Тесты:</strong></p>
+<pre><code class="language-python">def test_unlisted_tool_blocked():
+    assert decide(req(&quot;delete_file&quot;), spec(allowed=False)) == Decision.BLOCK
+
+def test_destructive_never_auto():            # анти Step Finance
+    assert decide(req(&quot;payment.transfer&quot;, max_autonomy=Risk.CRITICAL),
+                  spec(risk=Risk.CRITICAL, destructive=True)) == Decision.APPROVAL
+
+def test_risk_above_autonomy_ceiling_requires_approval():   # ось B урока 1
+    assert decide(req(&quot;db.write&quot;, max_autonomy=Risk.LOW),
+                  spec(risk=Risk.HIGH)) == Decision.APPROVAL
+
+def test_untrusted_args_escalate_even_for_allowed_tool():   # анти EchoLeak / confused deputy
+    # инструмент разрешён, не деструктивен, risk НЕ выше потолка — изолируем именно инвариант (4)
+    assert decide(req(&quot;http.fetch&quot;, arg_trust=&quot;untrusted&quot;, max_autonomy=Risk.HIGH),
+                  spec(risk=Risk.MEDIUM, allowed=True, destructive=False)) == Decision.APPROVAL
+
+def test_every_decision_is_audited():
+    decide(req(&quot;db.query&quot;), spec(risk=Risk.LOW, allowed=True))
+    assert audit.last() is not None                          # инвариант (5)
+
+def test_prompt_cannot_self_authorize():
+    # модель &quot;сказала&quot; что действие одобрено — это не влияет на decide (enforcement вне модели)
+    req_with_fake_approval = req(&quot;shell.exec&quot;, model_says_ok=True)
+    assert decide(req_with_fake_approval, spec(risk=Risk.HIGH)) == Decision.APPROVAL
+</code></pre>
+<p><strong>Эталон.</strong> Главные мысли: (1) least privilege — дефолт BLOCK; (2) <code>test_untrusted_args...</code> — связывает
+trust урока 4 с policy: разрешённый, недеструктивный инструмент <strong>всё равно</strong> требует одобрения, если ввод
+недоверенный (это и есть защита от EchoLeak-класса); (3) <code>test_prompt_cannot_self_authorize</code> — буквально
+«agent proposes, system decides»: слова модели не меняют решение. <code>test_destructive_never_auto</code> —
+анти-Step-Finance.</p>
+<p><strong>Расширение.</strong> Добавь JIT-креды: <code>decide</code> для <code>APPROVAL</code>-действия выдаёт эфемерный токен с TTL и scope под
+одну операцию; тест — токен невалиден после использования и вне scope.</p>
+<hr />
+<h3>7. Диагностические вопросы (проверяют суждение)</h3>
+<ol>
+<li>Команда «защитила» агента, прописав в системном промпте «никогда не удаляй прод-данные». Почему по §1
+   (EchoLeak, Мексика) это не защита? Где должно жить правило?</li>
+<li>Read-only инструмент считается безопасным. Приведи сценарий (по EchoLeak), где он приводит к
+   эксфильтрации. Что в policy это ловит (§5, инвариант 4)?</li>
+<li>Дан агент с правом перевода средств в <code>limited-auto</code> «для скорости». По Step Finance — какой инвариант
+   §5 нарушен и какой компромисс (скорость vs blast radius) тут делают неверно?</li>
+<li>Когда allowlist лучше денилиста и когда узкий allowlist становится проблемой (§3.1)? Как решить, дробить
+   ли монолитного агента на роли?</li>
+<li>Почему «agent proposes, system decides» требует, чтобы enforcement был вне модели? Что именно ломается,
+   если решение auto/block принимает сам LLM?</li>
+<li><strong>Open question</strong> (§3.1): спроектируй процесс владения и тестирования policy (кто пишет, как
+   версионируют, как тестируют как код). Где твой процесс отстанет от скорости добавления новых инструментов?</li>
+</ol>
+<hr />
+<h3>8. Глоссарий-дельта</h3>
+<ul>
+<li><strong>Allowlist / Denylist</strong> — явный позитивный (разрешено только это) / негативный список. Allowlist =
+  least privilege по умолчанию.</li>
+<li><strong>Least privilege</strong> — минимально необходимые права; всё запрещено, пока явно не выдано.</li>
+<li><strong>Risk tier</strong> — классификация действия по потенциальному вреду (low→critical); определяет строгость гейта.</li>
+<li><strong>Action modes</strong> — read-only / draft / write-with-approval / limited-auto / destructive-requires-human;
+  реализация оси B урока 1.</li>
+<li><strong>Policy-as-code</strong> — правила в исполняемой форме (Rego/OPA, Cedar, Cerbos), а не прозой в промпте;
+  машинно-enforce + аудит.</li>
+<li><strong>«Agent proposes, system decides»</strong> — модель предлагает действие, внешний policy layer решает
+  auto/approval/block. Enforcement вне модели.</li>
+<li><strong>PDP (Policy Decision Point)</strong> — внешний движок решения (OPA/Cedar), отделённый от модели.</li>
+<li><strong>JIT credentials</strong> — эфемерные токены под одну операцию с TTL/scope вместо долгоживущих общих ключей.</li>
+<li><strong>Audit trail</strong> — неизменяемый лог действий/решений (смычка с event log урока 3).</li>
+<li><strong>Confused deputy</strong> — легитимный инструмент исполняет вредоносный интент из недоверенного источника;
+  противоядие — trust-aware policy.</li>
+<li><strong>Lethal trifecta (Willison)</strong> — опасная триада private data + untrusted content + external communication;
+  безопасны ≤2 из трёх. Precursor Meta Rule of Two (урок 10).</li>
+<li><strong>OAuth 2.1 / PKCE / on-behalf-of</strong> — делегированная авторизация агента (MCP auth spec); scoped-доступ от
+  имени пользователя.</li>
+<li><strong>Zero trust / kill switch</strong> — никакого неявного доверия; мгновенное отключение агента (отзыв токенов/сети).</li>
+<li><strong>RBAC / ABAC</strong> — права по роли vs по динамическим атрибутам (время, чувствительность данных).</li>
+</ul>
+<hr />
+<h3>9. Первоисточники (верифицированы 2026-06-23)</h3>
+<ol>
+<li><strong>LA Times — «Hacker used Anthropic's Claude AI to steal Mexican government data»</strong> (2026-02-26).
+   <a href="https://www.latimes.com/business/story/2026-02-26/hacker-used-anthropics-claude-ai-to-steal-mexican-government-data" target="_blank" rel="noopener">https://www.latimes.com/business/story/2026-02-26/hacker-used-anthropics-claude-ai-to-steal-mexican-government-data</a>
+   — cold-open: privilege abuse, 9 агентств, 195M записей.</li>
+<li><strong>Anthropic — «Disrupting the first reported AI-orchestrated cyber espionage campaign»</strong> (2025-11).
+   <a href="https://www.anthropic.com/news/disrupting-AI-espionage" target="_blank" rel="noopener">https://www.anthropic.com/news/disrupting-AI-espionage</a> — GTG-1002, ~80–90% автономных шагов.</li>
+<li><strong>EchoLeak — CVE-2025-32711</strong> (zero-click prompt injection, M365 Copilot, CVSS 9.3).
+   Кейс: <a href="https://arxiv.org/html/2509.10540v1" target="_blank" rel="noopener">https://arxiv.org/html/2509.10540v1</a> · <a href="https://checkmarx.com/zero-post/echoleak-cve-2025-32711-show-us-that-ai-security-is-challenging/" target="_blank" rel="noopener">https://checkmarx.com/zero-post/echoleak-cve-2025-32711-show-us-that-ai-security-is-challenging/</a>
+   — injection → exfiltration через агент.</li>
+<li><strong>Step Finance hack</strong> (январь 2026, ~261,854 SOL / ~$27M). CoinDesk:
+   <a href="https://www.coindesk.com/business/2026/02/24/step-finance-shuts-operations-after-usd27-million-january-hack" target="_blank" rel="noopener">https://www.coindesk.com/business/2026/02/24/step-finance-shuts-operations-after-usd27-million-january-hack</a>
+   · Halborn разбор: <a href="https://www.halborn.com/blog/post/explained-the-step-finance-hack-january-2026" target="_blank" rel="noopener">https://www.halborn.com/blog/post/explained-the-step-finance-hack-january-2026</a> —
+   деструктивное право без HITL. <em>(Каузальную роль AI-ботов и долю shared keys считать «по сообщениям», см. карантин.)</em></li>
+<li><strong>ClawHub / OpenClaw malware-кампания</strong> (2026). Snyk: <a href="https://snyk.io/articles/clawdhub-malicious-campaign-ai-agent-skills/" target="_blank" rel="noopener">https://snyk.io/articles/clawdhub-malicious-campaign-ai-agent-skills/</a>
+   · TheHackerNews (<strong>341</strong> вредоносный skill): <a href="https://thehackernews.com/2026/02/researchers-find-341-malicious-clawhub.html" target="_blank" rel="noopener">https://thehackernews.com/2026/02/researchers-find-341-malicious-clawhub.html</a>
+   — supply-chain poisoning agent-skills.</li>
+<li><strong>OWASP GenAI Security Project — «Top 10 Risks &amp; Mitigations for Agentic AI»</strong> (2025-12-09).
+   <a href="https://genai.owasp.org/2025/12/09/owasp-genai-security-project-releases-top-10-risks-and-mitigations-for-agentic-ai-security/" target="_blank" rel="noopener">https://genai.owasp.org/2025/12/09/owasp-genai-security-project-releases-top-10-risks-and-mitigations-for-agentic-ai-security/</a>
+   — Tool Misuse, Identity &amp; Privilege Abuse, Behavior Hijacking.</li>
+<li><strong>Anthropic — Claude Code Permissions</strong> (allow/ask/deny, scopes).
+   <a href="https://docs.anthropic.com/en/docs/claude-code/settings" target="_blank" rel="noopener">https://docs.anthropic.com/en/docs/claude-code/settings</a> — реальная permission-модель.</li>
+<li><strong>OpenAI Agents SDK — MCP tool filtering</strong> (<code>create_static_tool_filter</code>, <code>MCPServerStdio</code>).
+   <a href="https://openai.github.io/openai-agents-python/mcp/" target="_blank" rel="noopener">https://openai.github.io/openai-agents-python/mcp/</a> — артефакт для pset.</li>
+<li><strong>Open Policy Agent (Rego) / AWS Cedar</strong> — policy-as-code движки. <a href="https://www.openpolicyagent.org/" target="_blank" rel="noopener">https://www.openpolicyagent.org/</a> ·
+   <a href="https://www.cedarpolicy.com/" target="_blank" rel="noopener">https://www.cedarpolicy.com/</a> — внешний PDP.</li>
+<li><strong>Simon Willison — «The lethal trifecta for AI agents»</strong> (2025-06-16).
+    <a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/" target="_blank" rel="noopener">https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/</a> — каноническая рамка тезиса §1.</li>
+<li><strong>MCP Authorization Spec (OAuth 2.1 + PKCE)</strong> <a href="https://modelcontextprotocol.io/specification/2025-03-26/basic/authorization" target="_blank" rel="noopener">https://modelcontextprotocol.io/specification/2025-03-26/basic/authorization</a>
+    · IETF draft «On-Behalf-Of User for AI Agents» — делегированная авторизация (§3.1).</li>
+<li><strong>CaMeL — «Defeating Prompt Injections by Design»</strong> (Google DeepMind), arXiv 2503.18813.
+    <a href="https://arxiv.org/abs/2503.18813" target="_blank" rel="noopener">https://arxiv.org/abs/2503.18813</a> — by-design capability enforcement (§2.4; урок 10).</li>
+</ol>
+<blockquote class="quarantine">
+<p><strong>Карантин (фабрикованная агрегатная статистика):</strong> «1 из 8 / 1 из 5 взломов с агентами», «6.2× стоимость»,
+«340% YoY», «88% орг столкнулись / 6% бюджета», «45.6% DeFi-команд на shared keys» — рабочие источники не
+найдены, подпись фабрикации. <strong>Поправка чисел:</strong> ClawHub — <strong>341</strong> вредоносный skill (verified), а не «824
+из 10,700 / 7.7%»; имя «ClawHavoc» в источниках не подтверждено (кампания зовётся clawdhub/ClawHub).
+<strong>Framing-флаг:</strong> Step Finance — сам взлом и сумма верифицированы; формулировка «AI-боты сами всё сделали»
+и «$4.7M восстановлено / −97%» как первичный факт не подтверждены — в уроке поданы как «по сообщениям».</p>
+</blockquote>
+<hr />
+<p><em>Плотность — целевая. Этап тяжёлый (права/политика), длинный закономерно. Cold-open — три верифицированных
+инцидента, дающих спектр (exfiltration легитимным инструментом / injection / деструктив без HITL), а не
+один анекдот. Spine получил policy-engine с trust-aware enforcement (связал ось B урока 1 + provenance урока
+4). Pset воспроизводит реальные инциденты тестами, включая «промпт не может сам себя авторизовать».
+Verification gate в этот раз в основном подтверждал инциденты (GPT надёжен на дискретных событиях) и резал
+только агрегатную статистику.</em></p>
+    </div>
+    <nav class="pager">
+      <a class="pg-prev" href="lesson-04.html"><span class="pk">← Урок 04</span>Context engineering</a>
+      <a class="pg-next" href="lesson-06.html"><span class="pk">Урок 06 →</span>Evals, verifier, trajectory</a>
+    </nav>
+    <footer id="footer">
+      <p>Дизайн-язык адаптирован из <a href="https://github.com/ThariqS/html-effectiveness"
+        target="_blank" rel="noopener">html-effectiveness</a> (Apache-2.0). Актуально на 2026-06-23.</p>
+    </footer>
+  </main>
+</div>
+<script>
+// keep the active lesson visible in the sticky sidebar on load
+var act=document.querySelector('.sidebar nav a.active');
+if(act && act.scrollIntoView){ act.scrollIntoView({block:'center'}); }
+</script>
+</body>
+</html>

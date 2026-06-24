@@ -1,0 +1,766 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Урок 02. Примитивы и reference-spine — L8+ Agentic Engineering</title>
+<!-- Design language adapted from ThariqS/html-effectiveness (Apache-2.0, (c) Anthropic PBC). -->
+<style>
+:root{
+  --ivory:#FAF9F5; --paper:#FFFFFF; --slate:#141413; --clay:#D97757; --clay-d:#B85C3E;
+  --oat:#E3DACC; --olive:#788C5D; --g100:#F0EEE6; --g200:#E6E3DA; --g300:#D1CFC5;
+  --g500:#87867F; --g700:#3D3D3A;
+  --serif:ui-serif,Georgia,"Times New Roman",Times,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Monaco,Consolas,monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--ivory);color:var(--slate);font-family:var(--sans);
+  line-height:1.6;-webkit-font-smoothing:antialiased;font-size:16.5px;}
+
+a{color:var(--clay-d);text-decoration-color:var(--oat);text-underline-offset:3px;}
+a:hover{text-decoration-color:var(--clay);}
+
+/* layout shell: sticky sidebar + reading column */
+.shell{max-width:1180px;margin:0 auto;padding:0 28px;display:grid;
+  grid-template-columns:236px minmax(0,1fr);gap:48px;align-items:start;}
+@media(max-width:900px){.shell{grid-template-columns:1fr;gap:0;padding:0 20px;}}
+
+/* sidebar */
+.sidebar{position:sticky;top:0;max-height:100vh;overflow-y:auto;padding:34px 0 40px;}
+@media(max-width:900px){.sidebar{position:static;max-height:none;border-bottom:1.5px solid var(--g300);
+  margin-bottom:8px;padding-bottom:18px;}}
+.side-brand{font-family:var(--serif);font-size:19px;font-weight:600;letter-spacing:-.01em;margin-bottom:2px;}
+.side-brand em{font-style:italic;color:var(--clay);}
+.side-sub{font-family:var(--mono);font-size:10.5px;color:var(--g500);text-transform:uppercase;
+  letter-spacing:.1em;margin-bottom:20px;}
+.sidebar nav{display:flex;flex-direction:column;gap:1px;}
+.sidebar nav a{display:flex;gap:9px;align-items:baseline;text-decoration:none;color:var(--g700);
+  font-size:13px;line-height:1.35;padding:5px 9px;border-radius:7px;border-left:2px solid transparent;}
+.sidebar nav a .n{font-family:var(--mono);font-size:10px;color:var(--g500);min-width:16px;}
+.sidebar nav a:hover{background:var(--g100);color:var(--slate);}
+.sidebar nav a.active{background:var(--paper);border-left-color:var(--clay);color:var(--slate);
+  box-shadow:0 1px 0 var(--g200);}
+.sidebar nav a.active .n{color:var(--clay);}
+.sidebar nav a.lead{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--g500);margin-top:14px;padding-bottom:2px;pointer-events:none;}
+
+/* main reading column */
+main{max-width:840px;padding:0 0 140px;min-width:0;}
+
+/* masthead */
+header.masthead{padding:54px 0 34px;border-bottom:1.5px solid var(--g300);margin-bottom:8px;}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--g500);margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+.eyebrow::before{content:"";width:24px;height:1.5px;background:var(--clay);}
+h1.title{font-family:var(--serif);font-weight:500;font-size:clamp(36px,5vw,58px);line-height:1.07;
+  letter-spacing:-.018em;margin:0 0 6px;max-width:18ch;}
+h1.title em{font-style:italic;color:var(--clay);}
+.lede{font-size:17px;color:var(--g700);margin:20px 0 0;max-width:640px;}
+.disclaimer{margin:22px 0 0;padding:14px 18px;background:var(--g100);border-radius:12px;
+  border:1.5px solid var(--g200);font-size:13.5px;color:var(--g700);max-width:660px;}
+.disclaimer b{color:var(--slate);}
+
+/* feature panel (spine) */
+.panel{margin:40px 0 0;background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;
+  padding:26px 28px;scroll-margin-top:16px;}
+.panel h2,.howto h2{font-family:var(--serif);font-weight:500;font-size:25px;margin:0 0 4px;letter-spacing:-.01em;}
+.panel .sub{color:var(--g700);font-size:14px;margin:0 0 18px;}
+.flow{font-family:var(--mono);font-size:12.5px;line-height:1.7;background:var(--g100);border-radius:10px;
+  padding:14px 16px;overflow-x:auto;color:var(--g700);white-space:pre-wrap;border:1px solid var(--g200);}
+ol.inv{margin:18px 0 0;padding-left:0;counter-reset:inv;list-style:none;display:grid;gap:7px;}
+ol.inv li{position:relative;padding-left:30px;font-size:14px;color:var(--g700);}
+ol.inv li::before{counter-increment:inv;content:counter(inv);position:absolute;left:0;top:0;
+  font-family:var(--mono);font-size:11px;color:var(--clay);font-weight:600;
+  border:1.5px solid var(--oat);border-radius:6px;width:21px;height:21px;display:flex;
+  align-items:center;justify-content:center;}
+ol.inv li b{color:var(--slate);font-weight:600;}
+
+.howto{margin:34px 0 0;scroll-margin-top:16px;}
+.howto ul{margin:10px 0 0;padding-left:20px;}
+.howto li{margin:6px 0;color:var(--g700);font-size:14.5px;}
+
+.section-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--g500);margin:64px 0 6px;display:flex;align-items:center;gap:10px;}
+.section-label::before{content:"";width:20px;height:1.5px;background:var(--clay);}
+
+/* lessons / accordion */
+section.lesson{margin-top:18px;scroll-margin-top:14px;}
+details.les{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;overflow:hidden;
+  transition:border-color 150ms,box-shadow 150ms;}
+details.les[open]{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);}
+details.les summary{list-style:none;cursor:pointer;padding:20px 22px;display:block;}
+details.les summary::-webkit-details-marker{display:none;}
+.sec-head{display:flex;align-items:baseline;gap:14px;}
+.sec-head .idx{font-family:var(--mono);font-size:13px;color:var(--clay);font-weight:600;min-width:26px;}
+.sec-head h2{font-family:var(--serif);font-weight:500;font-size:23px;margin:0;letter-spacing:-.01em;flex:1;}
+.tagline{color:var(--g700);font-size:14px;margin:3px 0 0 40px;}
+.card-meta{margin:13px 0 0 40px;display:grid;gap:5px;}
+.meta-item{font-size:13px;color:var(--g700);}
+.meta-item .k{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--g500);margin-right:8px;}
+.expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(--mono);font-size:11px;
+  color:var(--clay);}
+details.les[open] .expand-hint{display:none;}
+
+/* maturity badges */
+.badge{font-family:var(--mono);font-size:10.5px;padding:3px 9px;border-radius:999px;white-space:nowrap;
+  border:1.5px solid var(--g300);color:var(--g700);align-self:flex-start;}
+.badge.b-core{background:#EEF1E9;border-color:#C3D1AE;color:#3f5430;}
+.badge.b-emerging{background:#FBEDE6;border-color:#EBC3AE;color:var(--clay-d);}
+.badge.b-disputed{background:#FAF3E2;border-color:#E6D08C;color:#8a6d1f;}
+.badge.b-hype{background:#FBE9E6;border-color:#E9B4A8;color:#a23b28;}
+.badge.b-special{background:#ECEAF3;border-color:#C7C0DE;color:#4b4080;}
+
+/* lesson body (rendered markdown) */
+.lesson-body{padding:4px 26px 28px;border-top:1px solid var(--g100);}
+.lesson-body .status{font-size:13px;color:var(--g700);background:var(--g100);border-radius:10px;
+  padding:12px 15px;margin:18px 0 8px;border:1px solid var(--g200);}
+.lesson-body h3{font-family:var(--serif);font-weight:600;font-size:21px;margin:32px 0 8px;letter-spacing:-.008em;}
+.lesson-body h4{font-family:var(--serif);font-weight:600;font-size:17px;margin:22px 0 6px;color:var(--g700);}
+.lesson-body h5{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--g500);margin:18px 0 6px;}
+.lesson-body p{margin:11px 0;}
+.lesson-body ul,.lesson-body ol{margin:11px 0;padding-left:22px;}
+.lesson-body li{margin:5px 0;}
+.lesson-body code{font-family:var(--mono);font-size:.86em;background:var(--g100);padding:1.5px 5px;
+  border-radius:5px;border:1px solid var(--g200);}
+.lesson-body pre{background:#2b2a27;color:#eceae3;border-radius:12px;padding:16px 18px;overflow-x:auto;
+  font-size:12.7px;line-height:1.5;margin:14px 0;}
+.lesson-body pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit;}
+.lesson-body blockquote{margin:14px 0;padding:12px 18px;border-left:3px solid var(--clay);
+  background:var(--paper);border-radius:0 10px 10px 0;color:var(--g700);}
+.lesson-body blockquote.quarantine{border-left-color:#c98a2e;background:#FAF3E2;}
+.lesson-body table{border-collapse:collapse;width:100%;margin:16px 0;font-size:13px;display:block;
+  overflow-x:auto;}
+.lesson-body th,.lesson-body td{border:1px solid var(--g300);padding:7px 10px;text-align:left;
+  vertical-align:top;}
+.lesson-body th{background:var(--g100);font-weight:600;font-family:var(--sans);}
+.lesson-body tr:nth-child(even) td{background:#fcfbf8;}
+.lesson-body hr{border:none;border-top:1.5px solid var(--g200);margin:26px 0;}
+.lesson-body a{word-break:break-word;}
+.lesson-body em{color:var(--g700);}
+
+/* footer */
+footer{margin:80px 0 0;border-top:1.5px solid var(--g300);padding-top:30px;font-size:13px;
+  color:var(--g500);scroll-margin-top:16px;}
+footer .k{font-family:var(--serif);font-style:italic;color:var(--g700);font-size:15px;}
+footer p{margin:8px 0;max-width:680px;}
+
+.toolbar{display:flex;gap:10px;margin:22px 0 0 40px;}
+.toolbar button{font-family:var(--mono);font-size:11px;background:var(--paper);border:1.5px solid var(--g300);
+  color:var(--g700);border-radius:999px;padding:6px 13px;cursor:pointer;}
+.toolbar button:hover{border-color:var(--slate);color:var(--slate);}
+
+/* ---- multipage: lesson cards on index + lesson pages ---- */
+.side-brand-link{text-decoration:none;color:inherit;display:block;}
+.lcards{display:grid;gap:14px;margin-top:18px;}
+a.lcard{display:block;text-decoration:none;color:inherit;background:var(--paper);border:1.5px solid var(--g300);
+  border-radius:14px;padding:20px 22px;transition:border-color .15s,box-shadow .15s,transform .15s;}
+a.lcard:hover{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);transform:translateY(-1px);}
+a.lcard .sec-head h2{color:var(--slate);}
+a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(--mono);font-size:11px;color:var(--clay);}
+.crumb{margin:30px 0 2px;}
+.crumb a{font-family:var(--mono);font-size:12px;color:var(--g500);text-decoration:none;}
+.crumb a:hover{color:var(--clay-d);}
+.lesson-head{padding:12px 0 24px;border-bottom:1.5px solid var(--g300);margin-bottom:4px;}
+.lesson-head .eyebrow{margin-bottom:13px;}
+.lesson-head h1.title{font-size:clamp(29px,4vw,44px);max-width:22ch;margin:0;}
+.lesson-head .lede{margin-top:13px;}
+.pager{display:flex;justify-content:space-between;align-items:stretch;gap:14px;margin:54px 0 0;
+  border-top:1.5px solid var(--g300);padding-top:22px;}
+.pager a{text-decoration:none;color:var(--g700);font-size:13.5px;border:1.5px solid var(--g300);border-radius:11px;
+  padding:11px 15px;max-width:49%;transition:.15s;line-height:1.4;}
+.pager a:hover{border-color:var(--slate);color:var(--slate);}
+.pager a .pk{font-family:var(--mono);font-size:10px;color:var(--g500);display:block;margin-bottom:2px;}
+.pager .pg-next{margin-left:auto;text-align:right;}
+.sidebar nav a.active{background:var(--paper);border-left-color:var(--clay);color:var(--slate);box-shadow:0 1px 0 var(--g200);}
+.sidebar nav a.active .n{color:var(--clay);}
+
+/* ---- interactive course widgets (.cw) ---- */
+.cw{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;margin:28px 0;overflow:hidden;}
+.cw-head{display:flex;align-items:center;gap:10px;padding:13px 20px;border-bottom:1px solid var(--g200);background:var(--g100);}
+.cw-head .tag{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--clay);
+  border:1.5px solid var(--oat);border-radius:999px;padding:2px 9px;}
+.cw-head .ttl{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--slate);}
+.cw-body{padding:18px 20px;display:flex;flex-direction:column;gap:15px;}
+.cw-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+.cw-grid{display:grid;gap:10px;}
+.cw .lbl{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--g500);margin-bottom:7px;}
+.cw .metric{background:var(--g100);border:1px solid var(--g200);border-radius:10px;padding:9px 13px;}
+.cw .metric .mk{font-size:12px;color:var(--g500);}
+.cw .metric .mv{font-size:21px;font-weight:600;font-family:var(--serif);color:var(--slate);line-height:1.2;}
+.cw button{font-family:var(--sans);cursor:pointer;border-radius:8px;border:1.5px solid var(--g300);background:var(--paper);
+  color:var(--g700);font-size:13px;padding:7px 12px;transition:.12s;line-height:1.3;}
+.cw button:hover{border-color:var(--slate);color:var(--slate);}
+.cw .act{background:var(--clay);border-color:var(--clay);color:#fff;font-weight:600;}
+.cw .act:hover{background:var(--clay-d);border-color:var(--clay-d);color:#fff;}
+.cw .chip{font-family:var(--mono);font-size:11px;padding:5px 10px;border-radius:999px;}
+.cw .chip.sel{background:var(--slate);border-color:var(--slate);color:var(--ivory);}
+.cw .tog{display:flex;align-items:center;gap:8px;text-align:left;}
+.cw .tog.on-bad{background:#FBE9E6;border-color:#E9B4A8;color:#a23b28;}
+.cw .tog.on-good{background:#EEF1E9;border-color:#C3D1AE;color:#3f5430;}
+.cw input[type=range]{width:100%;accent-color:var(--clay);margin:2px 0;}
+.cw .slabel{display:flex;justify-content:space-between;font-size:12.5px;color:var(--g700);margin-bottom:2px;}
+.cw .slabel b{font-weight:600;color:var(--slate);}
+.cw .bar{display:flex;height:40px;border-radius:9px;overflow:hidden;border:1px solid var(--g300);}
+.cw .seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;overflow:hidden;
+  white-space:nowrap;border-right:1px solid var(--paper);}
+.cw .seg.c{background:#EEF1E9;color:#3f5430;}
+.cw .seg.u{background:#FAF3E2;color:#8a6d1f;}
+.cw .trace{display:flex;flex-direction:column;gap:6px;}
+.cw .trow{border-left:3px solid var(--g300);background:var(--g100);border-radius:0 8px 8px 0;padding:7px 12px;
+  font-family:var(--mono);font-size:12.5px;}
+.cw .trow .th{font-weight:600;color:var(--slate);}
+.cw .trow .tb{color:var(--g700);white-space:pre-wrap;word-break:break-word;margin-top:2px;}
+.cw .t-obs{border-color:var(--olive);}
+.cw .t-think{border-color:#c98a2e;}
+.cw .t-act{border-color:var(--g500);}
+.cw .t-block{border-color:#6f9152;}
+.cw .t-leak{border-color:var(--clay-d);}
+.cw .verdict{border-radius:10px;padding:12px 15px;font-size:14px;}
+.cw .v-safe{background:#EEF1E9;color:#3f5430;border:1px solid #C3D1AE;}
+.cw .v-leak{background:#FBE9E6;color:#a23b28;border:1px solid #E9B4A8;}
+.cw .verdict .vt{font-weight:700;}
+.cw .verdict .vd{margin-top:3px;line-height:1.5;}
+.cw .note{font-size:11.5px;color:var(--g500);line-height:1.6;}
+.cw .dot{display:inline-block;width:10px;height:10px;border-radius:3px;vertical-align:middle;margin-right:4px;}
+.cw textarea{width:100%;font-family:var(--mono);font-size:12.5px;border:1.5px solid var(--g300);border-radius:8px;
+  padding:8px 10px;background:var(--paper);color:var(--slate);resize:vertical;}
+.cw .runs{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;max-width:420px;}
+.cw .evd{aspect-ratio:1;border-radius:3px;background:var(--g200);}
+.cw .evd.ok{background:#9cbf6e;}
+.cw .evd.no{background:#e0a99c;}
+.cw .mlist{display:flex;flex-direction:column;gap:7px;}
+.cw .mitem{display:flex;align-items:center;gap:10px;border:1px solid var(--g200);border-radius:9px;padding:8px 11px;
+  font-size:13px;background:var(--g100);}
+.cw .mitem .mt{color:var(--slate);}
+.cw .mitem .src{font-family:var(--mono);font-size:10.5px;color:var(--g500);}
+.cw .pill{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:999px;margin-left:auto;white-space:nowrap;}
+.cw .pill.w{background:#EEF1E9;color:#3f5430;}
+.cw .pill.q{background:#FAF3E2;color:#8a6d1f;}
+.cw .pill.r{background:#FBE9E6;color:#a23b28;}
+.cw .stepc{font-family:var(--mono);font-size:11px;color:var(--g500);}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="top">
+    <a class="side-brand-link" href="index.html"><div class="side-brand">L8+ <em>Agentic</em></div></a>
+    <div class="side-sub">актуально 2026-06-23</div>
+    <nav>
+<a href="index.html">▲ Главная</a>
+<a class="lead">Карта</a>
+<a href="index.html#spine"><span class="n">◆</span>Reference-spine</a>
+<a href="index.html#how"><span class="n">?</span>Как читать</a>
+<a class="lead">Уроки</a>
+<a href="lesson-01.html"><span class="n">01</span>Зрелость автономии</a>
+<a href="lesson-02.html" class="active"><span class="n">02</span>Примитивы и reference-spine</a>
+<a href="lesson-03.html"><span class="n">03</span>Task lifecycle и durable execution</a>
+<a href="lesson-04.html"><span class="n">04</span>Context engineering</a>
+<a href="lesson-05.html"><span class="n">05</span>Инструменты, права, policy</a>
+<a href="lesson-06.html"><span class="n">06</span>Evals, verifier, trajectory</a>
+<a href="lesson-07.html"><span class="n">07</span>Память и жизненный цикл знания</a>
+<a href="lesson-08.html"><span class="n">08</span>Retrieval: RAG, hybrid, GraphRAG</a>
+<a href="lesson-09.html"><span class="n">09</span>Observability и воспроизводимость</a>
+<a href="lesson-10.html"><span class="n">10</span>Безопасность: injection, threat model</a>
+<a href="lesson-11.html"><span class="n">11</span>Мультиагентность: MCP / A2A</a>
+<a href="lesson-12.html"><span class="n">12</span>Human-in-the-loop и operating model</a>
+<a href="lesson-13.html"><span class="n">13</span>Экономика и production readiness (capstone)</a>
+<a href="lesson-14.html"><span class="n">14</span>Фронт и горизонт-сканирование</a>
+<a class="lead">Конец</a>
+<a href="index.html#footer"><span class="n">§</span>Метод и источники</a>
+    </nav>
+  </aside>
+
+  <main>
+    <div class="crumb"><a href="index.html">← Все уроки</a></div>
+    <header class="lesson-head">
+      <div class="eyebrow">Урок 02<span class="badge b-core" style="margin-left:6px">[конвенция, не стандарт]</span></div>
+      <h1 class="title">Примитивы и reference-spine</h1>
+      <p class="lede">Из чего собран оркестратор</p>
+      <div class="card-meta">
+        <div class="meta-item"><span class="k">Cold-open</span>Anthropic: рой из 50 субагентов</div>
+        <div class="meta-item"><span class="k">В spine</span>12 примитивов с контрактами</div>
+      </div>
+    </header>
+    <div class="lesson-body">
+      <div class="status"><p><strong>Статус:</strong> актуально на 2026-06-23, пересмотреть до 2026-09.
+Набор примитивов как <strong>функциональная декомпозиция</strong> — <strong>[устоявшееся]</strong> на уровне практики, но
+<strong>[конвенция, не формальный стандарт]</strong>: разные фреймворки реализуют те же роли под своими именами и
+с разной семантикой. Конкретные интерфейсы между примитивами <strong>[формирующееся]</strong> — общего API нет.
+Опирается на инвариант урока 1 (автономия = функция полномочий и надзора).</p></div>
+<hr />
+<h3>0. Зачем этот урок и что он оставляет в курсе</h3>
+<p>Урок 1 дал язык измерения автономии, но не сказал, <strong>из чего физически собрать систему</strong>, которая этот
+надзор обеспечивает. Этот урок — конструктивный: мы разбираем оркестратор на <strong>примитивы</strong> (функциональные
+блоки) и фиксируем <strong>reference-spine</strong> — сквозную систему с контрактами интерфейсов, которую все следующие
+11 этапов будут достраивать. Это самый «архитектурный» этап курса: после него у нас есть скелет, в который
+память (этап 7), retrieval (8), evals (6), security (10) и прочее встают как конкретные компоненты, а не
+как отдельные темы.</p>
+<p>Две мысли, которые урок должен оставить:</p>
+<blockquote>
+<p><strong>(1)</strong> Оркестратор — это не «умный промпт», а <strong>разделение ответственности</strong> между специализированными
+блоками, каждый из которых можно тестировать, заменять и наделять надзором по отдельности.
+<strong>(2)</strong> «Набор примитивов» — удобная инженерная рамка, <strong>а не стандарт</strong>. Ценность не в каноничности
+списка, а в том, что каждый блок имеет <strong>контракт интерфейса</strong> и <strong>ответ на вопрос «что ломается, если
+его убрать»</strong>.</p>
+</blockquote>
+<hr />
+<h3>1. Cold-open: система, которая «работала», но порождала рой</h3>
+<p>В отчёте Anthropic «How we built our multi-agent research system» (2025) задокументированы ранние отказы
+их собственной исследовательской MAS — до того, как архитектуру привели в порядок:</p>
+<ul>
+<li>лид-агент <strong>порождал 50 субагентов на простой запрос</strong>, который решался одним;</li>
+<li>субагенты <strong>дублировали работу</strong> — несколько одновременно искали одно и то же, потому что между ними не
+  было разделения границ;</li>
+<li>агенты звали <strong>неверные инструменты</strong> или выдумывали несуществующие;</li>
+<li>система потребляла <strong>≈15× токенов</strong> относительно чата (и ≈4× даже у одиночного агента) — то есть
+  неуправляемая координация не просто глючила, а кратно жгла бюджет.</li>
+</ul>
+<p><em>Источник: Anthropic, «How we built our multi-agent research system», 2025.</em></p>
+<p>Заметь, чего здесь <strong>не</strong> было: это не отказ модели (модель сильная) и не отказ полномочий из урока 1
+(никто не удалил прод). Это <strong>отказ структуры</strong>. Не было блока, который решает «сколько субагентов нужно»
+(router/planner с бюджетом), не было разграничения ролей (role boundaries), не было контроля завершения
+(стоп-критерий), не было реестра реальных инструментов (tool registry). Система была «одним большим
+агентом», которому поручили слишком много без внутренних швов.</p>
+<p>Отсюда тезис урока:</p>
+<blockquote>
+<p>Надёжность агентной системы определяется не качеством одного промпта, а <strong>наличием и контрактами
+отдельных примитивов</strong>. Отказ почти всегда локализуется в <em>отсутствующем</em> или <em>безконтрактном</em> блоке.</p>
+</blockquote>
+<p>Дальше выведем канонический набор примитивов — не списком, а по одному, каждый как ответ на конкретную
+боль из этого роя.</p>
+<hr />
+<h3>2. Деривация: от «LLM в цикле» к набору примитивов</h3>
+<p>Начнём с наивной архитектуры и будем добавлять блоки только тогда, когда без них что-то ломается.</p>
+<h4>2.1 Наивный агент</h4>
+<pre><code>while not done:
+    response = llm(prompt + history)
+    if response.tool_call:
+        result = run_tool(response.tool_call)   # любой инструмент, без ограничений
+        history += result
+    else:
+        done = True
+</code></pre>
+<p>Это работает на демо. У этой петли есть каноническое имя — <strong>ReAct</strong> (reason→act→observe; Yao et al.,
+2022): модель чередует рассуждение и действие в одном цикле. Базовые вариации — <strong>Reflexion</strong> (само-рефлексия
+и повтор при провале) и <strong>Plan-and-Execute</strong> (план верхнего уровня + исполнение). Проблемы начинаются ровно
+те, что в cold-open. Идём по ним.</p>
+<h4>2.2 Боль → примитив (вывод набора)</h4>
+<ul>
+<li><strong>«Агент зовёт несуществующий/неверный инструмент».</strong> Нужен <strong>tool registry</strong> — каталог доступных
+  инструментов с типизированными сигнатурами; исполнитель может звать только то, что в реестре. Побочно
+  это точка, где живёт политика доступа из урока 1 (read-only vs write).</li>
+<li><strong>«Агент сделал необратимое без спроса».</strong> Между намерением и исполнением нужен <strong>policy engine</strong> —
+  блок, который по типу действия и риску решает: auto / approval / block (реализация инварианта оси B
+  урока 1). Сам вызов инструмента выносится в <strong>executor</strong>, чтобы исполнение было одной
+  контролируемой точкой, а не разбросано по логике.</li>
+<li><strong>«Лид породил 50 субагентов / задача не туда».</strong> Нужно отделить <em>что делать</em> от <em>кто делает</em>:
+  <strong>planner</strong> раскладывает цель на шаги с бюджетом, <strong>router</strong> направляет шаг нужной роли/агенту.
+  Без planner'а нет контроля объёма работы; без router'а нет разделения границ (отсюда дублирование).</li>
+<li><strong>«В окно не влезает / агент теряет нужное».</strong> Сборку входа на каждый шаг нельзя оставлять
+  случайной — нужен <strong>context builder</strong> (детально — этап 4): что положить в окно из памяти/retrieval, а
+  что вынести.</li>
+<li><strong>«Ошибка раннего агента тихо поехала дальше».</strong> Нужен <strong>verifier</strong> — проверка результата (формат,
+  факты, выполнение критерия задачи) до того, как он станет входом следующего шага. Опционально
+  <strong>critic/reviewer</strong> — генерирует не «да/нет», а правки. (Глубоко — этап 6.)</li>
+<li><strong>«Каждый запуск стартует с нуля / нечем учиться».</strong> Нужен <strong>memory manager</strong> — что сохранить между
+  шагами и сессиями, с provenance и trust-level (этап 7).</li>
+<li><strong>«Непонятно, почему система так решила».</strong> Нужен <strong>trace/logging layer</strong> — журнал вызовов, решений
+  маршрутизации, tool-call'ов, причин (этап 9). Для агентов это не «логи на потом», а условие
+  воспроизводимости.</li>
+<li><strong>«Система не понимает, когда нужен человек».</strong> Нужен <strong>human escalation layer</strong> — точка прерывания и
+  передачи решения (этап 12).</li>
+<li>И на входе — <strong>task intake</strong> (нормализация запроса в формализованную задачу) и <strong>classifier</strong>
+  (тип/домен задачи для маршрутизации).</li>
+</ul>
+<h4>2.3 Результат: канонический набор (и честная оговорка)</h4>
+<pre><code>intake → classifier → planner → router → context-builder → executor(+tool-registry)
+         → verifier(+critic) → memory-manager
+   сквозь всё: policy-engine, trace-layer, human-escalation
+</code></pre>
+<p><strong>Важно:</strong> это <strong>функциональная</strong> декомпозиция, не физическая и не стандарт. В реальной системе несколько
+ролей могут жить в одном модуле или даже в одном промпте; маленькому агенту не нужны все 12. Ценность
+набора — диагностическая: когда что-то ломается, спрашиваешь «какого примитива не хватило или у какого нет
+контракта». Cold-open = отсутствие planner-бюджета + router-границ + стоп-критерия.</p>
+<p>Близкий практический ориентир — <strong>«12-factor agents»</strong> (HumanLayer): манифест надёжной агентной архитектуры,
+чьи факторы прямо ложатся на наши примитивы (<em>own your context window</em> → context-builder; <em>tools are
+structured outputs</em> → tool-registry; <em>stateless reducer</em> → lifecycle урока 3; <em>small, focused agents</em> →
+role boundaries).</p>
+<h4>2.4 Новая проблема (мост к §3 и дальше)</h4>
+<p>Набор примитивов — абстрактный. Каждый фреймворк реализует его <strong>по-своему и под своими именами</strong>, и
+выбор реализации — нетривиальный архитектурный компромисс. Это §3. А контракты интерфейсов между
+примитивами <strong>никто не стандартизировал</strong> — это §5 (наш spine) и открытая проблема индустрии.</p>
+<hr />
+<h3>3. Карта решений: граф vs handoffs vs роли vs декларатив</h3>
+<p>Один и тот же набор примитивов воплощён в четырёх семействах фреймворков по-разному. Это <strong>не разногласие
+о том, что правильно, а разные метафоры</strong> — но с реальными инженерными последствиями.</p>
+<table>
+<thead>
+<tr>
+<th>Подход</th>
+<th>Метафора</th>
+<th>Кто решает маршрут</th>
+<th>Сильная сторона</th>
+<th>Цена</th>
+<th>Когда брать</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>LangGraph</strong></td>
+<td>граф состояний (<code>StateGraph</code>, узлы/рёбра, conditional edges, checkpointing)</td>
+<td>код графа + условные рёбра</td>
+<td>явные зависимости, durable state, точки прерывания (HITL)</td>
+<td>многословность; ты пишешь граф руками</td>
+<td>сложные, ветвящиеся, возобновляемые процессы</td>
+</tr>
+<tr>
+<td><strong>OpenAI Agents SDK</strong></td>
+<td>handoffs + guardrails + agents-as-tools</td>
+<td>LLM-оркестратор динамически</td>
+<td>гибкость, мало кода, динамическая делегация</td>
+<td>труднее тестировать; маршрут недетерминирован</td>
+<td>адаптивные задачи, где маршрут заранее неизвестен</td>
+</tr>
+<tr>
+<td><strong>CrewAI</strong></td>
+<td>роли + задачи + crew; Flows (<code>@start/@listen/@router</code>)</td>
+<td>роли (декларатив) или Flow-логика</td>
+<td>быстрый старт, понятная ролевая модель</td>
+<td>меньше контроля над низким уровнем</td>
+<td>командные паттерны «роль решает подзадачу»</td>
+</tr>
+<tr>
+<td><strong>Microsoft Conductor</strong></td>
+<td>YAML-workflow, детерминированный роутинг (Jinja2), human gates</td>
+<td>статическая схема (без токенов на роутинг)</td>
+<td>предсказуемость, аудируемость, дешёвый роутинг</td>
+<td>негибок к новому; маршрут зашит</td>
+<td>критичные процессы с фиксированным маршрутом</td>
+</tr>
+<tr>
+<td><strong>Microsoft Agent Framework</strong> (преемник AutoGen + Semantic Kernel)</td>
+<td>agent runtime + workflows</td>
+<td>код + LLM</td>
+<td>флагманский MS multi-agent SDK (<strong>≠ Conductor</strong>)</td>
+<td>свежая зрелость (2025)</td>
+<td>общие multi-agent приложения на стеке MS</td>
+</tr>
+<tr>
+<td><strong>Google ADK / LlamaIndex Workflows</strong></td>
+<td>agent-dev kit / событийные шаги</td>
+<td>код</td>
+<td>быстрый старт в своей экосистеме</td>
+<td>vendor-тяготение</td>
+<td>агенты в Google Cloud / поверх LlamaIndex</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Общее во всех:</strong> все четыре дают (а) разбиение задачи, (б) коммуникацию между участниками, (в) точку
+надзора. Различие — в том, <strong>детерминирован ли маршрут</strong> (Conductor/LangGraph-граф) или <strong>решается
+моделью в рантайме</strong> (OpenAI SDK). Это прямое продолжение оси A урока 1 (workflow↔agent), но уже на уровне
+оркестрации.</p>
+<p><strong>Лексика композиции (Anthropic «Building Effective Agents») — 5 паттернов поверх примитивов §2:</strong>
+- <strong>prompt chaining</strong> — линейная последовательность шагов (planner с линейным планом);
+- <strong>routing</strong> — классификация → ветка (classifier + router);
+- <strong>parallelization</strong> (sectioning/voting) — параллельные ветки + агрегация (router fan-out + verifier);
+- <strong>orchestrator-workers</strong> — лид декомпозирует, воркеры исполняют (planner + router; см. урок 11);
+- <strong>evaluator-optimizer</strong> — генерация + критика в цикле (verifier + critic).</p>
+<p>Это не отдельные сущности, а имена типовых конфигураций наших примитивов.</p>
+<h4>3.1 Спорная точка: как читать бенчмарки фреймворков</h4>
+<p>CrewAI публикует, что он <strong>5.76× быстрее LangGraph</strong> на QA-задачах. Цифра реальная. Но независимый бенчмарк
+ставит CrewAI <strong>последним</strong> по другим осям — и обе цифры верны, потому что <strong>меряют разное</strong> (скорость
+исполнения конкретного пайплайна vs точность/общая производительность на другом наборе).
+<em>Источники: CrewAI (vendor); studiomeyer.io, независимый разбор «обе цифры реальны, меряют разное».</em></p>
+<p>Инженерный вывод (переносим как навык, не как факт): <strong>вендорский бенчмарк фреймворка — это не «какой
+лучше», а «что именно измерили и в каких условиях».</strong> 5.76× — про latency одного типа workflow, не про
+качество. Прежде чем верить числу «X быстрее Y», спрашивай: какая задача, какая метрика, кто мерил, что НЕ
+вошло. (Полноценно — этап 6.)</p>
+<h4>3.2 Прочие спорные точки (оставляем спорными)</h4>
+<ul>
+<li><strong>Planner-centric vs reactive.</strong> Заранее построить план и следовать ему (прозрачно, но негибко) против
+  «думать на лету» (гибко, но трудно верифицировать). Консенсуса нет; на практике — гибрид (план верхнего
+  уровня + локальные цепочки).</li>
+<li><strong>Нет стандарта интерфейсов между примитивами.</strong> <code>StateGraph</code> (типизированное состояние) в LangGraph ≠
+  ручной контекст в CrewAI ≠ JSON в Conductor. Переносимость между фреймворками страдает — отсюда наш
+  spine как <strong>нейтральный</strong> контракт.</li>
+</ul>
+<hr />
+<h3>4. Failure modes: отказ = отсутствующий или безконтрактный примитив</h3>
+<p>Систематика отказов (Anthropic + MAST, arXiv 2503.13657) ложится прямо на набор §2: каждый класс — это
+дефицит конкретного примитива.</p>
+<table>
+<thead>
+<tr>
+<th>Анти-паттерн</th>
+<th>Какого примитива/контракта не хватает</th>
+<th>Класс MAST</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Неограниченная делегация</strong> (агенты бесконечно передают задачу)</td>
+<td>стоп-критерий в planner/router</td>
+<td>specification (~42%)</td>
+</tr>
+<tr>
+<td><strong>Петля делегирования</strong> («50 субагентов на простой запрос»)</td>
+<td>бюджет в planner; границы ролей в router</td>
+<td>specification</td>
+</tr>
+<tr>
+<td><strong>Тихое распространение ошибки</strong> (каждый доверяет предыдущему)</td>
+<td>verifier между шагами</td>
+<td>task verification (~21%)</td>
+</tr>
+<tr>
+<td><strong>Игнорирование отказов</strong> (tool вернул error — поехали дальше)</td>
+<td>обработка ошибок в executor + verifier</td>
+<td>task verification</td>
+</tr>
+<tr>
+<td><strong>Отравление памяти</strong> (галлюцинация записана как факт, прочитана другими)</td>
+<td>write gate + trust-level в memory manager</td>
+<td>inter-agent (~37%)</td>
+</tr>
+<tr>
+<td><strong>Флуд токенов</strong> (диалог растёт без предела)</td>
+<td>бюджет в context builder + стоп-критерий</td>
+<td>specification</td>
+</tr>
+</tbody>
+</table>
+<p>Это и есть практический смысл набора примитивов: он превращает расплывчатое «система глючит» в адресный
+диагноз «нет verifier'а между шагом N и N+1». Cold-open читается по таблице как specification-failure
+(нет бюджета/границ) — типовой, не экзотический.</p>
+<hr />
+<h3>5. Вклад в reference-spine (центральный артефакт этапа)</h3>
+<p>Этот этап <strong>определяет сам spine</strong>: нейтральный оркестратор с контрактами интерфейсов. Дальше каждый этап
+наполняет конкретный примитив. Фиксируем интерфейсы (псевдо-Python, типы — контракт, не реализация):</p>
+<pre><code class="language-python"># === SPINE / reference-orchestrator (этап 2) ===
+
+@dataclass
+class Task:
+    id: str
+    type: str                 # research-and-plan | modify-code-and-verify | extract-facts
+    goal: str
+    constraints: dict         # бюджет токенов, ODD, max_autonomy (ось B урока 1)
+    status: str               # см. этап 3 (lifecycle)
+
+class Intake(Protocol):
+    def parse(self, raw_request: str) -&gt; Task: ...
+        # инвариант: на выходе всегда валидная Task с типом и constraints
+
+class Classifier(Protocol):
+    def classify(self, t: Task) -&gt; str: ...        # тип/домен для роутинга
+
+class Planner(Protocol):
+    def plan(self, t: Task) -&gt; list[&quot;Step&quot;]: ...
+        # инвариант: суммарный бюджет шагов &lt;= t.constraints.budget; есть условие завершения
+        # БЕЗ planner: нет контроля объёма → петля делегирования (§4)
+
+class Router(Protocol):
+    def route(self, step: &quot;Step&quot;) -&gt; &quot;Role&quot;: ...
+        # инвариант: каждый шаг → ровно одна роль; роли не пересекаются (границы)
+        # БЕЗ router: дублирование работы (cold-open)
+
+class ContextBuilder(Protocol):
+    def build(self, step: &quot;Step&quot;, memory, retrieval) -&gt; &quot;Context&quot;: ...   # этап 4
+
+class ToolRegistry(Protocol):
+    def get(self, name: str) -&gt; &quot;Tool | None&quot;: ...                       # этап 5
+        # инвариант: executor может звать ТОЛЬКО зарегистрированное
+
+class Executor(Protocol):
+    def run(self, step, ctx, registry, policy) -&gt; &quot;Result&quot;: ...
+        # инвариант: каждый side-effect проходит через policy перед исполнением (урок 1, ось B)
+        # tool-error НЕ проглатывается, а возвращается как Result.error
+
+class PolicyEngine(Protocol):
+    def decide(self, action) -&gt; &quot;auto | approval | block&quot;: ...           # этап 5/12
+
+class Verifier(Protocol):
+    def check(self, result, step) -&gt; &quot;Verdict&quot;: ...                      # этап 6
+        # инвариант: результат не становится входом следующего шага без verdict.ok
+        # БЕЗ verifier: тихое распространение ошибки (§4)
+
+class MemoryManager(Protocol):
+    def write(self, fact, provenance, trust) -&gt; None: ...                # этап 7
+        # инвариант: write gate — недоверенное не пишется как факт (анти-poisoning)
+
+class TraceLayer(Protocol):
+    def record(self, event) -&gt; None: ...                                 # этап 9
+        # инвариант: любой запуск воспроизводим из трассы
+
+class Escalation(Protocol):
+    def to_human(self, ctx, reason) -&gt; None: ...                         # этап 12
+</code></pre>
+<p><strong>Контракт для всех следующих этапов:</strong> наполняя примитив, этап обязан указать (1) его интерфейс
+вход/выход, (2) инвариант, который он держит, (3) <strong>что ломается при его удалении</strong> (failure mode из §4),
+(4) на какой уровень оси B он претендует и каким надзором это обеспечено (контракт урока 1).</p>
+<p>Spine проходит три сквозных типа задач (одни и те же примитивы, разные пути): <code>research-and-plan</code>,
+<code>modify-code-and-verify</code>, <code>extract-facts-and-update-knowledge</code>. Их трассы мы прогоняем на каждом этапе.</p>
+<hr />
+<h3>6. Pset 2 — минимальный оркестратор и доказательство необходимости примитивов</h3>
+<p><strong>Задача.</strong> Реализовать скелет оркестратора, прогоняющий <code>Task</code> через примитивы, и <strong>тестами доказать</strong>,
+что удаление verifier'а и router'а ведёт к конкретным задокументированным отказам (§4).</p>
+<p><strong>Скелет</strong> (<code>orchestrator.py</code>):</p>
+<pre><code class="language-python">from typing import Protocol
+
+class Orchestrator:
+    def __init__(self, planner, router, executor, verifier, trace, *, max_steps: int):
+        ...  # max_steps — стоп-критерий (бюджет planner'а)
+
+    def run(self, task: Task) -&gt; &quot;RunResult&quot;:
+        steps = self.planner.plan(task)
+        if sum(s.cost for s in steps) &gt; task.constraints[&quot;budget&quot;]:
+            raise BudgetExceeded(&quot;plan exceeds budget&quot;)   # инвариант planner: явное исключение, НЕ assert (assert вырезается под python -O)
+        results = []
+        for i, step in enumerate(steps):
+            if i &gt;= self.max_steps:
+                return RunResult(status=&quot;halted_budget&quot;, results=results)  # стоп-критерий
+            role = self.router.route(step)                 # инвариант: одна роль на шаг
+            res = self.executor.run(step, role)
+            verdict = self.verifier.check(res, step)       # инвариант: гейт перед следующим шагом
+            self.trace.record({&quot;step&quot;: step, &quot;role&quot;: role, &quot;verdict&quot;: verdict})
+            if not verdict.ok:
+                return RunResult(status=&quot;failed_verification&quot;, results=results)
+            results.append(res)
+        return RunResult(status=&quot;ok&quot;, results=results)
+</code></pre>
+<p><strong>Тесты</strong> (каждый воспроизводит реальный failure mode из §4):</p>
+<pre><code class="language-python">def test_missing_verifier_propagates_error_silently():
+    # verifier-заглушка, всегда ok → ошибка раннего шага доезжает до финала
+    orch = Orchestrator(..., verifier=AlwaysOkVerifier(), max_steps=10)
+    out = orch.run(task_with_bad_step_2)
+    assert out.status == &quot;ok&quot;            # БАГ: наивная система не заметила
+    # с настоящим verifier'ом:
+    orch2 = Orchestrator(..., verifier=RealVerifier(), max_steps=10)
+    assert orch2.run(task_with_bad_step_2).status == &quot;failed_verification&quot;
+
+def test_no_budget_causes_delegation_loop():
+    # planner без проверки бюджета → бесконечное расширение плана
+    with pytest.raises(BudgetExceeded):   # инвариант planner ловит cold-open Anthropic
+        Orchestrator(planner=UnboundedPlanner(), ...).run(simple_task)
+
+def test_router_assigns_exactly_one_role():
+    # дублирование работы = шаг ушёл &gt;1 роли
+    role = Orchestrator(...).router.route(step)
+    assert isinstance(role, Role)         # ровно одна, не список
+
+def test_run_is_reproducible_from_trace():
+    out = orch.run(task); trace = orch.trace.events
+    assert replay(trace) == out           # инвариант trace-layer (мост к этапу 9)
+</code></pre>
+<p><strong>Эталон.</strong> Главная мысль pset'а: примитивы — не украшение, а <strong>несущие инварианты</strong>. Тест
+<code>test_missing_verifier...</code> показывает буквально cold-open урока 1 в миниатюре (система рапортует «ok» на
+сломанном результате). <code>test_no_budget...</code> — cold-open этого урока (рой субагентов). Удаление примитива не
+«ухудшает», а <strong>впускает конкретный класс отказа</strong>.</p>
+<p><strong>Расширение.</strong> Добавь <code>policy_engine</code> в <code>executor.run</code> и тест: деструктивное действие без approval →
+<code>status="blocked"</code> (смычка с осью B урока 1).</p>
+<hr />
+<h3>7. Диагностические вопросы (проверяют суждение)</h3>
+<ol>
+<li>Тебе показывают агента из одного большого промпта, который «и планирует, и исполняет, и проверяет».
+   По §2 — это нормально или нет? Какой вопрос отделит «примитивы слиты осознанно» от «примитивов просто
+   нет»?</li>
+<li>Команда выбирает между LangGraph и OpenAI Agents SDK для процесса с фиксированным регламентом
+   (комплаенс-проверка из 6 шагов). Что порекомендуешь по §3 и почему динамический маршрут здесь — минус?</li>
+<li>Вендор A: «мы 5.76× быстрее B». Какие четыре вопроса (см. §3.1) ты задашь, прежде чем это число
+   повлияет на твой выбор? Что эта цифра точно НЕ говорит?</li>
+<li>Дана трасса, где два субагента вернули противоречивые результаты, и система выдала первый попавшийся.
+   Какого примитива (или контракта) не хватило? К какому классу MAST это относится?</li>
+<li>Почему «набор из 12 примитивов» нельзя продавать как стандарт? Приведи случай, где правильно слить два
+   примитива в один, и случай, где их обязательно разделить.</li>
+<li><strong>Open question</strong> (нерешённое, §3.2): спроектируй нейтральный формат сообщения между primitive'ами,
+   переносимый между LangGraph и Conductor. Что в нём придётся потерять и почему единого стандарта пока нет?</li>
+</ol>
+<hr />
+<h3>8. Глоссарий-дельта</h3>
+<ul>
+<li><strong>Примитив оркестратора</strong> — функциональный блок с контрактом интерфейса (intake, classifier, planner,
+  router, context-builder, executor, tool-registry, verifier, critic, policy-engine, memory-manager,
+  trace-layer, escalation). <strong>Конвенция, не стандарт.</strong></li>
+<li><strong>Оркестратор</strong> — система, координирующая примитивы; разделение ответственности, не «умный промпт».</li>
+<li><strong>Handoff</strong> (OpenAI Agents SDK) — передача владения задачей другому агенту-специалисту; реализация
+  router'а через динамическую делегацию.</li>
+<li><strong>StateGraph</strong> (LangGraph) — граф узлов с типизированным состоянием и checkpointing; реализация
+  planner+router+context как явного графа.</li>
+<li><strong>Crew / Role / Flow</strong> (CrewAI) — команда агентов с ролями и задачами; Flows (<code>@start/@listen/@router</code>) —
+  декларативная управляющая логика.</li>
+<li><strong>Детерминированный роутинг</strong> (Conductor) — маршрут зашит в YAML-схему (Jinja2), не решается LLM →
+  предсказуемость + нулевая токен-стоимость маршрутизации.</li>
+<li><strong>Anti-pattern (MAS)</strong> — неограниченная делегация, петля делегирования, тихое распространение ошибки,
+  игнорирование отказов, отравление памяти, флуд токенов. Каждый = дефицит примитива (§4).</li>
+<li><strong>Role boundary</strong> — разграничение зон ответственности агентов; его отсутствие → дублирование работы.</li>
+<li><strong>Orchestrator-worker / lead-agent pattern</strong> (Anthropic) — иерархический паттерн: лид делегирует
+  субагентам и собирает результат.</li>
+<li><strong>ReAct</strong> — каноническая агентная петля reason→act→observe (Yao et al., 2022); Reflexion / Plan-and-Execute
+  — её вариации.</li>
+<li><strong>12-factor agents</strong> (HumanLayer) — практический манифест надёжной агентной архитектуры; факторы ↔ примитивы §2.</li>
+<li><strong>5 паттернов (Anthropic)</strong> — prompt chaining / routing / parallelization / orchestrator-workers /
+  evaluator-optimizer; лексика композиции примитивов.</li>
+</ul>
+<hr />
+<h3>9. Первоисточники (верифицированы 2026-06-23)</h3>
+<ol>
+<li><strong>Anthropic — «How we built our multi-agent research system» (2025)</strong>.
+   <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank" rel="noopener">https://www.anthropic.com/engineering/multi-agent-research-system</a> — cold-open (рой субагентов,
+   дублирование), +90.2% мультиагент над одиночным, ≈4×/≈15× токенов, lead-agent pattern, анти-паттерны.</li>
+<li><strong>Anthropic — «Building Effective Agents» (2024/25)</strong>.
+   <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">https://www.anthropic.com/engineering/building-effective-agents</a> — паттерны (sequential, parallel,
+   routing, orchestrator-workers) и различие workflow/agent.</li>
+<li><strong>OpenAI — Agents SDK Docs</strong> (handoffs, guardrails, tracing, agents-as-tools).
+   <a href="https://openai.github.io/openai-agents-python/" target="_blank" rel="noopener">https://openai.github.io/openai-agents-python/</a> — реализация router/policy/trace.</li>
+<li><strong>LangGraph Docs</strong> (StateGraph, nodes/edges, persistence/checkpointing, interrupts).
+   <a href="https://langchain-ai.github.io/langgraph/" target="_blank" rel="noopener">https://langchain-ai.github.io/langgraph/</a> — граф-реализация примитивов + HITL.</li>
+<li><strong>CrewAI Docs</strong> (Agents, Tasks, Crews, Flows). <a href="https://docs.crewai.com/" target="_blank" rel="noopener">https://docs.crewai.com/</a> — ролевая реализация.</li>
+<li><strong>Microsoft — «Conductor: Deterministic orchestration for multi-agent AI workflows» (2026-05)</strong> +
+   репозиторий. <a href="https://opensource.microsoft.com/blog/2026/05/14/conductor-deterministic-orchestration-for-multi-agent-ai-workflows/" target="_blank" rel="noopener">https://opensource.microsoft.com/blog/2026/05/14/conductor-deterministic-orchestration-for-multi-agent-ai-workflows/</a>
+   · <a href="https://github.com/microsoft/conductor" target="_blank" rel="noopener">https://github.com/microsoft/conductor</a> — декларативный YAML-оркестратор, детерминированный роутинг.</li>
+<li><strong>Cemri, Pan et al. — «Why Do Multi-Agent LLM Systems Fail?» (MAST)</strong>, arXiv 2503.13657 (2025).
+   <a href="https://arxiv.org/abs/2503.13657" target="_blank" rel="noopener">https://arxiv.org/abs/2503.13657</a> — классы отказов (§4).</li>
+<li><strong>studiomeyer.io — «The CrewAI 5.76x Paradox»</strong> (независимый разбор vendor-бенчмарка).
+   <a href="https://studiomeyer.io/en/blog/crewai-5x-benchmark-paradox" target="_blank" rel="noopener">https://studiomeyer.io/en/blog/crewai-5x-benchmark-paradox</a> — материал §3.1 «как читать бенчмарки».</li>
+<li><strong>Yao et al. — «ReAct: Synergizing Reasoning and Acting in Language Models»</strong>, arXiv 2210.03629 (2022).
+   <a href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">https://arxiv.org/abs/2210.03629</a> — каноническая петля reason-act-observe (§2.1).</li>
+<li><strong>HumanLayer — «12-Factor Agents»</strong>. <a href="https://github.com/humanlayer/12-factor-agents" target="_blank" rel="noopener">https://github.com/humanlayer/12-factor-agents</a> — манифест
+    надёжной агентной архитектуры (§2.3).</li>
+<li><strong>Microsoft Agent Framework</strong> (преемник AutoGen + Semantic Kernel) <a href="https://learn.microsoft.com/agent-framework/" target="_blank" rel="noopener">https://learn.microsoft.com/agent-framework/</a>
+    · <strong>Google ADK</strong> <a href="https://google.github.io/adk-docs/" target="_blank" rel="noopener">https://google.github.io/adk-docs/</a> — карта фреймворков (§3).</li>
+</ol>
+<blockquote class="quarantine">
+<p><strong>Карантин (в урок не вошло — фабрикация/неподтверждено):</strong> числа «&gt;40% отказов / снижение в 3.2×»,
+«200мс→4с латентность», «0.41–0.867 на 1642 прогонах», «86% компаний используют агентов» (Dataiku) —
+рабочие источники не найдены. <strong>Атрибуция-laundering:</strong> Augment Code как «первоисточник» чисел 15× и 37%
+— на деле это Anthropic (15×) и MAST (37%); Augment как источник не цитируется. <strong>Illustrative, требует
+сверки:</strong> YAML-схема Conductor из досье приведена концептуально — точный синтаксис сверять с
+github.com/microsoft/conductor.</p>
+</blockquote>
+<hr />
+<p><em>Плотность — целевая (уровень лекции). Этап тяжёлый: он определяет spine, поэтому длиннее урока 1. Cold-open
+реален и сделал двойную работу (мотивировал и набор примитивов, и таблицу failure modes). Spine получил
+контракты интерфейсов, а не определения; pset доказывает необходимость примитивов через воспроизведение
+реальных отказов; vendor-бенчмарк превращён в навык чтения, а не в карантин.</em></p>
+    </div>
+    <nav class="pager">
+      <a class="pg-prev" href="lesson-01.html"><span class="pk">← Урок 01</span>Зрелость автономии</a>
+      <a class="pg-next" href="lesson-03.html"><span class="pk">Урок 03 →</span>Task lifecycle и durable execution</a>
+    </nav>
+    <footer id="footer">
+      <p>Дизайн-язык адаптирован из <a href="https://github.com/ThariqS/html-effectiveness"
+        target="_blank" rel="noopener">html-effectiveness</a> (Apache-2.0). Актуально на 2026-06-23.</p>
+    </footer>
+  </main>
+</div>
+<script>
+// keep the active lesson visible in the sticky sidebar on load
+var act=document.querySelector('.sidebar nav a.active');
+if(act && act.scrollIntoView){ act.scrollIntoView({block:'center'}); }
+</script>
+</body>
+</html>
