@@ -44,8 +44,11 @@ a:hover{text-decoration-color:var(--clay);}
 .sidebar nav a.active{background:var(--paper);border-left-color:var(--clay);color:var(--slate);
   box-shadow:0 1px 0 var(--g200);}
 .sidebar nav a.active .n{color:var(--clay);}
+.sidebar nav a.phase-lead{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--clay-d);margin-top:12px;padding-bottom:2px;pointer-events:none;border-left:2px solid var(--oat);}
 .sidebar nav a.lead{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;
   color:var(--g500);margin-top:14px;padding-bottom:2px;pointer-events:none;}
+.sidebar nav a.phase-lesson{padding-left:22px;}
 
 /* main reading column */
 main{max-width:840px;padding:0 0 140px;min-width:0;}
@@ -62,6 +65,71 @@ h1.title em{font-style:italic;color:var(--clay);}
 .disclaimer{margin:22px 0 0;padding:14px 18px;background:var(--g100);border-radius:12px;
   border:1.5px solid var(--g200);font-size:13.5px;color:var(--g700);max-width:660px;}
 .disclaimer b{color:var(--slate);}
+
+/* ---- phase structure on index ---- */
+.phase-block{margin:38px 0 0;}
+.phase-block:first-child{margin-top:18px;}
+.phase-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--g200);}
+.phase-head .ph-n{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--clay);min-width:50px;}
+.phase-head .ph-icon{font-size:16px;}
+.phase-head .ph-title{font-family:var(--serif);font-weight:500;font-size:19px;color:var(--slate);letter-spacing:-.008em;}
+.phase-cards{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;}
+a.lcard-ph{display:block;text-decoration:none;color:inherit;background:var(--paper);border:1.5px solid var(--g300);
+  border-radius:12px;padding:16px 20px;transition:border-color .15s,box-shadow .15s,transform .15s;}
+a.lcard-ph:hover{border-color:var(--slate);box-shadow:0 6px 24px rgba(20,20,19,.06);transform:translateY(-1px);}
+a.lcard-ph .sec-head h2{font-size:19px;}
+
+/* ---- progress bar ---- */
+.progress-wrap{margin:0 0 18px;}
+.progress-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--g500);
+  margin-bottom:4px;display:flex;justify-content:space-between;}
+.progress-bar{height:4px;background:var(--g200);border-radius:4px;overflow:hidden;}
+.progress-bar .fill{height:100%;background:var(--clay);border-radius:4px;transition:width .4s;}
+
+/* ---- callout boxes (auto-detected in rendered HTML) ---- */
+.callout{margin:22px 0;padding:16px 20px;border-radius:12px;border:1.5px solid var(--g200);font-size:15px;line-height:1.55;}
+.callout .cl-head{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;
+  display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.callout .cl-head::before{content:"";width:8px;height:8px;border-radius:3px;}
+.callout p{margin:6px 0;}
+.callout p:first-child{margin-top:0;}
+.callout p:last-child{margin-bottom:0;}
+
+.callout.cl-key{background:var(--paper);border-color:var(--clay);border-left-width:4px;}
+.callout.cl-key .cl-head{color:var(--clay-d);}
+.callout.cl-key .cl-head::before{background:var(--clay);}
+
+.callout.cl-thesis{background:var(--paper);border-color:var(--slate);border-left-width:4px;box-shadow:0 2px 12px rgba(20,20,19,.06);}
+.callout.cl-thesis .cl-head{color:var(--slate);}
+.callout.cl-thesis .cl-head::before{background:var(--slate);}
+
+.callout.cl-warn{background:#FFF8F3;border-color:#e8a860;border-left-width:4px;}
+.callout.cl-warn .cl-head{color:#a06020;}
+.callout.cl-warn .cl-head::before{background:#e8a860;}
+
+.callout.cl-tip{background:#F5FAF0;border-color:var(--olive);border-left-width:4px;}
+.callout.cl-tip .cl-head{color:var(--olive);}
+.callout.cl-tip .cl-head::before{background:var(--olive);}
+
+.callout.cl-recall{background:var(--g100);border-color:var(--g300);border-style:dashed;}
+.callout.cl-recall .cl-head{color:var(--g500);}
+.callout.cl-recall .cl-head::before{background:var(--g300);}
+
+.callout.cl-deep{background:var(--g100);border-color:var(--g300);}
+.callout.cl-deep .cl-head{color:var(--g500);font-size:10px;}
+.callout.cl-deep .cl-head::before{background:var(--g500);}
+
+.callout.cl-check{margin-top:28px;background:linear-gradient(135deg,#F5FAF0,var(--paper));border-color:var(--olive);}
+.callout.cl-check .cl-head{color:var(--olive);}
+.callout.cl-check .cl-head::before{background:var(--olive);}
+.callout.cl-check ul{list-style:none;padding-left:0;}
+.callout.cl-check li{margin:6px 0;padding-left:22px;position:relative;font-size:14px;}
+.callout.cl-check li::before{content:"\2713";position:absolute;left:0;color:var(--olive);font-weight:700;}
+
+/* ---- section break visual ---- */
+.section-break{margin:40px 0 28px;display:flex;align-items:center;gap:14px;}
+.section-break::before,.section-break::after{content:"";flex:1;height:1px;background:var(--g200);}
+.section-break .sb-dot{width:7px;height:7px;background:var(--clay);border-radius:50%;opacity:.5;}
 
 /* feature panel (spine) */
 .panel{margin:40px 0 0;background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;
@@ -85,25 +153,6 @@ ol.inv li b{color:var(--slate);font-weight:600;}
 .section-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
   color:var(--g500);margin:64px 0 6px;display:flex;align-items:center;gap:10px;}
 .section-label::before{content:"";width:20px;height:1.5px;background:var(--clay);}
-
-/* lessons / accordion */
-section.lesson{margin-top:18px;scroll-margin-top:14px;}
-details.les{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;overflow:hidden;
-  transition:border-color 150ms,box-shadow 150ms;}
-details.les[open]{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);}
-details.les summary{list-style:none;cursor:pointer;padding:20px 22px;display:block;}
-details.les summary::-webkit-details-marker{display:none;}
-.sec-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;}
-.sec-head .idx{font-family:var(--mono);font-size:13px;color:var(--clay);font-weight:600;min-width:26px;}
-.sec-head h2{font-family:var(--serif);font-weight:500;font-size:23px;margin:0;letter-spacing:-.01em;flex:1;min-width:0;}
-.tagline{color:var(--g700);font-size:14px;margin:3px 0 0 40px;}
-.card-meta{margin:13px 0 0 40px;display:grid;gap:5px;}
-.meta-item{font-size:13px;color:var(--g700);}
-.meta-item .k{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;
-  color:var(--g500);margin-right:8px;}
-.expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(--mono);font-size:11px;
-  color:var(--clay);}
-details.les[open] .expand-hint{display:none;}
 
 /* maturity badges */
 .badge{font-family:var(--mono);font-size:10.5px;padding:3px 9px;border-radius:999px;white-space:nowrap;
@@ -143,16 +192,18 @@ details.les[open] .expand-hint{display:none;}
 .lesson-body a{word-break:break-word;}
 .lesson-body em{color:var(--g700);}
 
+/* ---- lesson learning objectives (extracted from "Чему вы научитесь") ---- */
+.learn-obj{margin:10px 0 26px;padding:18px 22px;background:var(--g100);border-radius:12px;border:1.5px solid var(--g200);}
+.learn-obj .lo-head{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--g500);margin-bottom:10px;}
+.learn-obj ul{padding-left:0;list-style:none;}
+.learn-obj li{position:relative;padding-left:22px;margin:7px 0;font-size:14.5px;color:var(--g700);}
+.learn-obj li::before{content:"\25C6";position:absolute;left:0;color:var(--clay);font-size:10px;top:2px;}
+
 /* footer */
 footer{margin:80px 0 0;border-top:1.5px solid var(--g300);padding-top:30px;font-size:13px;
   color:var(--g500);scroll-margin-top:16px;}
 footer .k{font-family:var(--serif);font-style:italic;color:var(--g700);font-size:15px;}
 footer p{margin:8px 0;max-width:680px;}
-
-.toolbar{display:flex;gap:10px;margin:22px 0 0 40px;}
-.toolbar button{font-family:var(--mono);font-size:11px;background:var(--paper);border:1.5px solid var(--g300);
-  color:var(--g700);border-radius:999px;padding:6px 13px;cursor:pointer;}
-.toolbar button:hover{border-color:var(--slate);color:var(--slate);}
 
 /* ---- multipage: lesson cards on index + lesson pages ---- */
 .side-brand-link{text-decoration:none;color:inherit;display:block;}
@@ -255,19 +306,24 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <a class="lead">Карта</a>
 <a href="index.html#spine"><span class="n">◆</span>Опорный стержень</a>
 <a href="index.html#how"><span class="n">?</span>Как читать</a>
-<a class="lead">Уроки</a>
+<a class="phase-lead">Фаза 1</a>
 <a href="lesson-01.html"><span class="n">01</span>Зрелость автономии</a>
 <a href="lesson-02.html"><span class="n">02</span>Примитивы и опорный стержень</a>
+<a class="phase-lead">Фаза 2</a>
 <a href="lesson-03.html"><span class="n">03</span>Жизненный цикл задачи</a>
 <a href="lesson-04.html"><span class="n">04</span>Инженерия контекста</a>
+<a class="phase-lead">Фаза 3</a>
 <a href="lesson-05.html"><span class="n">05</span>Инструменты, права и политика</a>
 <a href="lesson-06.html"><span class="n">06</span>Оценка, верификатор и траектория</a>
+<a class="phase-lead">Фаза 4</a>
 <a href="lesson-07.html"><span class="n">07</span>Память и жизненный цикл знания</a>
 <a href="lesson-08.html" class="active"><span class="n">08</span>Поиск: RAG, гибридный и графовый</a>
 <a href="lesson-09.html"><span class="n">09</span>Наблюдаемость и воспроизводимость</a>
+<a class="phase-lead">Фаза 5</a>
 <a href="lesson-10.html"><span class="n">10</span>Безопасность: внедрение и модель угроз</a>
 <a href="lesson-11.html"><span class="n">11</span>Мультиагентность: MCP и A2A</a>
 <a href="lesson-12.html"><span class="n">12</span>Человек в цикле и модель эксплуатации</a>
+<a class="phase-lead">Фаза 6</a>
 <a href="lesson-13.html"><span class="n">13</span>Экономика и готовность к производству</a>
 <a href="lesson-14.html"><span class="n">14</span>Передний край и сканирование горизонта</a>
 <a class="lead">Конец</a>
@@ -277,8 +333,12 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 
   <main>
     <div class="crumb"><a href="index.html">← Все уроки</a></div>
+    <div class="progress-wrap">
+  <div class="progress-label"><span>Прогресс курса</span><span>8/14 уроков</span></div>
+  <div class="progress-bar"><div class="fill" style="width:57%"></div></div>
+</div>
     <header class="lesson-head">
-      <div class="eyebrow">Урок 08<span class="badge b-emerging" style="margin-left:6px">[устоявшееся] векторный; [формирующееся] графовый RAG</span></div>
+      <div class="eyebrow">Урок 08<span class="badge b-emerging" style="margin-left:6px">[устоявшееся] векторный; [формирующееся] графовый RAG</span><span style="font-size:11px;color:var(--g500);margin-left:8px;">Фаза 4: Знание и наблюдаемость: память, поиск, трассировка</span></div>
       <h1 class="title">Поиск: RAG, гибридный и графовый</h1>
       <p class="lede">Привязка к источнику, а не семантическая похожесть</p>
       <div class="card-meta">
@@ -292,6 +352,13 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <strong>[формирующееся/спорное]</strong> (MSR 2024→; ROI обсуждается). Агентная RAG — <strong>[спорное/хайп]</strong>. RAG-метрики и
 RAG безопасности — <strong>[формирующееся]</strong>. Это механизм за <code>memory.retrieve</code> (урок 7); поставляет <code>ContextItem</code>
 с происхождением (provenance) в context-builder (урок 4).</p></div>
+      <div class="learn-obj"><div class="lo-head">В ЭТОМ УРОКЕ</div><ul>
+<li>Проектировать конвейер поиска (retrieval pipeline) с гибридным поиском, переранжированием (reranking) и привязкой к источнику.</li>
+<li>Различать и предотвращать четыре ключевых режима отказа: граница фрагмента (chunk boundary), дрейф эмбеддинга (embedding drift), устаревший индекс (stale index), несовпадение ссылок (citation mismatch).</li>
+<li>Выбирать между векторной RAG, гибридным поиском и графовой RAG в зависимости от типа запросов — и оценивать, когда графовая RAG окупается, а когда нет.</li>
+<li>Реализовывать привязку к источнику (source-grounding): проверять, что каждое утверждение действительно поддержано извлечённым фрагментом.</li>
+<li>Понимать, почему наивный RAG не убирает галлюцинации, и на каких этапах конвейера теряется правда.</li>
+</ul></div>
 <hr />
 <h3>Чему вы научитесь</h3>
 <ul>
@@ -302,20 +369,22 @@ RAG безопасности — <strong>[формирующееся]</strong>. 
 <li>Понимать, почему наивный RAG не убирает галлюцинации, и на каких этапах конвейера теряется правда.</li>
 </ul>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>0. Зачем этот урок</h3>
 <p>Урок 7 объявил, что память умеет <code>retrieve</code>, но не сказал <em>как</em> — и почему это инженерная дисциплина, а не
 «достань похожее». Дополненная извлечением генерация (RAG) — это и есть <strong>внешняя память</strong> агента: механизм, наполняющий <code>memory.retrieve</code>.
 Этап разбирает, как доставать знание с <strong>источниками, связями и доказательствами</strong>, а не просто текст по
 похожести, — и почему наивный RAG не выполняет своё главное обещание (убрать галлюцинации).</p>
 <p>Две мысли, которые урок должен оставить:</p>
-<blockquote>
-<p><strong>(1)</strong> RAG не «убирает галлюцинации» автоматически — поиск ломается на каждом этапе (нарезка,
+<div class="callout cl-key"><div class="cl-head">КЛЮЧЕВАЯ МЫСЛЬ</div><p>
+<strong>(1)</strong> RAG не «убирает галлюцинации» автоматически — поиск ломается на каждом этапе (нарезка,
 эмбеддинг, ранжирование, привязка к источнику), и измеренно даже специализированные RAG-системы
 галлюцинируют заметно.
 <strong>(2)</strong> Ценность поиска — не «нашёл похожий текст», а <strong>привязка к источнику (source-grounding)</strong>: каждое утверждение
-привязано к проверяемому фрагменту-источнику. Без происхождения (provenance) поиск даёт уверенную ложь.</p>
-</blockquote>
+привязано к проверяемому фрагменту-источнику. Без происхождения (provenance) поиск даёт уверенную ложь.
+</p></div>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>1. Разбор инцидента</h3>
 <p>RAG продавали как лекарство от галлюцинаций: «дай модели реальные документы — и она перестанет выдумывать».
 Stanford измерил это в высокоставочном домене (юридический research, Magesh et al., «Assessing the
@@ -346,6 +415,7 @@ embedding, ranking и attribution. Его задача — не «найти п�
 35% медицинский корпус» — агрегат без источника. §9.)</em></p>
 <p>Отказы зафиксированы — теперь выстроим конвейер, который их устраняет.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>2. Устройство конвейера поиска</h3>
 <h4>2.1 Наивно</h4>
 <pre><code class="language-python">chunks = vector_db.search(embed(query), k=5)   # top-5 по похожести
@@ -393,6 +463,7 @@ answer = llm(query + &quot;\n&quot;.join(chunks))         # «вот докум�
 какой. Это §3.</p>
 <p>Конвейер спроектирован — остаётся выбрать, какой вариант поиска применить к конкретной задаче.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>3. Карта решений</h3>
 <table>
 <thead>
@@ -464,6 +535,7 @@ answer = llm(query + &quot;\n&quot;.join(chunks))         # «вот докум�
 </ul>
 <p>Карта решений очерчена — систематизируем режимы отказа как чек-лист для инженера.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>4. Режимы отказа</h3>
 <table>
 <thead>
@@ -515,6 +587,7 @@ answer = llm(query + &quot;\n&quot;.join(chunks))         # «вот докум�
 тезиса «RAG не убирает галлюцинации».</p>
 <p>Режимы отказа известны — встроим защиту от них в опорный стержень курса.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>5. Опорный стержень</h3>
 <p><code>memory.retrieve</code> (урок 7) реализуется как конвейер, отдающий <strong>evidence-объекты</strong> (а не голый текст) с
 происхождением/trust — ровно <code>ContextItem</code> для context-builder (урок 4).</p>
@@ -548,6 +621,7 @@ model; memory (урок 7) — это хранилище, поверх кото�
 привязки к источнику и без проверки поддержки цитаты.</p>
 <p>Контракт опорного стержня задан — реализуем его в практикуме.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>6. Практикум</h3>
 <p><strong>Задача.</strong> Реализовать <code>retrieve</code> (гибридный поиск + переранжирование + происхождение) и <code>ground</code> (привязка к источнику). Тестами
 воспроизвести реальные отказы: граница фрагмента пропускается без иерархии; гибридный поиск возвращает точный термин,
@@ -601,6 +675,7 @@ def test_critical_chunk_not_in_middle():
 которую vector miss (воспроизведение примера Novorossiya).</p>
 <p>Реализация проверена тестами — проверим инженерное суждение.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>7. Вопросы на суждение</h3>
 <ol>
 <li>Команда внедрила RAG «чтобы убрать галлюцинации» и удивлена, что бот всё равно врёт. По §1 (Stanford)
@@ -617,6 +692,7 @@ def test_critical_chunk_not_in_middle():
 </ol>
 <p>Суждение проверено — закрепим понятия в глоссарии.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>8. Глоссарий</h3>
 <ul>
 <li><strong>Дополненная извлечением генерация (RAG)</strong> — обогащение генерации извлечёнными внешними данными; механизм внешней памяти (урок 7).</li>
@@ -643,6 +719,7 @@ def test_critical_chunk_not_in_middle():
 </ul>
 <p>Понятия определены — обратимся к первоисточникам.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>9. Первоисточники</h3>
 <ol>
 <li><strong>Magesh et al. (Stanford) — «Assessing the Reliability of Leading AI Legal Research Tools»</strong>.

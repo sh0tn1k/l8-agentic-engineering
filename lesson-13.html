@@ -44,8 +44,11 @@ a:hover{text-decoration-color:var(--clay);}
 .sidebar nav a.active{background:var(--paper);border-left-color:var(--clay);color:var(--slate);
   box-shadow:0 1px 0 var(--g200);}
 .sidebar nav a.active .n{color:var(--clay);}
+.sidebar nav a.phase-lead{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--clay-d);margin-top:12px;padding-bottom:2px;pointer-events:none;border-left:2px solid var(--oat);}
 .sidebar nav a.lead{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;
   color:var(--g500);margin-top:14px;padding-bottom:2px;pointer-events:none;}
+.sidebar nav a.phase-lesson{padding-left:22px;}
 
 /* main reading column */
 main{max-width:840px;padding:0 0 140px;min-width:0;}
@@ -62,6 +65,71 @@ h1.title em{font-style:italic;color:var(--clay);}
 .disclaimer{margin:22px 0 0;padding:14px 18px;background:var(--g100);border-radius:12px;
   border:1.5px solid var(--g200);font-size:13.5px;color:var(--g700);max-width:660px;}
 .disclaimer b{color:var(--slate);}
+
+/* ---- phase structure on index ---- */
+.phase-block{margin:38px 0 0;}
+.phase-block:first-child{margin-top:18px;}
+.phase-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--g200);}
+.phase-head .ph-n{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--clay);min-width:50px;}
+.phase-head .ph-icon{font-size:16px;}
+.phase-head .ph-title{font-family:var(--serif);font-weight:500;font-size:19px;color:var(--slate);letter-spacing:-.008em;}
+.phase-cards{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;}
+a.lcard-ph{display:block;text-decoration:none;color:inherit;background:var(--paper);border:1.5px solid var(--g300);
+  border-radius:12px;padding:16px 20px;transition:border-color .15s,box-shadow .15s,transform .15s;}
+a.lcard-ph:hover{border-color:var(--slate);box-shadow:0 6px 24px rgba(20,20,19,.06);transform:translateY(-1px);}
+a.lcard-ph .sec-head h2{font-size:19px;}
+
+/* ---- progress bar ---- */
+.progress-wrap{margin:0 0 18px;}
+.progress-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--g500);
+  margin-bottom:4px;display:flex;justify-content:space-between;}
+.progress-bar{height:4px;background:var(--g200);border-radius:4px;overflow:hidden;}
+.progress-bar .fill{height:100%;background:var(--clay);border-radius:4px;transition:width .4s;}
+
+/* ---- callout boxes (auto-detected in rendered HTML) ---- */
+.callout{margin:22px 0;padding:16px 20px;border-radius:12px;border:1.5px solid var(--g200);font-size:15px;line-height:1.55;}
+.callout .cl-head{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;
+  display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.callout .cl-head::before{content:"";width:8px;height:8px;border-radius:3px;}
+.callout p{margin:6px 0;}
+.callout p:first-child{margin-top:0;}
+.callout p:last-child{margin-bottom:0;}
+
+.callout.cl-key{background:var(--paper);border-color:var(--clay);border-left-width:4px;}
+.callout.cl-key .cl-head{color:var(--clay-d);}
+.callout.cl-key .cl-head::before{background:var(--clay);}
+
+.callout.cl-thesis{background:var(--paper);border-color:var(--slate);border-left-width:4px;box-shadow:0 2px 12px rgba(20,20,19,.06);}
+.callout.cl-thesis .cl-head{color:var(--slate);}
+.callout.cl-thesis .cl-head::before{background:var(--slate);}
+
+.callout.cl-warn{background:#FFF8F3;border-color:#e8a860;border-left-width:4px;}
+.callout.cl-warn .cl-head{color:#a06020;}
+.callout.cl-warn .cl-head::before{background:#e8a860;}
+
+.callout.cl-tip{background:#F5FAF0;border-color:var(--olive);border-left-width:4px;}
+.callout.cl-tip .cl-head{color:var(--olive);}
+.callout.cl-tip .cl-head::before{background:var(--olive);}
+
+.callout.cl-recall{background:var(--g100);border-color:var(--g300);border-style:dashed;}
+.callout.cl-recall .cl-head{color:var(--g500);}
+.callout.cl-recall .cl-head::before{background:var(--g300);}
+
+.callout.cl-deep{background:var(--g100);border-color:var(--g300);}
+.callout.cl-deep .cl-head{color:var(--g500);font-size:10px;}
+.callout.cl-deep .cl-head::before{background:var(--g500);}
+
+.callout.cl-check{margin-top:28px;background:linear-gradient(135deg,#F5FAF0,var(--paper));border-color:var(--olive);}
+.callout.cl-check .cl-head{color:var(--olive);}
+.callout.cl-check .cl-head::before{background:var(--olive);}
+.callout.cl-check ul{list-style:none;padding-left:0;}
+.callout.cl-check li{margin:6px 0;padding-left:22px;position:relative;font-size:14px;}
+.callout.cl-check li::before{content:"\2713";position:absolute;left:0;color:var(--olive);font-weight:700;}
+
+/* ---- section break visual ---- */
+.section-break{margin:40px 0 28px;display:flex;align-items:center;gap:14px;}
+.section-break::before,.section-break::after{content:"";flex:1;height:1px;background:var(--g200);}
+.section-break .sb-dot{width:7px;height:7px;background:var(--clay);border-radius:50%;opacity:.5;}
 
 /* feature panel (spine) */
 .panel{margin:40px 0 0;background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;
@@ -85,25 +153,6 @@ ol.inv li b{color:var(--slate);font-weight:600;}
 .section-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
   color:var(--g500);margin:64px 0 6px;display:flex;align-items:center;gap:10px;}
 .section-label::before{content:"";width:20px;height:1.5px;background:var(--clay);}
-
-/* lessons / accordion */
-section.lesson{margin-top:18px;scroll-margin-top:14px;}
-details.les{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;overflow:hidden;
-  transition:border-color 150ms,box-shadow 150ms;}
-details.les[open]{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);}
-details.les summary{list-style:none;cursor:pointer;padding:20px 22px;display:block;}
-details.les summary::-webkit-details-marker{display:none;}
-.sec-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;}
-.sec-head .idx{font-family:var(--mono);font-size:13px;color:var(--clay);font-weight:600;min-width:26px;}
-.sec-head h2{font-family:var(--serif);font-weight:500;font-size:23px;margin:0;letter-spacing:-.01em;flex:1;min-width:0;}
-.tagline{color:var(--g700);font-size:14px;margin:3px 0 0 40px;}
-.card-meta{margin:13px 0 0 40px;display:grid;gap:5px;}
-.meta-item{font-size:13px;color:var(--g700);}
-.meta-item .k{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;
-  color:var(--g500);margin-right:8px;}
-.expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(--mono);font-size:11px;
-  color:var(--clay);}
-details.les[open] .expand-hint{display:none;}
 
 /* maturity badges */
 .badge{font-family:var(--mono);font-size:10.5px;padding:3px 9px;border-radius:999px;white-space:nowrap;
@@ -143,16 +192,18 @@ details.les[open] .expand-hint{display:none;}
 .lesson-body a{word-break:break-word;}
 .lesson-body em{color:var(--g700);}
 
+/* ---- lesson learning objectives (extracted from "Чему вы научитесь") ---- */
+.learn-obj{margin:10px 0 26px;padding:18px 22px;background:var(--g100);border-radius:12px;border:1.5px solid var(--g200);}
+.learn-obj .lo-head{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--g500);margin-bottom:10px;}
+.learn-obj ul{padding-left:0;list-style:none;}
+.learn-obj li{position:relative;padding-left:22px;margin:7px 0;font-size:14.5px;color:var(--g700);}
+.learn-obj li::before{content:"\25C6";position:absolute;left:0;color:var(--clay);font-size:10px;top:2px;}
+
 /* footer */
 footer{margin:80px 0 0;border-top:1.5px solid var(--g300);padding-top:30px;font-size:13px;
   color:var(--g500);scroll-margin-top:16px;}
 footer .k{font-family:var(--serif);font-style:italic;color:var(--g700);font-size:15px;}
 footer p{margin:8px 0;max-width:680px;}
-
-.toolbar{display:flex;gap:10px;margin:22px 0 0 40px;}
-.toolbar button{font-family:var(--mono);font-size:11px;background:var(--paper);border:1.5px solid var(--g300);
-  color:var(--g700);border-radius:999px;padding:6px 13px;cursor:pointer;}
-.toolbar button:hover{border-color:var(--slate);color:var(--slate);}
 
 /* ---- multipage: lesson cards on index + lesson pages ---- */
 .side-brand-link{text-decoration:none;color:inherit;display:block;}
@@ -255,19 +306,24 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <a class="lead">Карта</a>
 <a href="index.html#spine"><span class="n">◆</span>Опорный стержень</a>
 <a href="index.html#how"><span class="n">?</span>Как читать</a>
-<a class="lead">Уроки</a>
+<a class="phase-lead">Фаза 1</a>
 <a href="lesson-01.html"><span class="n">01</span>Зрелость автономии</a>
 <a href="lesson-02.html"><span class="n">02</span>Примитивы и опорный стержень</a>
+<a class="phase-lead">Фаза 2</a>
 <a href="lesson-03.html"><span class="n">03</span>Жизненный цикл задачи</a>
 <a href="lesson-04.html"><span class="n">04</span>Инженерия контекста</a>
+<a class="phase-lead">Фаза 3</a>
 <a href="lesson-05.html"><span class="n">05</span>Инструменты, права и политика</a>
 <a href="lesson-06.html"><span class="n">06</span>Оценка, верификатор и траектория</a>
+<a class="phase-lead">Фаза 4</a>
 <a href="lesson-07.html"><span class="n">07</span>Память и жизненный цикл знания</a>
 <a href="lesson-08.html"><span class="n">08</span>Поиск: RAG, гибридный и графовый</a>
 <a href="lesson-09.html"><span class="n">09</span>Наблюдаемость и воспроизводимость</a>
+<a class="phase-lead">Фаза 5</a>
 <a href="lesson-10.html"><span class="n">10</span>Безопасность: внедрение и модель угроз</a>
 <a href="lesson-11.html"><span class="n">11</span>Мультиагентность: MCP и A2A</a>
 <a href="lesson-12.html"><span class="n">12</span>Человек в цикле и модель эксплуатации</a>
+<a class="phase-lead">Фаза 6</a>
 <a href="lesson-13.html" class="active"><span class="n">13</span>Экономика и готовность к производству</a>
 <a href="lesson-14.html"><span class="n">14</span>Передний край и сканирование горизонта</a>
 <a class="lead">Конец</a>
@@ -277,8 +333,12 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 
   <main>
     <div class="crumb"><a href="index.html">← Все уроки</a></div>
+    <div class="progress-wrap">
+  <div class="progress-label"><span>Прогресс курса</span><span>13/14 уроков</span></div>
+  <div class="progress-bar"><div class="fill" style="width:93%"></div></div>
+</div>
     <header class="lesson-head">
-      <div class="eyebrow">Урок 13<span class="badge b-disputed" style="margin-left:6px">[спорное] удельная экономика</span></div>
+      <div class="eyebrow">Урок 13<span class="badge b-disputed" style="margin-left:6px">[спорное] удельная экономика</span><span style="font-size:11px;color:var(--g500);margin-left:8px;">Фаза 6: Производство: экономика, готовность и передний край</span></div>
       <h1 class="title">Экономика и готовность к производству</h1>
       <p class="lede">Реальная цена = вывод + проверка + отказ</p>
       <div class="card-meta">
@@ -292,6 +352,14 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 надёжности/окупаемости инвестиций (ROI) — <strong>[спорное]</strong> (нет отраслевого стандарта). Регуляция полного цикла — <strong>[формирующееся]</strong>.
 Это интеграционный этап: собирает весь опорный стержень (spine) уроков 2–12 в единый проект (blueprint) и добавляет экономический слой
 + уровень готовности к промышленной эксплуатации (production-readiness gate). Замыкает вопрос урока 1 («чем прод отличается от демо»).</p></div>
+      <div class="learn-obj"><div class="lo-head">В ЭТОМ УРОКЕ</div><ul>
+<li>Рассчитывать настоящую стоимость агентной системы через стоимость успешной задачи, а не стоимость задачи.</li>
+<li>Оценивать окупаемость инвестиций с учётом трёх компонентов: стоимости вывода, стоимости верификации и стоимости отказа.</li>
+<li>Отличать демонстрационный прототип от продукта через чеклист готовности к промышленной эксплуатации.</li>
+<li>Собирать все примитивы опорного стержня уроков 2–12 в единый проект и проверять инварианты каждого примитива.</li>
+<li>Понимать, почему верифицируемость — экономический потолок автономии и узкое место масштабирования.</li>
+<li>Реализовывать модель стоимости и уровень готовности, блокирующий развёртывание при дырах в опорном стержне.</li>
+</ul></div>
 <h3>Чему вы научитесь</h3>
 <ul>
 <li>Рассчитывать настоящую стоимость агентной системы через стоимость успешной задачи, а не стоимость задачи.</li>
@@ -302,22 +370,24 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <li>Реализовывать модель стоимости и уровень готовности, блокирующий развёртывание при дырах в опорном стержне.</li>
 </ul>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>0. Зачем этот урок</h3>
 <p>Двенадцать этапов мы собирали примитивы. Урок 1 задал вопрос: <strong>чем работающая в проде L8-система
 отличается от демо?</strong> Теперь, имея весь опорный стержень, мы отвечаем — через <strong>экономику</strong> (сколько на самом деле
 стоит агент) и <strong>готовность к промышленной эксплуатации</strong> (что должно присутствовать, чтобы запускать). Это итоговый проект: здесь
 опорный стержень становится единым проектом, а не набором тем.</p>
 <p>Две мысли, которые урок должен оставить:</p>
-<blockquote>
-<p><strong>(1)</strong> Настоящая цена агента — <strong>не стоимость вывода (cost-of-inference)</strong>, а <code>стоимость вывода + стоимость верификации (cost-of-verification) +
+<div class="callout cl-key"><div class="cl-head">КЛЮЧЕВАЯ МЫСЛЬ</div><p>
+<strong>(1)</strong> Настоящая цена агента — <strong>не стоимость вывода (cost-of-inference)</strong>, а <code>стоимость вывода + стоимость верификации (cost-of-verification) +
 стоимость отказа (cost-of-failure)</code>. Дешёвый агент, который дорого ошибается (Amazon Q: 6.3 млн потерянных заказов), —
 экономически отрицателен. Считать надо <strong>стоимость успешной задачи (cost-per-successful-task)</strong>, не стоимость задачи (cost-per-task).
 <strong>(2)</strong> Узкое место масштабирования — <strong>верифицируемость</strong>, а не интеллект. «Последние 5% надёжности
 даются как первые 95%». Поэтому 95% пилотов не доходят до окупаемости инвестиций (MIT) и 40% агентных проектов отменят
-(Gartner): они умирают в разрыве «демо→прод», и разрыв этот — экономический и верификационный.</p>
-</blockquote>
+(Gartner): они умирают в разрыве «демо→прод», и разрыв этот — экономический и верификационный.
+</p></div>
 <p>Чтобы понять, почему экономика — ключевой вопрос, начнём с реального инцидента, где стоимость отказа в масштабе перевесила стоимость вывода на порядки.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>1. Разбор инцидента</h3>
 <p>Декабрь 2025. Внутренний ИИ-агент Amazon (Amazon Q) <strong>не написал плохой код</strong> — он дал <strong>уверенно неверный
 совет</strong>, неправильно поняв <strong>устаревшую внутреннюю документацию</strong>. Результат: каскад ошибок, <strong>~6.3 млн
@@ -336,17 +406,18 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
   Replit (удаление прод-БД, урок 1).</li>
 </ul>
 <p>Отсюда тезис урока (и ответ на вопрос урока 1):</p>
-<blockquote>
-<p>Прод отличается от демо не качеством модели, а тем, что в проде доминируют <strong>стоимость отказа</strong> и
+<div class="callout cl-thesis"><div class="cl-head">ТЕЗИС</div><p>
+Прод отличается от демо не качеством модели, а тем, что в проде доминируют <strong>стоимость отказа</strong> и
 <strong>стоимость верификации</strong>, а не стоимость вывода. L8-система — это не «умный агент», а <strong>проверяемая,
 экономически положительная, безопасно откатываемая</strong> система, где каждый примитив опорного стержня присутствует со
-своим инвариантом. Узкое место — верифицируемость, и она же ставит экономический потолок автономии.</p>
-</blockquote>
+своим инвариантом. Узкое место — верифицируемость, и она же ставит экономический потолок автономии.
+</p></div>
 <p><em>(Карантин: «$6.3M loss» — на деле 6.3 млн ЗАКАЗОВ; ChatDev «Microsoft 33%» — это Tsinghua; «$47K loop»,
 «PocketOS Cursor 9s» — единичные/непроверенные; конкретные cost-числа ($636–1996, 2.4 req $0.018) —
 оценки практиков, поданы как иллюстрация. §9.)</em></p>
 <p>Разбор инцидента Amazon Q показывает: наивный подход «дешёвая модель = дёшево» приводит к катастрофе. Перейдём к тому, как правильно считать настоящую цену агента.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>2. Настоящая цена агента</h3>
 <h4>2.1 Наивная модель стоимости</h4>
 <pre><code>cost ≈ model_price × steps          # «дешёвая модель + мало шагов = дёшево»
@@ -382,6 +453,7 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <strong>протокол сканирования</strong>).</p>
 <p>Вооружённые пониманием истинной стоимости, перейдём к практическим решениям: что выбирать и с какими компромиссами.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>3. Карта решений</h3>
 <table>
 <thead>
@@ -449,6 +521,7 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 </ul>
 <p>Зная решения и их цену, посмотрим, как эти выборы ломаются на практике — через призму всего курса.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>4. Режимы отказа</h3>
 <table>
 <thead>
@@ -495,6 +568,7 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 данных) масштабируется в 6.3M заказов.</p>
 <p>Поняв, как отказы закрываются примитивами, соберём всё в единый проект.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>5. Опорный стержень</h3>
 <p>Итоговый проект — здесь опорный стержень собирается целиком. Каждый примитив со своим инвариантом + сквозные контракты +
 экономический слой.</p>
@@ -540,6 +614,7 @@ class ProductionReadinessGate(Protocol):
 этот уровень (нет верификатора фактов, нет свежести памяти).</p>
 <p>Имея проект в коде, закрепим понимание практикумом.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>6. Практикум</h3>
 <p><strong>Задача.</strong> Реализовать (а) стоимость успешной задачи с учётом верификации и отказов; (б) уровень готовности,
 блокирующий развёртывание при дырах в опорном стержне. Доказать: дешёвый-ненадёжный агент проигрывает дорогому-надёжному;
@@ -588,6 +663,7 @@ def test_full_spine_is_production_ready():
 доказуемый артефакт.</p>
 <p>Проверив кодом, проверим и суждением.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>7. Вопросы на суждение</h3>
 <ol>
 <li>Агент дёшев ($0.02/задача), но ошибается в 10% и каждая ошибка стоит дорого (Amazon-Q-класс). По §2 —
@@ -605,6 +681,7 @@ def test_full_spine_is_production_ready():
 </ol>
 <p>Закрепим терминологию урока в глоссарии.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>8. Глоссарий</h3>
 <ul>
 <li><strong>Стоимость вывода, верификации и отказов</strong> — три компонента настоящей цены: токены × шаги / проверка (оценки + человек в контуре) / вероятность отказа × ущерб. Доминирует не первый.</li>
@@ -621,6 +698,7 @@ def test_full_spine_is_production_ready():
 <li><strong>Фреймворк против платформы</strong> — строительные блоки (свой CI/CD) против готовой инфраструктуры.</li>
 </ul>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>9. Первоисточники</h3>
 <ol>
 <li><strong>Amazon Q retail outages</strong> — Wharton Accountable AI Lab + vectara/awesome-agent-failures (case study):

@@ -44,8 +44,11 @@ a:hover{text-decoration-color:var(--clay);}
 .sidebar nav a.active{background:var(--paper);border-left-color:var(--clay);color:var(--slate);
   box-shadow:0 1px 0 var(--g200);}
 .sidebar nav a.active .n{color:var(--clay);}
+.sidebar nav a.phase-lead{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--clay-d);margin-top:12px;padding-bottom:2px;pointer-events:none;border-left:2px solid var(--oat);}
 .sidebar nav a.lead{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;
   color:var(--g500);margin-top:14px;padding-bottom:2px;pointer-events:none;}
+.sidebar nav a.phase-lesson{padding-left:22px;}
 
 /* main reading column */
 main{max-width:840px;padding:0 0 140px;min-width:0;}
@@ -62,6 +65,71 @@ h1.title em{font-style:italic;color:var(--clay);}
 .disclaimer{margin:22px 0 0;padding:14px 18px;background:var(--g100);border-radius:12px;
   border:1.5px solid var(--g200);font-size:13.5px;color:var(--g700);max-width:660px;}
 .disclaimer b{color:var(--slate);}
+
+/* ---- phase structure on index ---- */
+.phase-block{margin:38px 0 0;}
+.phase-block:first-child{margin-top:18px;}
+.phase-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--g200);}
+.phase-head .ph-n{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--clay);min-width:50px;}
+.phase-head .ph-icon{font-size:16px;}
+.phase-head .ph-title{font-family:var(--serif);font-weight:500;font-size:19px;color:var(--slate);letter-spacing:-.008em;}
+.phase-cards{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;}
+a.lcard-ph{display:block;text-decoration:none;color:inherit;background:var(--paper);border:1.5px solid var(--g300);
+  border-radius:12px;padding:16px 20px;transition:border-color .15s,box-shadow .15s,transform .15s;}
+a.lcard-ph:hover{border-color:var(--slate);box-shadow:0 6px 24px rgba(20,20,19,.06);transform:translateY(-1px);}
+a.lcard-ph .sec-head h2{font-size:19px;}
+
+/* ---- progress bar ---- */
+.progress-wrap{margin:0 0 18px;}
+.progress-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--g500);
+  margin-bottom:4px;display:flex;justify-content:space-between;}
+.progress-bar{height:4px;background:var(--g200);border-radius:4px;overflow:hidden;}
+.progress-bar .fill{height:100%;background:var(--clay);border-radius:4px;transition:width .4s;}
+
+/* ---- callout boxes (auto-detected in rendered HTML) ---- */
+.callout{margin:22px 0;padding:16px 20px;border-radius:12px;border:1.5px solid var(--g200);font-size:15px;line-height:1.55;}
+.callout .cl-head{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;
+  display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.callout .cl-head::before{content:"";width:8px;height:8px;border-radius:3px;}
+.callout p{margin:6px 0;}
+.callout p:first-child{margin-top:0;}
+.callout p:last-child{margin-bottom:0;}
+
+.callout.cl-key{background:var(--paper);border-color:var(--clay);border-left-width:4px;}
+.callout.cl-key .cl-head{color:var(--clay-d);}
+.callout.cl-key .cl-head::before{background:var(--clay);}
+
+.callout.cl-thesis{background:var(--paper);border-color:var(--slate);border-left-width:4px;box-shadow:0 2px 12px rgba(20,20,19,.06);}
+.callout.cl-thesis .cl-head{color:var(--slate);}
+.callout.cl-thesis .cl-head::before{background:var(--slate);}
+
+.callout.cl-warn{background:#FFF8F3;border-color:#e8a860;border-left-width:4px;}
+.callout.cl-warn .cl-head{color:#a06020;}
+.callout.cl-warn .cl-head::before{background:#e8a860;}
+
+.callout.cl-tip{background:#F5FAF0;border-color:var(--olive);border-left-width:4px;}
+.callout.cl-tip .cl-head{color:var(--olive);}
+.callout.cl-tip .cl-head::before{background:var(--olive);}
+
+.callout.cl-recall{background:var(--g100);border-color:var(--g300);border-style:dashed;}
+.callout.cl-recall .cl-head{color:var(--g500);}
+.callout.cl-recall .cl-head::before{background:var(--g300);}
+
+.callout.cl-deep{background:var(--g100);border-color:var(--g300);}
+.callout.cl-deep .cl-head{color:var(--g500);font-size:10px;}
+.callout.cl-deep .cl-head::before{background:var(--g500);}
+
+.callout.cl-check{margin-top:28px;background:linear-gradient(135deg,#F5FAF0,var(--paper));border-color:var(--olive);}
+.callout.cl-check .cl-head{color:var(--olive);}
+.callout.cl-check .cl-head::before{background:var(--olive);}
+.callout.cl-check ul{list-style:none;padding-left:0;}
+.callout.cl-check li{margin:6px 0;padding-left:22px;position:relative;font-size:14px;}
+.callout.cl-check li::before{content:"\2713";position:absolute;left:0;color:var(--olive);font-weight:700;}
+
+/* ---- section break visual ---- */
+.section-break{margin:40px 0 28px;display:flex;align-items:center;gap:14px;}
+.section-break::before,.section-break::after{content:"";flex:1;height:1px;background:var(--g200);}
+.section-break .sb-dot{width:7px;height:7px;background:var(--clay);border-radius:50%;opacity:.5;}
 
 /* feature panel (spine) */
 .panel{margin:40px 0 0;background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;
@@ -85,25 +153,6 @@ ol.inv li b{color:var(--slate);font-weight:600;}
 .section-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
   color:var(--g500);margin:64px 0 6px;display:flex;align-items:center;gap:10px;}
 .section-label::before{content:"";width:20px;height:1.5px;background:var(--clay);}
-
-/* lessons / accordion */
-section.lesson{margin-top:18px;scroll-margin-top:14px;}
-details.les{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;overflow:hidden;
-  transition:border-color 150ms,box-shadow 150ms;}
-details.les[open]{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);}
-details.les summary{list-style:none;cursor:pointer;padding:20px 22px;display:block;}
-details.les summary::-webkit-details-marker{display:none;}
-.sec-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;}
-.sec-head .idx{font-family:var(--mono);font-size:13px;color:var(--clay);font-weight:600;min-width:26px;}
-.sec-head h2{font-family:var(--serif);font-weight:500;font-size:23px;margin:0;letter-spacing:-.01em;flex:1;min-width:0;}
-.tagline{color:var(--g700);font-size:14px;margin:3px 0 0 40px;}
-.card-meta{margin:13px 0 0 40px;display:grid;gap:5px;}
-.meta-item{font-size:13px;color:var(--g700);}
-.meta-item .k{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;
-  color:var(--g500);margin-right:8px;}
-.expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(--mono);font-size:11px;
-  color:var(--clay);}
-details.les[open] .expand-hint{display:none;}
 
 /* maturity badges */
 .badge{font-family:var(--mono);font-size:10.5px;padding:3px 9px;border-radius:999px;white-space:nowrap;
@@ -143,16 +192,18 @@ details.les[open] .expand-hint{display:none;}
 .lesson-body a{word-break:break-word;}
 .lesson-body em{color:var(--g700);}
 
+/* ---- lesson learning objectives (extracted from "Чему вы научитесь") ---- */
+.learn-obj{margin:10px 0 26px;padding:18px 22px;background:var(--g100);border-radius:12px;border:1.5px solid var(--g200);}
+.learn-obj .lo-head{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--g500);margin-bottom:10px;}
+.learn-obj ul{padding-left:0;list-style:none;}
+.learn-obj li{position:relative;padding-left:22px;margin:7px 0;font-size:14.5px;color:var(--g700);}
+.learn-obj li::before{content:"\25C6";position:absolute;left:0;color:var(--clay);font-size:10px;top:2px;}
+
 /* footer */
 footer{margin:80px 0 0;border-top:1.5px solid var(--g300);padding-top:30px;font-size:13px;
   color:var(--g500);scroll-margin-top:16px;}
 footer .k{font-family:var(--serif);font-style:italic;color:var(--g700);font-size:15px;}
 footer p{margin:8px 0;max-width:680px;}
-
-.toolbar{display:flex;gap:10px;margin:22px 0 0 40px;}
-.toolbar button{font-family:var(--mono);font-size:11px;background:var(--paper);border:1.5px solid var(--g300);
-  color:var(--g700);border-radius:999px;padding:6px 13px;cursor:pointer;}
-.toolbar button:hover{border-color:var(--slate);color:var(--slate);}
 
 /* ---- multipage: lesson cards on index + lesson pages ---- */
 .side-brand-link{text-decoration:none;color:inherit;display:block;}
@@ -255,19 +306,24 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <a class="lead">Карта</a>
 <a href="index.html#spine"><span class="n">◆</span>Опорный стержень</a>
 <a href="index.html#how"><span class="n">?</span>Как читать</a>
-<a class="lead">Уроки</a>
+<a class="phase-lead">Фаза 1</a>
 <a href="lesson-01.html"><span class="n">01</span>Зрелость автономии</a>
 <a href="lesson-02.html"><span class="n">02</span>Примитивы и опорный стержень</a>
+<a class="phase-lead">Фаза 2</a>
 <a href="lesson-03.html"><span class="n">03</span>Жизненный цикл задачи</a>
 <a href="lesson-04.html"><span class="n">04</span>Инженерия контекста</a>
+<a class="phase-lead">Фаза 3</a>
 <a href="lesson-05.html"><span class="n">05</span>Инструменты, права и политика</a>
 <a href="lesson-06.html"><span class="n">06</span>Оценка, верификатор и траектория</a>
+<a class="phase-lead">Фаза 4</a>
 <a href="lesson-07.html"><span class="n">07</span>Память и жизненный цикл знания</a>
 <a href="lesson-08.html"><span class="n">08</span>Поиск: RAG, гибридный и графовый</a>
 <a href="lesson-09.html"><span class="n">09</span>Наблюдаемость и воспроизводимость</a>
+<a class="phase-lead">Фаза 5</a>
 <a href="lesson-10.html"><span class="n">10</span>Безопасность: внедрение и модель угроз</a>
 <a href="lesson-11.html"><span class="n">11</span>Мультиагентность: MCP и A2A</a>
 <a href="lesson-12.html"><span class="n">12</span>Человек в цикле и модель эксплуатации</a>
+<a class="phase-lead">Фаза 6</a>
 <a href="lesson-13.html"><span class="n">13</span>Экономика и готовность к производству</a>
 <a href="lesson-14.html" class="active"><span class="n">14</span>Передний край и сканирование горизонта</a>
 <a class="lead">Конец</a>
@@ -277,8 +333,12 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 
   <main>
     <div class="crumb"><a href="index.html">← Все уроки</a></div>
+    <div class="progress-wrap">
+  <div class="progress-label"><span>Прогресс курса</span><span>14/14 уроков</span></div>
+  <div class="progress-bar"><div class="fill" style="width:100%"></div></div>
+</div>
     <header class="lesson-head">
-      <div class="eyebrow">Урок 14<span class="badge b-special" style="margin-left:6px">ОСОБЫЙ: снимок до 2026-09-23 + протокол</span></div>
+      <div class="eyebrow">Урок 14<span class="badge b-special" style="margin-left:6px">ОСОБЫЙ: снимок до 2026-09-23 + протокол</span><span style="font-size:11px;color:var(--g500);margin-left:8px;">Фаза 6: Производство: экономика, готовность и передний край</span></div>
       <h1 class="title">Передний край и сканирование горизонта</h1>
       <p class="lede">Не догонять тенденции, а оценивать их</p>
       <div class="card-meta">
@@ -292,6 +352,13 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 (заведомо протухающий) и (B) главный артефакт — <strong>протокол сканирования горизонта</strong> (повторяемый навык).
 Recency-правило доминирует: любой блок без <strong>даты</strong> и <strong>флага зрелости</strong> в урок не идёт.
 <strong>Снимок актуален на 2026-06-23. Пересмотреть до 2026-09-23.</strong></p></div>
+      <div class="learn-obj"><div class="lo-head">В ЭТОМ УРОКЕ</div><ul>
+<li>Прогонять ежеквартальный <strong>протокол сканирования горизонта</strong>: обход источников, фильтрация нитей, обновление снимка.</li>
+<li>Отличать <strong>сигнал от хайпа</strong> по рубрике из шести осей: подтверждённость, широта, зрелость (maturity), зона влияния, обратимость, безопасность.</li>
+<li>Привязывать каждую новую нить к устойчивому ядру (этапы 1–13) и решать, меняет ли она архитектуру.</li>
+<li>Составлять <strong>фальсифицируемые предсказания</strong> с датой проверки и критерием «сбылось/нет» — чтобы не обманывать себя задним числом.</li>
+<li>Отличать устаревающий снимок от переносимого навыка: список тенденций протухает за квартал, протокол оценки — нет.</li>
+</ul></div>
 <hr />
 <h3>Чему вы научитесь</h3>
 <ul>
@@ -302,20 +369,22 @@ Recency-правило доминирует: любой блок без <strong>
 <li>Отличать устаревающий снимок от переносимого навыка: список тенденций протухает за квартал, протокол оценки — нет.</li>
 </ul>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>0. Зачем этот этап другой</h3>
 <p>Уроки 1–13 дали blueprint, устойчивый на годы. Но если выучить «тенденции 2026», знание протухнет за квартал.
 Цель этапа — не список тенденций, а <strong>переносимый навык</strong>: уметь взять любую новую работу/протокол/бенчмарк и
 за час решить — это сигнал или хайп, и меняет ли оно архитектуру из уроков 1–13. Снимок прилагается, но он
 <strong>заведомо устаревающий раздел</strong>, а не канон.</p>
 <p>Две мысли, которые этап должен оставить:</p>
-<blockquote>
-<p><strong>(1)</strong> Список тенденций протухает; <strong>протокол оценки</strong> — нет. Главный артефакт — повторяемый ежеквартальный
+<div class="callout cl-key"><div class="cl-head">КЛЮЧЕВАЯ МЫСЛЬ</div><p>
+<strong>(1)</strong> Список тенденций протухает; <strong>протокол оценки</strong> — нет. Главный артефакт — повторяемый ежеквартальный
 процесс + рубрика «сигнал vs хайп», а не снимок текущего переднего края.
 <strong>(2)</strong> Новое оценивается <strong>не по новизне, а по подтверждённости, широте, зрелости, зоне влияния (какой
 этап 1–13) и обратимости</strong>. То, что меняет capstone (этап 13), требует пересборки blueprint; то, что
-«paper без кода», идёт в карантин.</p>
-</blockquote>
+«paper без кода», идёт в карантин.
+</p></div>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>1. Разбор инцидента</h3>
 <p>Этот курс девять раз ловил фабрикации через verification gate — но даже <strong>верифицированный</strong> факт с переднего края
 тлеет на глазах:</p>
@@ -338,6 +407,7 @@ Recency-правило доминирует: любой блок без <strong>
 отдельно и не идут в core — см. §9.)</em></p>
 <p>Так выглядит холодный старт: мы смотрим на конкретные примеры протухания фактов и выводим из этого потребность в протоколе, а не в памяти. Следующий раздел выводит этот протокол систематически.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>2. От памяти к фильтру</h3>
 <h4>2.1 Ядро vs передний край</h4>
 <p>Сначала разделение: <strong>устойчивое ядро</strong> (этапы 1–13 — примитивы, инварианты, threat model, экономика) меняется
@@ -359,6 +429,7 @@ Recency-правило доминирует: любой блок без <strong>
 (§3.2) — лишь результат <strong>одного</strong> прогона на 2026-06-23, приложенный как пример и заведомо устаревающий.</p>
 <p>Имея деривацию, переходим к конкретным артефактам, которые она порождает.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>3. Карта решений</h3>
 <h4>3.0 Протокол сканирования горизонта (ГЛАВНЫЙ артефакт, повторяемый ежеквартально)</h4>
 <pre><code>КАЖДЫЙ КВАРТАЛ (следующий прогон — до 2026-09-23):
@@ -671,6 +742,7 @@ Recency-правило доминирует: любой блок без <strong>
 </table>
 <p>Карта решений дала полный набор инструментов. Теперь посмотрим, как именно новые нити взаимодействуют с ядром — что расширяют, а что угрожают обесценить.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>4. Режимы отказа</h3>
 <table>
 <thead>
@@ -723,6 +795,7 @@ Recency-правило доминирует: любой блок без <strong>
 напрямую бьёт по уроку 6 (агрегатная метрика слепа) и уроку 7 (нужен memory integrity validator).</p>
 <p>Разобрав режимы отказа, закрепим это всё в опорном стержне как обязательство.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>5. Опорный стержень</h3>
 <p>Этап 14 добавляет к spine не примитив, а <strong>процесс поддержания</strong>: blueprint живёт, только если раз в квартал
 прогонять сканирование горизонта. Контракт:</p>
@@ -736,6 +809,7 @@ Recency-правило доминирует: любой блок без <strong>
 <p>Это замыкает курс: уроки 1–13 дают систему, урок 14 даёт <strong>механизм, не дающий ей устареть</strong> молча.</p>
 <p>Теория зафиксирована — теперь практическая проверка через код.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>6. Практикум</h3>
 <p><strong>Задача.</strong> Реализовать оценщик нити по рубрике (§3.1) и решатель «карантин/appendix/core», + генератор
 фальсифицируемого предсказания с датой проверки. Доказать: blog-claim → карантин; paper+код+репликация → core;
@@ -786,6 +860,7 @@ verified+воспроизведённое в core (тот же gate, что мы
 обнови снимок §3.2 с новой датой. Это и есть один цикл протокола §3.0.</p>
 <p>Практикум дал hands-on опыт. Проверим теперь навык суждения — без кода, но с той же рубрикой.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>7. Вопросы на суждение</h3>
 <ol>
 <li>Вышла статья «новый метод X бьёт RAG на 40%». Прогони её по рубрике (§3.1): какие 6 вопросов задашь и
@@ -802,6 +877,7 @@ verified+воспроизведённое в core (тот же gate, что мы
    критерием «не взлетел». Что именно ты признаешь как «тенденция не оправдалась»?</li>
 </ol>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>8. Глоссарий</h3>
 <ul>
 <li><strong>Снимок переднего края</strong> — датированный срез переднего края со сроком годности; заведомо протухает.</li>
@@ -820,6 +896,7 @@ verified+воспроизведённое в core (тот же gate, что мы
   исчезновение программиста). [спорное].</li>
 </ul>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>9. Первоисточники</h3>
 <ol>
 <li><strong>Search-R1</strong> — arXiv 2503.09516 (+ github.com/PeterGriffinJin/Search-R1). <a href="https://arxiv.org/abs/2503.09516" target="_blank" rel="noopener">https://arxiv.org/abs/2503.09516</a>

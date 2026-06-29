@@ -44,8 +44,11 @@ a:hover{text-decoration-color:var(--clay);}
 .sidebar nav a.active{background:var(--paper);border-left-color:var(--clay);color:var(--slate);
   box-shadow:0 1px 0 var(--g200);}
 .sidebar nav a.active .n{color:var(--clay);}
+.sidebar nav a.phase-lead{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--clay-d);margin-top:12px;padding-bottom:2px;pointer-events:none;border-left:2px solid var(--oat);}
 .sidebar nav a.lead{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;
   color:var(--g500);margin-top:14px;padding-bottom:2px;pointer-events:none;}
+.sidebar nav a.phase-lesson{padding-left:22px;}
 
 /* main reading column */
 main{max-width:840px;padding:0 0 140px;min-width:0;}
@@ -62,6 +65,71 @@ h1.title em{font-style:italic;color:var(--clay);}
 .disclaimer{margin:22px 0 0;padding:14px 18px;background:var(--g100);border-radius:12px;
   border:1.5px solid var(--g200);font-size:13.5px;color:var(--g700);max-width:660px;}
 .disclaimer b{color:var(--slate);}
+
+/* ---- phase structure on index ---- */
+.phase-block{margin:38px 0 0;}
+.phase-block:first-child{margin-top:18px;}
+.phase-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--g200);}
+.phase-head .ph-n{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--clay);min-width:50px;}
+.phase-head .ph-icon{font-size:16px;}
+.phase-head .ph-title{font-family:var(--serif);font-weight:500;font-size:19px;color:var(--slate);letter-spacing:-.008em;}
+.phase-cards{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;}
+a.lcard-ph{display:block;text-decoration:none;color:inherit;background:var(--paper);border:1.5px solid var(--g300);
+  border-radius:12px;padding:16px 20px;transition:border-color .15s,box-shadow .15s,transform .15s;}
+a.lcard-ph:hover{border-color:var(--slate);box-shadow:0 6px 24px rgba(20,20,19,.06);transform:translateY(-1px);}
+a.lcard-ph .sec-head h2{font-size:19px;}
+
+/* ---- progress bar ---- */
+.progress-wrap{margin:0 0 18px;}
+.progress-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--g500);
+  margin-bottom:4px;display:flex;justify-content:space-between;}
+.progress-bar{height:4px;background:var(--g200);border-radius:4px;overflow:hidden;}
+.progress-bar .fill{height:100%;background:var(--clay);border-radius:4px;transition:width .4s;}
+
+/* ---- callout boxes (auto-detected in rendered HTML) ---- */
+.callout{margin:22px 0;padding:16px 20px;border-radius:12px;border:1.5px solid var(--g200);font-size:15px;line-height:1.55;}
+.callout .cl-head{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;
+  display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.callout .cl-head::before{content:"";width:8px;height:8px;border-radius:3px;}
+.callout p{margin:6px 0;}
+.callout p:first-child{margin-top:0;}
+.callout p:last-child{margin-bottom:0;}
+
+.callout.cl-key{background:var(--paper);border-color:var(--clay);border-left-width:4px;}
+.callout.cl-key .cl-head{color:var(--clay-d);}
+.callout.cl-key .cl-head::before{background:var(--clay);}
+
+.callout.cl-thesis{background:var(--paper);border-color:var(--slate);border-left-width:4px;box-shadow:0 2px 12px rgba(20,20,19,.06);}
+.callout.cl-thesis .cl-head{color:var(--slate);}
+.callout.cl-thesis .cl-head::before{background:var(--slate);}
+
+.callout.cl-warn{background:#FFF8F3;border-color:#e8a860;border-left-width:4px;}
+.callout.cl-warn .cl-head{color:#a06020;}
+.callout.cl-warn .cl-head::before{background:#e8a860;}
+
+.callout.cl-tip{background:#F5FAF0;border-color:var(--olive);border-left-width:4px;}
+.callout.cl-tip .cl-head{color:var(--olive);}
+.callout.cl-tip .cl-head::before{background:var(--olive);}
+
+.callout.cl-recall{background:var(--g100);border-color:var(--g300);border-style:dashed;}
+.callout.cl-recall .cl-head{color:var(--g500);}
+.callout.cl-recall .cl-head::before{background:var(--g300);}
+
+.callout.cl-deep{background:var(--g100);border-color:var(--g300);}
+.callout.cl-deep .cl-head{color:var(--g500);font-size:10px;}
+.callout.cl-deep .cl-head::before{background:var(--g500);}
+
+.callout.cl-check{margin-top:28px;background:linear-gradient(135deg,#F5FAF0,var(--paper));border-color:var(--olive);}
+.callout.cl-check .cl-head{color:var(--olive);}
+.callout.cl-check .cl-head::before{background:var(--olive);}
+.callout.cl-check ul{list-style:none;padding-left:0;}
+.callout.cl-check li{margin:6px 0;padding-left:22px;position:relative;font-size:14px;}
+.callout.cl-check li::before{content:"\2713";position:absolute;left:0;color:var(--olive);font-weight:700;}
+
+/* ---- section break visual ---- */
+.section-break{margin:40px 0 28px;display:flex;align-items:center;gap:14px;}
+.section-break::before,.section-break::after{content:"";flex:1;height:1px;background:var(--g200);}
+.section-break .sb-dot{width:7px;height:7px;background:var(--clay);border-radius:50%;opacity:.5;}
 
 /* feature panel (spine) */
 .panel{margin:40px 0 0;background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;
@@ -85,25 +153,6 @@ ol.inv li b{color:var(--slate);font-weight:600;}
 .section-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
   color:var(--g500);margin:64px 0 6px;display:flex;align-items:center;gap:10px;}
 .section-label::before{content:"";width:20px;height:1.5px;background:var(--clay);}
-
-/* lessons / accordion */
-section.lesson{margin-top:18px;scroll-margin-top:14px;}
-details.les{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;overflow:hidden;
-  transition:border-color 150ms,box-shadow 150ms;}
-details.les[open]{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);}
-details.les summary{list-style:none;cursor:pointer;padding:20px 22px;display:block;}
-details.les summary::-webkit-details-marker{display:none;}
-.sec-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;}
-.sec-head .idx{font-family:var(--mono);font-size:13px;color:var(--clay);font-weight:600;min-width:26px;}
-.sec-head h2{font-family:var(--serif);font-weight:500;font-size:23px;margin:0;letter-spacing:-.01em;flex:1;min-width:0;}
-.tagline{color:var(--g700);font-size:14px;margin:3px 0 0 40px;}
-.card-meta{margin:13px 0 0 40px;display:grid;gap:5px;}
-.meta-item{font-size:13px;color:var(--g700);}
-.meta-item .k{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;
-  color:var(--g500);margin-right:8px;}
-.expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(--mono);font-size:11px;
-  color:var(--clay);}
-details.les[open] .expand-hint{display:none;}
 
 /* maturity badges */
 .badge{font-family:var(--mono);font-size:10.5px;padding:3px 9px;border-radius:999px;white-space:nowrap;
@@ -143,16 +192,18 @@ details.les[open] .expand-hint{display:none;}
 .lesson-body a{word-break:break-word;}
 .lesson-body em{color:var(--g700);}
 
+/* ---- lesson learning objectives (extracted from "Чему вы научитесь") ---- */
+.learn-obj{margin:10px 0 26px;padding:18px 22px;background:var(--g100);border-radius:12px;border:1.5px solid var(--g200);}
+.learn-obj .lo-head{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--g500);margin-bottom:10px;}
+.learn-obj ul{padding-left:0;list-style:none;}
+.learn-obj li{position:relative;padding-left:22px;margin:7px 0;font-size:14.5px;color:var(--g700);}
+.learn-obj li::before{content:"\25C6";position:absolute;left:0;color:var(--clay);font-size:10px;top:2px;}
+
 /* footer */
 footer{margin:80px 0 0;border-top:1.5px solid var(--g300);padding-top:30px;font-size:13px;
   color:var(--g500);scroll-margin-top:16px;}
 footer .k{font-family:var(--serif);font-style:italic;color:var(--g700);font-size:15px;}
 footer p{margin:8px 0;max-width:680px;}
-
-.toolbar{display:flex;gap:10px;margin:22px 0 0 40px;}
-.toolbar button{font-family:var(--mono);font-size:11px;background:var(--paper);border:1.5px solid var(--g300);
-  color:var(--g700);border-radius:999px;padding:6px 13px;cursor:pointer;}
-.toolbar button:hover{border-color:var(--slate);color:var(--slate);}
 
 /* ---- multipage: lesson cards on index + lesson pages ---- */
 .side-brand-link{text-decoration:none;color:inherit;display:block;}
@@ -255,19 +306,24 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <a class="lead">Карта</a>
 <a href="index.html#spine"><span class="n">◆</span>Опорный стержень</a>
 <a href="index.html#how"><span class="n">?</span>Как читать</a>
-<a class="lead">Уроки</a>
+<a class="phase-lead">Фаза 1</a>
 <a href="lesson-01.html"><span class="n">01</span>Зрелость автономии</a>
 <a href="lesson-02.html"><span class="n">02</span>Примитивы и опорный стержень</a>
+<a class="phase-lead">Фаза 2</a>
 <a href="lesson-03.html"><span class="n">03</span>Жизненный цикл задачи</a>
 <a href="lesson-04.html"><span class="n">04</span>Инженерия контекста</a>
+<a class="phase-lead">Фаза 3</a>
 <a href="lesson-05.html"><span class="n">05</span>Инструменты, права и политика</a>
 <a href="lesson-06.html"><span class="n">06</span>Оценка, верификатор и траектория</a>
+<a class="phase-lead">Фаза 4</a>
 <a href="lesson-07.html"><span class="n">07</span>Память и жизненный цикл знания</a>
 <a href="lesson-08.html"><span class="n">08</span>Поиск: RAG, гибридный и графовый</a>
 <a href="lesson-09.html"><span class="n">09</span>Наблюдаемость и воспроизводимость</a>
+<a class="phase-lead">Фаза 5</a>
 <a href="lesson-10.html"><span class="n">10</span>Безопасность: внедрение и модель угроз</a>
 <a href="lesson-11.html"><span class="n">11</span>Мультиагентность: MCP и A2A</a>
 <a href="lesson-12.html"><span class="n">12</span>Человек в цикле и модель эксплуатации</a>
+<a class="phase-lead">Фаза 6</a>
 <a href="lesson-13.html"><span class="n">13</span>Экономика и готовность к производству</a>
 <a href="lesson-14.html"><span class="n">14</span>Передний край и сканирование горизонта</a>
 <a class="lead">Конец</a>
@@ -280,8 +336,9 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
       <div class="eyebrow">Учебник для инженеров проф-уровня в ИИ</div>
       <h1 class="title">L8+ <em>Agentic Engineering</em></h1>
        <p class="lede">Учебник для сильных инженеров: от автономии до производственного чертежа. Деривация от «что такое автономия» до собранного
-        производственного чертежа и протокола, не дающего ему устареть — 14 уроков, каждый с реальным сломанным
-        прогоном, выводом «проблема → решение → новая проблема», вкладом в сквозную систему и практикумом.</p>
+        производственного чертежа и протокола, не дающего ему устареть — 14 уроков в 6 фазах,
+        каждый с реальным сломанным прогоном, выводом «проблема → решение → новая проблема»
+        и практикумом.</p>
       <div class="disclaimer">
         <b>«L8+»</b> — внутреннее обозначение курса, <b>не отраслевой стандарт</b> (признанные таксономии —
         L0–L5, производны от SAE J3016; см. урок 1). <b>Актуально на 2026-06-23.</b>
@@ -310,19 +367,25 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
     <div class="howto" id="how">
       <h2>Как читать</h2>
       <ul>
-        <li><b>Линейно</b> — деривация выстроена так, что каждый урок опирается на предыдущие.</li>
-        <li><b>Структура урока</b> (одинаковая у всех 14): статус → разбор инцидента (реальный сломанный прогон) →
-          деривация → карта решений → режимы отказа → вклад в опорный стержень → практикум (скелет/тесты/эталон)
-          → вопросы на суждение → глоссарий → первоисточники (+ карантин).</li>
+        <li><b>По фазам, линейно</b> — каждая фаза добавляет слой системы; уроки внутри фазы строятся друг на друге.</li>
+        <li><b>Структура урока</b> (одинаковая у всех 14): разбор инцидента → деривация → карта решений → режимы отказа
+          → вклад в опорный стержень → практикум → вопросы на суждение → глоссарий → первоисточники.</li>
         <li><b>Спорное оставлено спорным</b> — где академия/прод/фреймворки расходятся, урок даёт критерий
           выбора, а не «правильный ответ».</li>
         <li>Уроки 3, 4, 6, 7, 10 содержат <b>интерактивные виджеты</b> — потрогать механику руками.</li>
+        <li><b>Шкала зрелости</b>: <span class="badge b-core">устоявшееся</span> <span class="badge b-emerging">формирующееся</span> <span class="badge b-disputed">спорное</span> <span class="badge b-hype">нерешённое</span></li>
       </ul>
     </div>
 
-    <div class="section-label">14 уроков</div>
-    <div class="lcards">
-<a class="lcard" href="lesson-01.html">
+    <div class="section-label">6 фаз — 14 уроков</div>
+<div class="phase-block">
+  <div class="phase-head">
+    <span class="ph-icon">⚙</span>
+    <span class="ph-n">Фаза 1</span>
+    <span class="ph-title">Фундамент: что такое автономия и из чего собран оркестратор</span>
+  </div>
+  <div class="phase-cards">
+<a class="lcard-ph" href="lesson-01.html">
   <div class="sec-head">
     <span class="idx">01</span>
     <h2>Зрелость автономии</h2>
@@ -331,11 +394,10 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
   <div class="tagline">Уровень агента — не его способности</div>
   <div class="card-meta">
     <div class="meta-item"><span class="k">Инцидент</span>Replit: агент удалил промышленную базу данных</div>
-    <div class="meta-item"><span class="k">В стержень</span>Оси динамичности и полномочий</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
-<a class="lcard" href="lesson-02.html">
+<a class="lcard-ph" href="lesson-02.html">
   <div class="sec-head">
     <span class="idx">02</span>
     <h2>Примитивы и опорный стержень</h2>
@@ -344,11 +406,19 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
   <div class="tagline">Из чего собран оркестратор</div>
   <div class="card-meta">
     <div class="meta-item"><span class="k">Инцидент</span>Anthropic: рой из 50 подагентов</div>
-    <div class="meta-item"><span class="k">В стержень</span>12 примитивов с контрактами</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
-<a class="lcard" href="lesson-03.html">
+  </div>
+</div>
+<div class="phase-block">
+  <div class="phase-head">
+    <span class="ph-icon">◆</span>
+    <span class="ph-n">Фаза 2</span>
+    <span class="ph-title">Ядро исполнения: жизненный цикл задачи и инженерия контекста</span>
+  </div>
+  <div class="phase-cards">
+<a class="lcard-ph" href="lesson-03.html">
   <div class="sec-head">
     <span class="idx">03</span>
     <h2>Жизненный цикл задачи</h2>
@@ -357,11 +427,10 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
   <div class="tagline">Надёжность поверх недетерминированной языковой модели</div>
   <div class="card-meta">
     <div class="meta-item"><span class="k">Инцидент</span>Replit: накопление ошибок + нет восстановления</div>
-    <div class="meta-item"><span class="k">В стержень</span>Машина состояний, идемпотентность, журнал событий</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
-<a class="lcard" href="lesson-04.html">
+<a class="lcard-ph" href="lesson-04.html">
   <div class="sec-head">
     <span class="idx">04</span>
     <h2>Инженерия контекста</h2>
@@ -370,11 +439,19 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
   <div class="tagline">Контекст — бюджет внимания, а не хранилище</div>
   <div class="card-meta">
     <div class="meta-item"><span class="k">Инцидент</span>Du et al.: деградация даже при идеальном поиске</div>
-    <div class="meta-item"><span class="k">В стержень</span>Сборщик контекста (бюджет + 4 операции)</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
-<a class="lcard" href="lesson-05.html">
+  </div>
+</div>
+<div class="phase-block">
+  <div class="phase-head">
+    <span class="ph-icon">◈</span>
+    <span class="ph-n">Фаза 3</span>
+    <span class="ph-title">Контроль и безопасность: права, политики, оценка и верификатор</span>
+  </div>
+  <div class="phase-cards">
+<a class="lcard-ph" href="lesson-05.html">
   <div class="sec-head">
     <span class="idx">05</span>
     <h2>Инструменты, права и политика</h2>
@@ -383,11 +460,10 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
   <div class="tagline">Агент предлагает — система решает</div>
   <div class="card-meta">
     <div class="meta-item"><span class="k">Инцидент</span>Взлом Мексики: 195 млн записей / EchoLeak</div>
-    <div class="meta-item"><span class="k">В стержень</span>Движок политик с учётом доверия</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
-<a class="lcard" href="lesson-06.html">
+<a class="lcard-ph" href="lesson-06.html">
   <div class="sec-head">
     <span class="idx">06</span>
     <h2>Оценка, верификатор и траектория</h2>
@@ -396,11 +472,19 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
   <div class="tagline">Финального ответа недостаточно</div>
   <div class="card-meta">
     <div class="meta-item"><span class="k">Инцидент</span>WebArena: 14% / tau-bench: менее 50% + pass^k</div>
-    <div class="meta-item"><span class="k">В стержень</span>Верификатор + оснастка оценки (pass^k)</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
-<a class="lcard" href="lesson-07.html">
+  </div>
+</div>
+<div class="phase-block">
+  <div class="phase-head">
+    <span class="ph-icon">◎</span>
+    <span class="ph-n">Фаза 4</span>
+    <span class="ph-title">Знание и наблюдаемость: память, поиск, трассировка</span>
+  </div>
+  <div class="phase-cards">
+<a class="lcard-ph" href="lesson-07.html">
   <div class="sec-head">
     <span class="idx">07</span>
     <h2>Память и жизненный цикл знания</h2>
@@ -409,11 +493,10 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
   <div class="tagline">Что агент хранит и чему верит</div>
   <div class="card-meta">
     <div class="meta-item"><span class="k">Инцидент</span>Отравление памяти — эксплойт, который ждёт</div>
-    <div class="meta-item"><span class="k">В стержень</span>Управление памятью (шлюз записи/происхождение/доверие)</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
-<a class="lcard" href="lesson-08.html">
+<a class="lcard-ph" href="lesson-08.html">
   <div class="sec-head">
     <span class="idx">08</span>
     <h2>Поиск: RAG, гибридный и графовый</h2>
@@ -422,11 +505,10 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
   <div class="tagline">Привязка к источнику, а не семантическая похожесть</div>
   <div class="card-meta">
     <div class="meta-item"><span class="k">Инцидент</span>Stanford: юридический RAG ошибается в 17–33% случаев</div>
-    <div class="meta-item"><span class="k">В стержень</span>Конвейер поиска + привязка к источнику</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
-<a class="lcard" href="lesson-09.html">
+<a class="lcard-ph" href="lesson-09.html">
   <div class="sec-head">
     <span class="idx">09</span>
     <h2>Наблюдаемость и воспроизводимость</h2>
@@ -435,11 +517,19 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
   <div class="tagline">Видеть то, что нельзя повторить</div>
   <div class="card-meta">
     <div class="meta-item"><span class="k">Инцидент</span>Replit: тихий отказ + невоспроизводимость</div>
-    <div class="meta-item"><span class="k">В стержень</span>Слой трассировки + детерминированное воспроизведение</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
-<a class="lcard" href="lesson-10.html">
+  </div>
+</div>
+<div class="phase-block">
+  <div class="phase-head">
+    <span class="ph-icon">⬡</span>
+    <span class="ph-n">Фаза 5</span>
+    <span class="ph-title">Масштаб: внедрение, мультиагентность, человек в цикле</span>
+  </div>
+  <div class="phase-cards">
+<a class="lcard-ph" href="lesson-10.html">
   <div class="sec-head">
     <span class="idx">10</span>
     <h2>Безопасность: внедрение и модель угроз</h2>
@@ -448,11 +538,10 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
   <div class="tagline">Почему фильтры не спасают</div>
   <div class="card-meta">
     <div class="meta-item"><span class="k">Инцидент</span>Nasr: защиты обойдены более чем на 90%, человек — 100%</div>
-    <div class="meta-item"><span class="k">В стержень</span>Модель угроз + правило двух</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
-<a class="lcard" href="lesson-11.html">
+<a class="lcard-ph" href="lesson-11.html">
   <div class="sec-head">
     <span class="idx">11</span>
     <h2>Мультиагентность: MCP и A2A</h2>
@@ -461,11 +550,10 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
   <div class="tagline">MCP — вертикаль, A2A — горизонталь</div>
   <div class="card-meta">
     <div class="meta-item"><span class="k">Инцидент</span>Anthropic: +90.2% / ×15 токенов / MAST 37%</div>
-    <div class="meta-item"><span class="k">В стержень</span>Координация, протоколы и правило двух на подагентов</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
-<a class="lcard" href="lesson-12.html">
+<a class="lcard-ph" href="lesson-12.html">
   <div class="sec-head">
     <span class="idx">12</span>
     <h2>Человек в цикле и модель эксплуатации</h2>
@@ -474,11 +562,19 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
   <div class="tagline">Надзор, не вырождающийся в формальность</div>
   <div class="card-meta">
     <div class="meta-item"><span class="k">Инцидент</span>Air Canada: компания отвечает за слова бота</div>
-    <div class="meta-item"><span class="k">В стержень</span>Эскалация + RACI (ответственный — человек)</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
-<a class="lcard" href="lesson-13.html">
+  </div>
+</div>
+<div class="phase-block">
+  <div class="phase-head">
+    <span class="ph-icon">◉</span>
+    <span class="ph-n">Фаза 6</span>
+    <span class="ph-title">Производство: экономика, готовность и передний край</span>
+  </div>
+  <div class="phase-cards">
+<a class="lcard-ph" href="lesson-13.html">
   <div class="sec-head">
     <span class="idx">13</span>
     <h2>Экономика и готовность к производству</h2>
@@ -487,11 +583,10 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
   <div class="tagline">Реальная цена = вывод + проверка + отказ</div>
   <div class="card-meta">
     <div class="meta-item"><span class="k">Инцидент</span>Amazon Q: 6.3 млн потерянных заказов</div>
-    <div class="meta-item"><span class="k">В стержень</span>Полный чертёж + модель затрат + шлюз готовности</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
-<a class="lcard" href="lesson-14.html">
+<a class="lcard-ph" href="lesson-14.html">
   <div class="sec-head">
     <span class="idx">14</span>
     <h2>Передний край и сканирование горизонта</h2>
@@ -500,11 +595,11 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
   <div class="tagline">Не догонять тенденции, а оценивать их</div>
   <div class="card-meta">
     <div class="meta-item"><span class="k">Инцидент</span>Даже tau-bench и SWE-bench устаревают</div>
-    <div class="meta-item"><span class="k">В стержень</span>Протокол сканирования горизонта (защита от устаревания)</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
-    </div>
+  </div>
+</div>
 
     <footer id="footer">
       <p class="k">Прод отличается от демо наличием всех инвариантов опорного стержня, положительной удельной экономикой и

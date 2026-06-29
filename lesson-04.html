@@ -44,8 +44,11 @@ a:hover{text-decoration-color:var(--clay);}
 .sidebar nav a.active{background:var(--paper);border-left-color:var(--clay);color:var(--slate);
   box-shadow:0 1px 0 var(--g200);}
 .sidebar nav a.active .n{color:var(--clay);}
+.sidebar nav a.phase-lead{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--clay-d);margin-top:12px;padding-bottom:2px;pointer-events:none;border-left:2px solid var(--oat);}
 .sidebar nav a.lead{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;
   color:var(--g500);margin-top:14px;padding-bottom:2px;pointer-events:none;}
+.sidebar nav a.phase-lesson{padding-left:22px;}
 
 /* main reading column */
 main{max-width:840px;padding:0 0 140px;min-width:0;}
@@ -62,6 +65,71 @@ h1.title em{font-style:italic;color:var(--clay);}
 .disclaimer{margin:22px 0 0;padding:14px 18px;background:var(--g100);border-radius:12px;
   border:1.5px solid var(--g200);font-size:13.5px;color:var(--g700);max-width:660px;}
 .disclaimer b{color:var(--slate);}
+
+/* ---- phase structure on index ---- */
+.phase-block{margin:38px 0 0;}
+.phase-block:first-child{margin-top:18px;}
+.phase-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--g200);}
+.phase-head .ph-n{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--clay);min-width:50px;}
+.phase-head .ph-icon{font-size:16px;}
+.phase-head .ph-title{font-family:var(--serif);font-weight:500;font-size:19px;color:var(--slate);letter-spacing:-.008em;}
+.phase-cards{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;}
+a.lcard-ph{display:block;text-decoration:none;color:inherit;background:var(--paper);border:1.5px solid var(--g300);
+  border-radius:12px;padding:16px 20px;transition:border-color .15s,box-shadow .15s,transform .15s;}
+a.lcard-ph:hover{border-color:var(--slate);box-shadow:0 6px 24px rgba(20,20,19,.06);transform:translateY(-1px);}
+a.lcard-ph .sec-head h2{font-size:19px;}
+
+/* ---- progress bar ---- */
+.progress-wrap{margin:0 0 18px;}
+.progress-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--g500);
+  margin-bottom:4px;display:flex;justify-content:space-between;}
+.progress-bar{height:4px;background:var(--g200);border-radius:4px;overflow:hidden;}
+.progress-bar .fill{height:100%;background:var(--clay);border-radius:4px;transition:width .4s;}
+
+/* ---- callout boxes (auto-detected in rendered HTML) ---- */
+.callout{margin:22px 0;padding:16px 20px;border-radius:12px;border:1.5px solid var(--g200);font-size:15px;line-height:1.55;}
+.callout .cl-head{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;
+  display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.callout .cl-head::before{content:"";width:8px;height:8px;border-radius:3px;}
+.callout p{margin:6px 0;}
+.callout p:first-child{margin-top:0;}
+.callout p:last-child{margin-bottom:0;}
+
+.callout.cl-key{background:var(--paper);border-color:var(--clay);border-left-width:4px;}
+.callout.cl-key .cl-head{color:var(--clay-d);}
+.callout.cl-key .cl-head::before{background:var(--clay);}
+
+.callout.cl-thesis{background:var(--paper);border-color:var(--slate);border-left-width:4px;box-shadow:0 2px 12px rgba(20,20,19,.06);}
+.callout.cl-thesis .cl-head{color:var(--slate);}
+.callout.cl-thesis .cl-head::before{background:var(--slate);}
+
+.callout.cl-warn{background:#FFF8F3;border-color:#e8a860;border-left-width:4px;}
+.callout.cl-warn .cl-head{color:#a06020;}
+.callout.cl-warn .cl-head::before{background:#e8a860;}
+
+.callout.cl-tip{background:#F5FAF0;border-color:var(--olive);border-left-width:4px;}
+.callout.cl-tip .cl-head{color:var(--olive);}
+.callout.cl-tip .cl-head::before{background:var(--olive);}
+
+.callout.cl-recall{background:var(--g100);border-color:var(--g300);border-style:dashed;}
+.callout.cl-recall .cl-head{color:var(--g500);}
+.callout.cl-recall .cl-head::before{background:var(--g300);}
+
+.callout.cl-deep{background:var(--g100);border-color:var(--g300);}
+.callout.cl-deep .cl-head{color:var(--g500);font-size:10px;}
+.callout.cl-deep .cl-head::before{background:var(--g500);}
+
+.callout.cl-check{margin-top:28px;background:linear-gradient(135deg,#F5FAF0,var(--paper));border-color:var(--olive);}
+.callout.cl-check .cl-head{color:var(--olive);}
+.callout.cl-check .cl-head::before{background:var(--olive);}
+.callout.cl-check ul{list-style:none;padding-left:0;}
+.callout.cl-check li{margin:6px 0;padding-left:22px;position:relative;font-size:14px;}
+.callout.cl-check li::before{content:"\2713";position:absolute;left:0;color:var(--olive);font-weight:700;}
+
+/* ---- section break visual ---- */
+.section-break{margin:40px 0 28px;display:flex;align-items:center;gap:14px;}
+.section-break::before,.section-break::after{content:"";flex:1;height:1px;background:var(--g200);}
+.section-break .sb-dot{width:7px;height:7px;background:var(--clay);border-radius:50%;opacity:.5;}
 
 /* feature panel (spine) */
 .panel{margin:40px 0 0;background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;
@@ -85,25 +153,6 @@ ol.inv li b{color:var(--slate);font-weight:600;}
 .section-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
   color:var(--g500);margin:64px 0 6px;display:flex;align-items:center;gap:10px;}
 .section-label::before{content:"";width:20px;height:1.5px;background:var(--clay);}
-
-/* lessons / accordion */
-section.lesson{margin-top:18px;scroll-margin-top:14px;}
-details.les{background:var(--paper);border:1.5px solid var(--g300);border-radius:14px;overflow:hidden;
-  transition:border-color 150ms,box-shadow 150ms;}
-details.les[open]{border-color:var(--slate);box-shadow:0 8px 30px rgba(20,20,19,.07);}
-details.les summary{list-style:none;cursor:pointer;padding:20px 22px;display:block;}
-details.les summary::-webkit-details-marker{display:none;}
-.sec-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;}
-.sec-head .idx{font-family:var(--mono);font-size:13px;color:var(--clay);font-weight:600;min-width:26px;}
-.sec-head h2{font-family:var(--serif);font-weight:500;font-size:23px;margin:0;letter-spacing:-.01em;flex:1;min-width:0;}
-.tagline{color:var(--g700);font-size:14px;margin:3px 0 0 40px;}
-.card-meta{margin:13px 0 0 40px;display:grid;gap:5px;}
-.meta-item{font-size:13px;color:var(--g700);}
-.meta-item .k{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;
-  color:var(--g500);margin-right:8px;}
-.expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(--mono);font-size:11px;
-  color:var(--clay);}
-details.les[open] .expand-hint{display:none;}
 
 /* maturity badges */
 .badge{font-family:var(--mono);font-size:10.5px;padding:3px 9px;border-radius:999px;white-space:nowrap;
@@ -143,16 +192,18 @@ details.les[open] .expand-hint{display:none;}
 .lesson-body a{word-break:break-word;}
 .lesson-body em{color:var(--g700);}
 
+/* ---- lesson learning objectives (extracted from "Чему вы научитесь") ---- */
+.learn-obj{margin:10px 0 26px;padding:18px 22px;background:var(--g100);border-radius:12px;border:1.5px solid var(--g200);}
+.learn-obj .lo-head{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--g500);margin-bottom:10px;}
+.learn-obj ul{padding-left:0;list-style:none;}
+.learn-obj li{position:relative;padding-left:22px;margin:7px 0;font-size:14.5px;color:var(--g700);}
+.learn-obj li::before{content:"\25C6";position:absolute;left:0;color:var(--clay);font-size:10px;top:2px;}
+
 /* footer */
 footer{margin:80px 0 0;border-top:1.5px solid var(--g300);padding-top:30px;font-size:13px;
   color:var(--g500);scroll-margin-top:16px;}
 footer .k{font-family:var(--serif);font-style:italic;color:var(--g700);font-size:15px;}
 footer p{margin:8px 0;max-width:680px;}
-
-.toolbar{display:flex;gap:10px;margin:22px 0 0 40px;}
-.toolbar button{font-family:var(--mono);font-size:11px;background:var(--paper);border:1.5px solid var(--g300);
-  color:var(--g700);border-radius:999px;padding:6px 13px;cursor:pointer;}
-.toolbar button:hover{border-color:var(--slate);color:var(--slate);}
 
 /* ---- multipage: lesson cards on index + lesson pages ---- */
 .side-brand-link{text-decoration:none;color:inherit;display:block;}
@@ -255,19 +306,24 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <a class="lead">Карта</a>
 <a href="index.html#spine"><span class="n">◆</span>Опорный стержень</a>
 <a href="index.html#how"><span class="n">?</span>Как читать</a>
-<a class="lead">Уроки</a>
+<a class="phase-lead">Фаза 1</a>
 <a href="lesson-01.html"><span class="n">01</span>Зрелость автономии</a>
 <a href="lesson-02.html"><span class="n">02</span>Примитивы и опорный стержень</a>
+<a class="phase-lead">Фаза 2</a>
 <a href="lesson-03.html"><span class="n">03</span>Жизненный цикл задачи</a>
 <a href="lesson-04.html" class="active"><span class="n">04</span>Инженерия контекста</a>
+<a class="phase-lead">Фаза 3</a>
 <a href="lesson-05.html"><span class="n">05</span>Инструменты, права и политика</a>
 <a href="lesson-06.html"><span class="n">06</span>Оценка, верификатор и траектория</a>
+<a class="phase-lead">Фаза 4</a>
 <a href="lesson-07.html"><span class="n">07</span>Память и жизненный цикл знания</a>
 <a href="lesson-08.html"><span class="n">08</span>Поиск: RAG, гибридный и графовый</a>
 <a href="lesson-09.html"><span class="n">09</span>Наблюдаемость и воспроизводимость</a>
+<a class="phase-lead">Фаза 5</a>
 <a href="lesson-10.html"><span class="n">10</span>Безопасность: внедрение и модель угроз</a>
 <a href="lesson-11.html"><span class="n">11</span>Мультиагентность: MCP и A2A</a>
 <a href="lesson-12.html"><span class="n">12</span>Человек в цикле и модель эксплуатации</a>
+<a class="phase-lead">Фаза 6</a>
 <a href="lesson-13.html"><span class="n">13</span>Экономика и готовность к производству</a>
 <a href="lesson-14.html"><span class="n">14</span>Передний край и сканирование горизонта</a>
 <a class="lead">Конец</a>
@@ -277,8 +333,12 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 
   <main>
     <div class="crumb"><a href="index.html">← Все уроки</a></div>
+    <div class="progress-wrap">
+  <div class="progress-label"><span>Прогресс курса</span><span>4/14 уроков</span></div>
+  <div class="progress-bar"><div class="fill" style="width:29%"></div></div>
+</div>
     <header class="lesson-head">
-      <div class="eyebrow">Урок 04<span class="badge b-core" style="margin-left:6px">[устоявшееся] деградация</span></div>
+      <div class="eyebrow">Урок 04<span class="badge b-core" style="margin-left:6px">[устоявшееся] деградация</span><span style="font-size:11px;color:var(--g500);margin-left:8px;">Фаза 2: Ядро исполнения: жизненный цикл задачи и инженерия контекста</span></div>
       <h1 class="title">Инженерия контекста</h1>
       <p class="lede">Контекст — бюджет внимания, а не хранилище</p>
       <div class="card-meta">
@@ -293,6 +353,13 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 выгрузка (offloading), извлечение по требованию (just-in-time retrieval), изоляция (isolation)) — <strong>[формирующееся]</strong>, практикуются в проде. ЧПЗ (Читай-Планируй-Запоминай, RLM) —
 <strong>[формирующееся]</strong> (есть статья + независимая репликация, но не дефолт). Опирается на context-builder
 примитив (урок 2) и накопление ошибок (compounding error) (урок 3).</p></div>
+      <div class="learn-obj"><div class="lo-head">В ЭТОМ УРОКЕ</div><ul>
+<li>Понимать, почему «больше контекста» не означает «лучше»: эмпирические доказательства деградации от длины.</li>
+<li>Применять четыре операции инженерии контекста: сжатие, выгрузку, извлечение по требованию, изоляцию.</li>
+<li>Диагностировать режимы отказа: деградацию контекста, потерю середины, потерю деталей при сжатии, накопление ошибок, отравление контекста.</li>
+<li>Реализовать сборщик контекста с жёстким бюджетом токенов, провенансом и защитой от отравления.</li>
+<li>Выбирать стратегию под задачу: сжатие, ЧПЗ или изоляция — со знанием цены каждой.</li>
+</ul></div>
 <hr />
 <h3>Чему вы научитесь</h3>
 <ul>
@@ -303,6 +370,7 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <li>Выбирать стратегию под задачу: сжатие, ЧПЗ или изоляция — со знанием цены каждой.</li>
 </ul>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 
 <div class="cw" id="w-kv">
   <div class="cw-head"><span class="tag">Интерактив</span><span class="ttl">Окно контекста и KV-кэш</span></div>
@@ -373,14 +441,15 @@ LLM на каждом шаге так, чтобы модель работала 
 контекста» эмпирически неверна. Это связующий этап: память (7) и извлечение (8) — это, по сути, <strong>решения
 проблемы контекста</strong>, и мы здесь задаём рамку, в которую они встанут.</p>
 <p>Две мысли, которые урок должен оставить:</p>
-<blockquote>
-<p><strong>(1)</strong> Контекст — это <strong>бюджет внимания, а не хранилище</strong>. Больше токенов ≠ лучше; качество падает от
+<div class="callout cl-key"><div class="cl-head">КЛЮЧЕВАЯ МЫСЛЬ</div><p>
+<strong>(1)</strong> Контекст — это <strong>бюджет внимания, а не хранилище</strong>. Больше токенов ≠ лучше; качество падает от
 самой длины, даже при идеальном извлечении. Инженерия контекста — это управление дефицитным вниманием.
 <strong>(2)</strong> На длинном горизонте ошибки <strong>компаундятся</strong>: деградация контекста + потеря деталей при сжатии + ошибка
 шага накладываются. Лечится не «окном побольше», а архитектурой сборки контекста + промежуточными
-проверками.</p>
-</blockquote>
+проверками.
+</p></div>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>1. Разбор инцидента</h3>
 <p>Наивная инженерная модель: «у модели окно 200K–1M токенов → засунь туда всё нужное (или достань хорошим
 извлечением) → модель разберётся». Три независимых результата 2025 года показывают, что это <strong>ложно</strong>:</p>
@@ -409,6 +478,7 @@ M+, точные числа ЧПЗ «+130%»; они в карантине, §9.
 <p>Эмпирическая картина ясна: размер вредит. Теперь необходимо понять, как именно собирать контекст, чтобы
 минимизировать этот вред.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>2. От наивного контекста к управлению вниманием</h3>
 <h4>2.1 Наивно</h4>
 <pre><code class="language-python">context = system_prompt + full_history + all_tool_outputs + everything_retrieved
@@ -454,6 +524,7 @@ response = llm(context)   # «окно большое, влезет»
 <p>Четыре операции покрывают основные боли, но каждая имеет свою цену. Следующий шаг — сопоставить их
 систематически.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>3. Карта решений</h3>
 <table>
 <thead>
@@ -529,6 +600,7 @@ response = llm(context)   # «окно большое, влезет»
 </ul>
 <p>Карта решений — это выбор. Но за каждой стратегией стоят конкретные механизмы отказа, которые и определяют цену.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>4. Режимы отказа</h3>
 <table>
 <thead>
@@ -575,6 +647,7 @@ response = llm(context)   # «окно большое, влезет»
 детали при сжатии на шаге M». Разбор инцидента (Du/OOLONG/Chroma) = эмпирическая база первых двух строк.</p>
 <p>Режимы отказа задают требования к сборщику контекста. Переведём их в контракт.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>5. Опорный стержень</h3>
 <p>Наполняем <code>ContextBuilder</code> из урока 2. Контекст собирается <strong>под бюджет токенов</strong>, с явными операциями и
 провенансом (для борьбы с отравлением).</p>
@@ -613,6 +686,7 @@ class ContextBuilder(Protocol):
 — точка прерывания при низком доверии сборки. Context-builder — узел, где сходятся почти все примитивы.</p>
 <p>Контракт зафиксирован. Теперь реализуем его в коде, проверив инварианты тестами.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>6. Практикум</h3>
 <p><strong>Задача.</strong> Реализовать <code>build</code> с (а) жёстким бюджетом токенов; (б) сжатием с пометкой потерь; (в)
 провенансом/доверием (анти-отравление); (г) переупорядочиванием важного к краям.</p>
@@ -659,6 +733,7 @@ def test_eviction_drops_low_priority_first():
 токены — операционализация разбора инцидента.</p>
 <p>Код проверяет инварианты. Но инженерное суждение проверяется не только реализацией.</p>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>7. Вопросы на суждение</h3>
 <ol>
 <li>Коллега предлагает решить проблему переходом на модель с окном 1M токенов «чтобы всё влезало». По §1 —
@@ -675,6 +750,7 @@ def test_eviction_drops_low_priority_first():
    когда вставить промежуточную верификацию. Чем её можно обмануть?</li>
 </ol>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>8. Глоссарий</h3>
 <ul>
 <li><strong>Контекст как бюджет внимания</strong> — окно LLM ограничено не только ёмкостью, но и <em>способностью</em> им
@@ -697,6 +773,7 @@ def test_eviction_drops_low_priority_first():
   строится из неё.</li>
 </ul>
 <hr />
+<div class="section-break"><span class="sb-dot"></span></div>
 <h3>9. Первоисточники</h3>
 <ol>
 <li><strong>Du et al. — «Context Length Alone Hurts LLM Performance Despite Perfect Retrieval»</strong>, arXiv 2510.05381,
