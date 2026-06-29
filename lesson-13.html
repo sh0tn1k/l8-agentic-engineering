@@ -168,6 +168,32 @@ ol.inv li b{color:var(--slate);font-weight:600;}
 .lesson-body .status{font-size:13px;color:var(--g700);background:var(--g100);border-radius:10px;
   padding:12px 15px;margin:18px 0 8px;border:1px solid var(--g200);}
 .lesson-body h3{font-family:var(--serif);font-weight:600;font-size:21px;margin:32px 0 8px;letter-spacing:-.008em;}
+/* ---- section role badges ---- */
+.srole{font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:5px;margin-left:8px;
+  vertical-align:middle;white-space:nowrap;font-weight:500;letter-spacing:.06em;}
+.srole-core{background:#EEF1E9;color:#3f5430;border:1px solid #C3D1AE;}
+.srole-example{background:#EFF3FA;color:#3a5080;border:1px solid #B8C9E8;}
+.srole-tool{background:#F5EEF7;color:#5a3f6e;border:1px solid #C9B8D8;}
+.srole-ref{background:var(--g100);color:var(--g500);border:1px solid var(--g300);font-style:italic;}
+.srole-dispute{background:#FAF3E2;color:#8a6d1f;border:1px solid #E6D08C;}
+.srole-warn{background:#FBE9E6;color:#a23b28;border:1px solid #E9B4A8;}
+.srole-context{background:var(--g100);color:var(--g700);border:1px solid var(--g200);}
+.srole-check{background:#F5FAF0;color:var(--olive);border:1px solid #C3D1AE;}
+
+/* ---- collapsible reference sections ---- */
+details.ref-collapse{margin:28px 0;}
+details.ref-collapse summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;}
+details.ref-collapse summary::-webkit-details-marker{display:none;}
+details.ref-collapse summary::before{content:"+";font-family:var(--mono);font-size:14px;color:var(--g500);
+  width:20px;text-align:center;transition:transform .2s;}
+details.ref-collapse[open] summary::before{content:"\2212";}
+details.ref-collapse summary h3{margin:0!important;}
+
+/* ---- table essence preview ---- */
+.table-essence{margin:18px 0 4px;padding:8px 14px;background:var(--g100);border-radius:8px;border:1px solid var(--g200);
+  font-size:12.5px;color:var(--g700);line-height:1.5;}
+.table-essence .te-label{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--clay);margin-right:6px;}
 .lesson-body h4{font-family:var(--serif);font-weight:600;font-size:17px;margin:22px 0 6px;color:var(--g700);}
 .lesson-body h5{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;
   color:var(--g500);margin:18px 0 6px;}
@@ -371,7 +397,7 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 </ul>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>0. Зачем этот урок</h3>
+<h3>0. Зачем этот урок <span class="srole srole-context">КОНТЕКСТ</span></h3>
 <p>Двенадцать этапов мы собирали примитивы. Урок 1 задал вопрос: <strong>чем работающая в проде L8-система
 отличается от демо?</strong> Теперь, имея весь опорный стержень, мы отвечаем — через <strong>экономику</strong> (сколько на самом деле
 стоит агент) и <strong>готовность к промышленной эксплуатации</strong> (что должно присутствовать, чтобы запускать). Это итоговый проект: здесь
@@ -388,7 +414,7 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <p>Чтобы понять, почему экономика — ключевой вопрос, начнём с реального инцидента, где стоимость отказа в масштабе перевесила стоимость вывода на порядки.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>1. Разбор инцидента</h3>
+<h3>1. Разбор инцидента <span class="srole srole-example">ПРИМЕР</span></h3>
 <p>Декабрь 2025. Внутренний ИИ-агент Amazon (Amazon Q) <strong>не написал плохой код</strong> — он дал <strong>уверенно неверный
 совет</strong>, неправильно поняв <strong>устаревшую внутреннюю документацию</strong>. Результат: каскад ошибок, <strong>~6.3 млн
 потерянных заказов</strong> и многочасовой простой клиентского сервиса.
@@ -454,7 +480,8 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <p>Вооружённые пониманием истинной стоимости, перейдём к практическим решениям: что выбирать и с какими компромиссами.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>3. Карта решений</h3>
+<h3>3. Карта решений <span class="srole srole-tool">ИНСТРУМЕНТ</span></h3>
+<div class="table-essence"><span class="te-label">ОХВАТ ТАБЛИЦЫ</span> Решение · Когда · Цена · Надёжность · Один вызов большой языковой модели (LLM) и ещё 1</div>
 <table>
 <thead>
 <tr>
@@ -522,7 +549,8 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <p>Зная решения и их цену, посмотрим, как эти выборы ломаются на практике — через призму всего курса.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>4. Режимы отказа</h3>
+<h3>4. Режимы отказа <span class="srole srole-core">ОСНОВНОЕ</span></h3>
+<div class="table-essence"><span class="te-label">ОХВАТ ТАБЛИЦЫ</span> Отказ · Механизм · Чем закрывается (примитив опорного стержня) · Уверенно-неверно в масштабе · уверенно неверно из устаревших данных (Amazon Q, 6.3M заказов) и ещё 2</div>
 <table>
 <thead>
 <tr>
@@ -569,7 +597,7 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <p>Поняв, как отказы закрываются примитивами, соберём всё в единый проект.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>5. Опорный стержень</h3>
+<h3>5. Опорный стержень <span class="srole srole-core">ОСНОВНОЕ</span></h3>
 <p>Итоговый проект — здесь опорный стержень собирается целиком. Каждый примитив со своим инвариантом + сквозные контракты +
 экономический слой.</p>
 <pre><code class="language-python"># === L8+ REFERENCE BLUEPRINT (сборка уроков 2–13) ===
@@ -615,7 +643,7 @@ class ProductionReadinessGate(Protocol):
 <p>Имея проект в коде, закрепим понимание практикумом.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>6. Практикум</h3>
+<h3>6. Практикум <span class="srole srole-tool">ПРАКТИКУМ</span></h3>
 <p><strong>Задача.</strong> Реализовать (а) стоимость успешной задачи с учётом верификации и отказов; (б) уровень готовности,
 блокирующий развёртывание при дырах в опорном стержне. Доказать: дешёвый-ненадёжный агент проигрывает дорогому-надёжному;
 без аварийного отключения/верификатора система не готова к промышленной эксплуатации.</p>
@@ -664,7 +692,7 @@ def test_full_spine_is_production_ready():
 <p>Проверив кодом, проверим и суждением.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>7. Вопросы на суждение</h3>
+<h3>7. Вопросы на суждение <span class="srole srole-check">ПРОВЕРКА</span></h3>
 <ol>
 <li>Агент дёшев ($0.02/задача), но ошибается в 10% и каждая ошибка стоит дорого (Amazon-Q-класс). По §2 —
    как посчитать настоящую цену и почему стоимость задачи вводит в заблуждение?</li>
@@ -682,7 +710,7 @@ def test_full_spine_is_production_ready():
 <p>Закрепим терминологию урока в глоссарии.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>8. Глоссарий</h3>
+<details class="ref-collapse" open><summary><h3>8. Глоссарий <span class="srole srole-ref">СПРАВКА</span></h3></summary>
 <ul>
 <li><strong>Стоимость вывода, верификации и отказов</strong> — три компонента настоящей цены: токены × шаги / проверка (оценки + человек в контуре) / вероятность отказа × ущерб. Доминирует не первый.</li>
 <li><strong>Стоимость успешной задачи</strong> — общая стоимость / доля успеха; правильная удельная метрика (не стоимость задачи).</li>
@@ -699,7 +727,7 @@ def test_full_spine_is_production_ready():
 </ul>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>9. Первоисточники</h3>
+</details><details class="ref-collapse"><summary><h3>9. Первоисточники <span class="srole srole-ref">СПРАВКА</span></h3></summary>
 <ol>
 <li><strong>Amazon Q retail outages</strong> — Wharton Accountable AI Lab + vectara/awesome-agent-failures (case study):
    уверенно-неверно из устаревшей документации → ~6.3 млн потерянных заказов, многочасовой простой.
@@ -742,7 +770,7 @@ def test_full_spine_is_production_ready():
 показывает доминирование стоимости отказа над стоимостью вывода. Этап собрал весь опорный стержень в проект, ввёл
 удельную экономику (стоимость успешной задачи) и уровень готовности к промышленной эксплуатации как ответ на вопрос урока 1. Уровень
 подтвердил Amazon Q и Mata v. Avianca, опёрся на уже верифицированные MIT/Gartner/Anthropic/бенчмарки и
-срезал числа практиков без источника + поправил «6.3M заказов ≠ $6.3M» и атрибуцию ChatDev.</em></p>
+срезал числа практиков без источника + поправил «6.3M заказов ≠ $6.3M» и атрибуцию ChatDev.</em></p></details>
     </div>
     <nav class="pager">
       <a class="pg-prev" href="lesson-12.html"><span class="pk">← Урок 12</span>Человек в цикле и модель эксплуатации</a>

@@ -168,6 +168,32 @@ ol.inv li b{color:var(--slate);font-weight:600;}
 .lesson-body .status{font-size:13px;color:var(--g700);background:var(--g100);border-radius:10px;
   padding:12px 15px;margin:18px 0 8px;border:1px solid var(--g200);}
 .lesson-body h3{font-family:var(--serif);font-weight:600;font-size:21px;margin:32px 0 8px;letter-spacing:-.008em;}
+/* ---- section role badges ---- */
+.srole{font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:5px;margin-left:8px;
+  vertical-align:middle;white-space:nowrap;font-weight:500;letter-spacing:.06em;}
+.srole-core{background:#EEF1E9;color:#3f5430;border:1px solid #C3D1AE;}
+.srole-example{background:#EFF3FA;color:#3a5080;border:1px solid #B8C9E8;}
+.srole-tool{background:#F5EEF7;color:#5a3f6e;border:1px solid #C9B8D8;}
+.srole-ref{background:var(--g100);color:var(--g500);border:1px solid var(--g300);font-style:italic;}
+.srole-dispute{background:#FAF3E2;color:#8a6d1f;border:1px solid #E6D08C;}
+.srole-warn{background:#FBE9E6;color:#a23b28;border:1px solid #E9B4A8;}
+.srole-context{background:var(--g100);color:var(--g700);border:1px solid var(--g200);}
+.srole-check{background:#F5FAF0;color:var(--olive);border:1px solid #C3D1AE;}
+
+/* ---- collapsible reference sections ---- */
+details.ref-collapse{margin:28px 0;}
+details.ref-collapse summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;}
+details.ref-collapse summary::-webkit-details-marker{display:none;}
+details.ref-collapse summary::before{content:"+";font-family:var(--mono);font-size:14px;color:var(--g500);
+  width:20px;text-align:center;transition:transform .2s;}
+details.ref-collapse[open] summary::before{content:"\2212";}
+details.ref-collapse summary h3{margin:0!important;}
+
+/* ---- table essence preview ---- */
+.table-essence{margin:18px 0 4px;padding:8px 14px;background:var(--g100);border-radius:8px;border:1px solid var(--g200);
+  font-size:12.5px;color:var(--g700);line-height:1.5;}
+.table-essence .te-label{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--clay);margin-right:6px;}
 .lesson-body h4{font-family:var(--serif);font-weight:600;font-size:17px;margin:22px 0 6px;color:var(--g700);}
 .lesson-body h5{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;
   color:var(--g500);margin:18px 0 6px;}
@@ -434,7 +460,7 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
   R.querySelector('.o-hist').addEventListener('click',function(){this.dataset.on=this.dataset.on==='append'?'rewrite':'append';render();});
   render();
 })();</script>
-<h3>0. Зачем этот урок</h3>
+<h3>0. Зачем этот урок <span class="srole srole-context">КОНТЕКСТ</span></h3>
 <p>Урок 3 обеспечил, что задача <strong>доходит до конца</strong> несмотря на сбои. Но он молчал о том, что внутри одной
 длинной траектории <strong>качество тихо деградирует</strong> — даже без падений. Этот урок про то, как собрать вход
 LLM на каждом шаге так, чтобы модель работала на пике, и почему наивная интуиция «дай модели больше
@@ -450,7 +476,7 @@ LLM на каждом шаге так, чтобы модель работала 
 </p></div>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>1. Разбор инцидента</h3>
+<h3>1. Разбор инцидента <span class="srole srole-example">ПРИМЕР</span></h3>
 <p>Наивная инженерная модель: «у модели окно 200K–1M токенов → засунь туда всё нужное (или достань хорошим
 извлечением) → модель разберётся». Три независимых результата 2025 года показывают, что это <strong>ложно</strong>:</p>
 <ul>
@@ -479,7 +505,7 @@ M+, точные числа ЧПЗ «+130%»; они в карантине, §9.
 минимизировать этот вред.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>2. От наивного контекста к управлению вниманием</h3>
+<h3>2. От наивного контекста к управлению вниманием <span class="srole srole-core">ОСНОВНОЕ</span></h3>
 <h4>2.1 Наивно</h4>
 <pre><code class="language-python">context = system_prompt + full_history + all_tool_outputs + everything_retrieved
 response = llm(context)   # «окно большое, влезет»
@@ -525,7 +551,8 @@ response = llm(context)   # «окно большое, влезет»
 систематически.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>3. Карта решений</h3>
+<h3>3. Карта решений <span class="srole srole-tool">ИНСТРУМЕНТ</span></h3>
+<div class="table-essence"><span class="te-label">ОХВАТ ТАБЛИЦЫ</span> Стратегия · Идея · Сильная сторона · Цена · Когда брать и ещё 1</div>
 <table>
 <thead>
 <tr>
@@ -601,7 +628,8 @@ response = llm(context)   # «окно большое, влезет»
 <p>Карта решений — это выбор. Но за каждой стратегией стоят конкретные механизмы отказа, которые и определяют цену.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>4. Режимы отказа</h3>
+<h3>4. Режимы отказа <span class="srole srole-core">ОСНОВНОЕ</span></h3>
+<div class="table-essence"><span class="te-label">ОХВАТ ТАБЛИЦЫ</span> Отказ · Механизм · Операция-противоядие · Деградация контекста · качество извлечения падает с ростом длины (даже при perfect retrieval) и ещё 2</div>
 <table>
 <thead>
 <tr>
@@ -648,7 +676,7 @@ response = llm(context)   # «окно большое, влезет»
 <p>Режимы отказа задают требования к сборщику контекста. Переведём их в контракт.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>5. Опорный стержень</h3>
+<h3>5. Опорный стержень <span class="srole srole-core">ОСНОВНОЕ</span></h3>
 <p>Наполняем <code>ContextBuilder</code> из урока 2. Контекст собирается <strong>под бюджет токенов</strong>, с явными операциями и
 провенансом (для борьбы с отравлением).</p>
 <pre><code class="language-python">@dataclass
@@ -687,7 +715,7 @@ class ContextBuilder(Protocol):
 <p>Контракт зафиксирован. Теперь реализуем его в коде, проверив инварианты тестами.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>6. Практикум</h3>
+<h3>6. Практикум <span class="srole srole-tool">ПРАКТИКУМ</span></h3>
 <p><strong>Задача.</strong> Реализовать <code>build</code> с (а) жёстким бюджетом токенов; (б) сжатием с пометкой потерь; (в)
 провенансом/доверием (анти-отравление); (г) переупорядочиванием важного к краям.</p>
 <p><strong>Скелет</strong> (<code>context_builder.py</code>):</p>
@@ -734,7 +762,7 @@ def test_eviction_drops_low_priority_first():
 <p>Код проверяет инварианты. Но инженерное суждение проверяется не только реализацией.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>7. Вопросы на суждение</h3>
+<h3>7. Вопросы на суждение <span class="srole srole-check">ПРОВЕРКА</span></h3>
 <ol>
 <li>Коллега предлагает решить проблему переходом на модель с окном 1M токенов «чтобы всё влезало». По §1 —
    почему это не решит задачу и какой эксперимент Du et al. ты приведёшь как контраргумент?</li>
@@ -751,7 +779,7 @@ def test_eviction_drops_low_priority_first():
 </ol>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>8. Глоссарий</h3>
+<details class="ref-collapse" open><summary><h3>8. Глоссарий <span class="srole srole-ref">СПРАВКА</span></h3></summary>
 <ul>
 <li><strong>Контекст как бюджет внимания</strong> — окно LLM ограничено не только ёмкостью, но и <em>способностью</em> им
   пользоваться; качество падает от длины.</li>
@@ -774,7 +802,7 @@ def test_eviction_drops_low_priority_first():
 </ul>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>9. Первоисточники</h3>
+</details><details class="ref-collapse"><summary><h3>9. Первоисточники <span class="srole srole-ref">СПРАВКА</span></h3></summary>
 <ol>
 <li><strong>Du et al. — «Context Length Alone Hurts LLM Performance Despite Perfect Retrieval»</strong>, arXiv 2510.05381,
    EMNLP 2025 Findings. <a href="https://arxiv.org/abs/2510.05381" target="_blank" rel="noopener">https://arxiv.org/abs/2510.05381</a> — разбор инцидента: деградация от длины при идеальном
@@ -816,7 +844,7 @@ CodeAct / +28.3% на 220B» (точные значения не сверены 
 инцидента). Опорный стержень получил полный контракт context-builder (бюджет + провенанс + 4 операции) — узел, куда
 встанут память и извлечение. §2.3 связал пространственную проблему контекста с временной (накопление ошибок)
 и пробросил мост к верификации (этап 6). Самое аккуратное досье на входе из четырёх — gate в основном
-подтверждал, а не вырезал.</em></p>
+подтверждал, а не вырезал.</em></p></details>
     </div>
     <nav class="pager">
       <a class="pg-prev" href="lesson-03.html"><span class="pk">← Урок 03</span>Жизненный цикл задачи</a>

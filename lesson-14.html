@@ -168,6 +168,32 @@ ol.inv li b{color:var(--slate);font-weight:600;}
 .lesson-body .status{font-size:13px;color:var(--g700);background:var(--g100);border-radius:10px;
   padding:12px 15px;margin:18px 0 8px;border:1px solid var(--g200);}
 .lesson-body h3{font-family:var(--serif);font-weight:600;font-size:21px;margin:32px 0 8px;letter-spacing:-.008em;}
+/* ---- section role badges ---- */
+.srole{font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:5px;margin-left:8px;
+  vertical-align:middle;white-space:nowrap;font-weight:500;letter-spacing:.06em;}
+.srole-core{background:#EEF1E9;color:#3f5430;border:1px solid #C3D1AE;}
+.srole-example{background:#EFF3FA;color:#3a5080;border:1px solid #B8C9E8;}
+.srole-tool{background:#F5EEF7;color:#5a3f6e;border:1px solid #C9B8D8;}
+.srole-ref{background:var(--g100);color:var(--g500);border:1px solid var(--g300);font-style:italic;}
+.srole-dispute{background:#FAF3E2;color:#8a6d1f;border:1px solid #E6D08C;}
+.srole-warn{background:#FBE9E6;color:#a23b28;border:1px solid #E9B4A8;}
+.srole-context{background:var(--g100);color:var(--g700);border:1px solid var(--g200);}
+.srole-check{background:#F5FAF0;color:var(--olive);border:1px solid #C3D1AE;}
+
+/* ---- collapsible reference sections ---- */
+details.ref-collapse{margin:28px 0;}
+details.ref-collapse summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;}
+details.ref-collapse summary::-webkit-details-marker{display:none;}
+details.ref-collapse summary::before{content:"+";font-family:var(--mono);font-size:14px;color:var(--g500);
+  width:20px;text-align:center;transition:transform .2s;}
+details.ref-collapse[open] summary::before{content:"\2212";}
+details.ref-collapse summary h3{margin:0!important;}
+
+/* ---- table essence preview ---- */
+.table-essence{margin:18px 0 4px;padding:8px 14px;background:var(--g100);border-radius:8px;border:1px solid var(--g200);
+  font-size:12.5px;color:var(--g700);line-height:1.5;}
+.table-essence .te-label{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--clay);margin-right:6px;}
 .lesson-body h4{font-family:var(--serif);font-weight:600;font-size:17px;margin:22px 0 6px;color:var(--g700);}
 .lesson-body h5{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;
   color:var(--g500);margin:18px 0 6px;}
@@ -370,7 +396,7 @@ Recency-правило доминирует: любой блок без <strong>
 </ul>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>0. Зачем этот этап другой</h3>
+<h3>0. Зачем этот этап другой <span class="srole srole-context">КОНТЕКСТ</span></h3>
 <p>Уроки 1–13 дали blueprint, устойчивый на годы. Но если выучить «тенденции 2026», знание протухнет за квартал.
 Цель этапа — не список тенденций, а <strong>переносимый навык</strong>: уметь взять любую новую работу/протокол/бенчмарк и
 за час решить — это сигнал или хайп, и меняет ли оно архитектуру из уроков 1–13. Снимок прилагается, но он
@@ -385,7 +411,7 @@ Recency-правило доминирует: любой блок без <strong>
 </p></div>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>1. Разбор инцидента</h3>
+<h3>1. Разбор инцидента <span class="srole srole-example">ПРИМЕР</span></h3>
 <p>Этот курс девять раз ловил фабрикации через verification gate — но даже <strong>верифицированный</strong> факт с переднего края
 тлеет на глазах:</p>
 <ul>
@@ -430,7 +456,7 @@ Recency-правило доминирует: любой блок без <strong>
 <p>Имея деривацию, переходим к конкретным артефактам, которые она порождает.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>3. Карта решений</h3>
+<h3>3. Карта решений <span class="srole srole-tool">ИНСТРУМЕНТ</span></h3>
 <h4>3.0 Протокол сканирования горизонта (ГЛАВНЫЙ артефакт, повторяемый ежеквартально)</h4>
 <pre><code>КАЖДЫЙ КВАРТАЛ (следующий прогон — до 2026-09-23):
   1. ОБХОД живого списка наблюдения (§3.3): собрать новые работы/протоколы/бенчмарки/инциденты.
@@ -446,6 +472,7 @@ Recency-правило доминирует: любой блок без <strong>
          свежие термины — высокий риск галлюцинаций; цитаты сверять (урок цены: проверяли весь курс).
 </code></pre>
 <h4>3.1 Рубрика оценки тенденций (как отличать сигнал от хайпа)</h4>
+<div class="table-essence"><span class="te-label">ОХВАТ ТАБЛИЦЫ</span> Ось · 0 · 1 · 2 · 3 и ещё 2</div>
 <table>
 <thead>
 <tr>
@@ -509,6 +536,7 @@ Recency-правило доминирует: любой блок без <strong>
 </tbody>
 </table>
 <h4>3.2 Снимок переднего края (актуально 2026-06-23, пересмотреть до 2026-09-23 — ЗАВЕДОМО ПРОТУХАЮЩИЙ)</h4>
+<div class="table-essence"><span class="te-label">ОХВАТ ТАБЛИЦЫ</span> Нить · Зрелость · Зона (этапы) · Действие · Статус источника и ещё 8</div>
 <table>
 <thead>
 <tr>
@@ -607,6 +635,7 @@ Recency-правило доминирует: любой блок без <strong>
 </tbody>
 </table>
 <h4>3.3 Живой список наблюдения (с надёжностью и каденсом)</h4>
+<div class="table-essence"><span class="te-label">ОХВАТ ТАБЛИЦЫ</span> Категория · Где смотреть · Надёжность · Каденс · Протоколы и ещё 4</div>
 <table>
 <thead>
 <tr>
@@ -668,6 +697,7 @@ Recency-правило доминирует: любой блок без <strong>
 </tbody>
 </table>
 <h4>3.4 Журнал фальсифицируемых предсказаний (с датами проверки)</h4>
+<div class="table-essence"><span class="te-label">ОХВАТ ТАБЛИЦЫ</span> Предсказание · Проверить до · Критерий «сбылось» · Сейчас · A2A — de facto протокол взаимодействия агентов в enterprise и ещё 6</div>
 <table>
 <thead>
 <tr>
@@ -743,7 +773,8 @@ Recency-правило доминирует: любой блок без <strong>
 <p>Карта решений дала полный набор инструментов. Теперь посмотрим, как именно новые нити взаимодействуют с ядром — что расширяют, а что угрожают обесценить.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>4. Режимы отказа</h3>
+<h3>4. Режимы отказа <span class="srole srole-core">ОСНОВНОЕ</span></h3>
+<div class="table-essence"><span class="te-label">ОХВАТ ТАБЛИЦЫ</span> Нить · Расширяет этап · Угрожает обесценить · Агентное обучение с подкреплением · 6 (как обучать tool-use/verifier) и ещё 3</div>
 <table>
 <thead>
 <tr>
@@ -796,7 +827,7 @@ Recency-правило доминирует: любой блок без <strong>
 <p>Разобрав режимы отказа, закрепим это всё в опорном стержне как обязательство.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>5. Опорный стержень</h3>
+<h3>5. Опорный стержень <span class="srole srole-core">ОСНОВНОЕ</span></h3>
 <p>Этап 14 добавляет к spine не примитив, а <strong>процесс поддержания</strong>: blueprint живёт, только если раз в квартал
 прогонять сканирование горизонта. Контракт:</p>
 <pre><code>SPINE / frontier-maintenance (этап 14):
@@ -810,7 +841,7 @@ Recency-правило доминирует: любой блок без <strong>
 <p>Теория зафиксирована — теперь практическая проверка через код.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>6. Практикум</h3>
+<h3>6. Практикум <span class="srole srole-tool">ПРАКТИКУМ</span></h3>
 <p><strong>Задача.</strong> Реализовать оценщик нити по рубрике (§3.1) и решатель «карантин/appendix/core», + генератор
 фальсифицируемого предсказания с датой проверки. Доказать: blog-claim → карантин; paper+код+репликация → core;
 нить, меняющая этап 13 → триггер пересборки.</p>
@@ -861,7 +892,7 @@ verified+воспроизведённое в core (тот же gate, что мы
 <p>Практикум дал hands-on опыт. Проверим теперь навык суждения — без кода, но с той же рубрикой.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>7. Вопросы на суждение</h3>
+<h3>7. Вопросы на суждение <span class="srole srole-check">ПРОВЕРКА</span></h3>
 <ol>
 <li>Вышла статья «новый метод X бьёт RAG на 40%». Прогони её по рубрике (§3.1): какие 6 вопросов задашь и
    при каком ответе пустишь в core, а при каком — в карантин?</li>
@@ -878,7 +909,7 @@ verified+воспроизведённое в core (тот же gate, что мы
 </ol>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>8. Глоссарий</h3>
+<details class="ref-collapse" open><summary><h3>8. Глоссарий <span class="srole srole-ref">СПРАВКА</span></h3></summary>
 <ul>
 <li><strong>Снимок переднего края</strong> — датированный срез переднего края со сроком годности; заведомо протухает.</li>
 <li><strong>Протокол сканирования горизонта</strong> — повторяемый ежеквартальный процесс оценки нового (главный артефакт этапа).</li>
@@ -897,7 +928,7 @@ verified+воспроизведённое в core (тот же gate, что мы
 </ul>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>9. Первоисточники</h3>
+</details><details class="ref-collapse"><summary><h3>9. Первоисточники <span class="srole srole-ref">СПРАВКА</span></h3></summary>
 <ol>
 <li><strong>Search-R1</strong> — arXiv 2503.09516 (+ github.com/PeterGriffinJin/Search-R1). <a href="https://arxiv.org/abs/2503.09516" target="_blank" rel="noopener">https://arxiv.org/abs/2503.09516</a>
    — агентное обучение с подкреплением для reasoning+search.</li>
@@ -938,7 +969,7 @@ blueprint молча устаревает: <strong>протокол сканир
 (Search-R1, WebSailor, RLM, OOLONG, AgentPRM, NVIDIA SLM, Containment Gap, MCP/A2A — 5/5 выборочно
 проверенных + ранее верифицированные), несверенные цитаты явно отделены в §9. Парадокс этапа: самое
 «рискованное на галлюцинации» досье оказалось одним из самых точных — потому что GPT следовал recency-правилу
-и цитировал реальные arXiv с датами.</em></p>
+и цитировал реальные arXiv с датами.</em></p></details>
     </div>
     <nav class="pager">
       <a class="pg-prev" href="lesson-13.html"><span class="pk">← Урок 13</span>Экономика и готовность к производству</a>
