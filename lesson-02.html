@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="data:,">
-<title>Урок 02. Примитивы и reference-spine — L8+ Agentic Engineering</title>
+<title>Урок 02. Примитивы и опорный стержень — L8+ Agentic Engineering</title>
 <!-- Design language adapted from ThariqS/html-effectiveness (Apache-2.0, (c) Anthropic PBC). -->
 <style>
 :root{
@@ -253,23 +253,23 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
     <nav>
 <a href="index.html">▲ Главная</a>
 <a class="lead">Карта</a>
-<a href="index.html#spine"><span class="n">◆</span>Reference-spine</a>
+<a href="index.html#spine"><span class="n">◆</span>Опорный стержень</a>
 <a href="index.html#how"><span class="n">?</span>Как читать</a>
 <a class="lead">Уроки</a>
 <a href="lesson-01.html"><span class="n">01</span>Зрелость автономии</a>
-<a href="lesson-02.html" class="active"><span class="n">02</span>Примитивы и reference-spine</a>
-<a href="lesson-03.html"><span class="n">03</span>Task lifecycle и durable execution</a>
-<a href="lesson-04.html"><span class="n">04</span>Context engineering</a>
-<a href="lesson-05.html"><span class="n">05</span>Инструменты, права, policy</a>
-<a href="lesson-06.html"><span class="n">06</span>Evals, verifier, trajectory</a>
+<a href="lesson-02.html" class="active"><span class="n">02</span>Примитивы и опорный стержень</a>
+<a href="lesson-03.html"><span class="n">03</span>Жизненный цикл задачи</a>
+<a href="lesson-04.html"><span class="n">04</span>Инженерия контекста</a>
+<a href="lesson-05.html"><span class="n">05</span>Инструменты, права и политика</a>
+<a href="lesson-06.html"><span class="n">06</span>Оценка, верификатор и траектория</a>
 <a href="lesson-07.html"><span class="n">07</span>Память и жизненный цикл знания</a>
-<a href="lesson-08.html"><span class="n">08</span>Retrieval: RAG, hybrid, GraphRAG</a>
-<a href="lesson-09.html"><span class="n">09</span>Observability и воспроизводимость</a>
-<a href="lesson-10.html"><span class="n">10</span>Безопасность: injection, threat model</a>
-<a href="lesson-11.html"><span class="n">11</span>Мультиагентность: MCP / A2A</a>
-<a href="lesson-12.html"><span class="n">12</span>Human-in-the-loop и operating model</a>
-<a href="lesson-13.html"><span class="n">13</span>Экономика и production readiness (capstone)</a>
-<a href="lesson-14.html"><span class="n">14</span>Фронт и горизонт-сканирование</a>
+<a href="lesson-08.html"><span class="n">08</span>Поиск: RAG, гибридный и графовый</a>
+<a href="lesson-09.html"><span class="n">09</span>Наблюдаемость и воспроизводимость</a>
+<a href="lesson-10.html"><span class="n">10</span>Безопасность: внедрение и модель угроз</a>
+<a href="lesson-11.html"><span class="n">11</span>Мультиагентность: MCP и A2A</a>
+<a href="lesson-12.html"><span class="n">12</span>Человек в цикле и модель эксплуатации</a>
+<a href="lesson-13.html"><span class="n">13</span>Экономика и готовность к производству</a>
+<a href="lesson-14.html"><span class="n">14</span>Передний край и сканирование горизонта</a>
 <a class="lead">Конец</a>
 <a href="index.html#footer"><span class="n">§</span>Метод и источники</a>
     </nav>
@@ -279,11 +279,11 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
     <div class="crumb"><a href="index.html">← Все уроки</a></div>
     <header class="lesson-head">
       <div class="eyebrow">Урок 02<span class="badge b-core" style="margin-left:6px">[конвенция, не стандарт]</span></div>
-      <h1 class="title">Примитивы и reference-spine</h1>
+      <h1 class="title">Примитивы и опорный стержень</h1>
       <p class="lede">Из чего собран оркестратор</p>
       <div class="card-meta">
-        <div class="meta-item"><span class="k">Cold-open</span>Anthropic: рой из 50 субагентов</div>
-        <div class="meta-item"><span class="k">В spine</span>12 примитивов с контрактами</div>
+        <div class="meta-item"><span class="k">Инцидент</span>Anthropic: рой из 50 подагентов</div>
+        <div class="meta-item"><span class="k">В стержень</span>12 примитивов с контрактами</div>
       </div>
     </header>
     <div class="lesson-body">
@@ -293,38 +293,39 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 с разной семантикой. Конкретные интерфейсы между примитивами <strong>[формирующееся]</strong> — общего API нет.
 Опирается на инвариант урока 1 (автономия = функция полномочий и надзора).</p></div>
 <hr />
-<h3>0. Зачем этот урок и что он оставляет в курсе</h3>
-<p>Урок 1 дал язык измерения автономии, но не сказал, <strong>из чего физически собрать систему</strong>, которая этот
-надзор обеспечивает. Этот урок — конструктивный: мы разбираем оркестратор на <strong>примитивы</strong> (функциональные
-блоки) и фиксируем <strong>reference-spine</strong> — сквозную систему с контрактами интерфейсов, которую все следующие
-11 этапов будут достраивать. Это самый «архитектурный» этап курса: после него у нас есть скелет, в который
-память (этап 7), retrieval (8), evals (6), security (10) и прочее встают как конкретные компоненты, а не
-как отдельные темы.</p>
+<h3>Чему вы научитесь</h3>
+<ul>
+<li>Выделять архитектурные примитивы оркестратора, понимать их контракты и инварианты.</li>
+<li>Диагностировать отказы агентных систем через отсутствие конкретных примитивов, а не через расплывчатое «система глючит».</li>
+<li>Сравнивать фреймворки оркестрации по их архитектурным метафорам, а не по вендорским бенчмаркам.</li>
+<li>Проектировать опорный стержень (reference-spine) — нейтральный оркестратор с интерфейсными контрактами между примитивами.</li>
+<li>Доказывать необходимость примитивов через воспроизводимые тесты, каждый из которых воспроизводит реальный класс отказов.</li>
+</ul>
+<hr />
+<h3>0. Зачем этот урок</h3>
+<p>Урок 1 дал язык измерения автономии, но не сказал, из чего физически собрать систему надзора. Этот урок — конструктивный: мы разбираем оркестратор на примитивы и фиксируем опорный стержень (reference-spine) — сквозную систему с контрактами интерфейсов, которую все следующие этапы будут достраивать.</p>
 <p>Две мысли, которые урок должен оставить:</p>
 <blockquote>
-<p><strong>(1)</strong> Оркестратор — это не «умный промпт», а <strong>разделение ответственности</strong> между специализированными
-блоками, каждый из которых можно тестировать, заменять и наделять надзором по отдельности.
-<strong>(2)</strong> «Набор примитивов» — удобная инженерная рамка, <strong>а не стандарт</strong>. Ценность не в каноничности
-списка, а в том, что каждый блок имеет <strong>контракт интерфейса</strong> и <strong>ответ на вопрос «что ломается, если
-его убрать»</strong>.</p>
+<p><strong>(1)</strong> Оркестратор — это не «умный промпт», а разделение ответственности между специализированными блоками, каждый из которых можно тестировать, заменять и наделять надзором по отдельности.
+<strong>(2)</strong> «Набор примитивов» — удобная инженерная рамка, а не стандарт. Ценность не в каноничности списка, а в том, что каждый блок имеет контракт интерфейса и ответ на вопрос «что ломается, если его убрать».</p>
 </blockquote>
 <hr />
-<h3>1. Cold-open: система, которая «работала», но порождала рой</h3>
+<h3>1. Разбор инцидента</h3>
 <p>В отчёте Anthropic «How we built our multi-agent research system» (2025) задокументированы ранние отказы
-их собственной исследовательской MAS — до того, как архитектуру привели в порядок:</p>
+их собственной исследовательской мультиагентной системы — до того, как архитектуру привели в порядок:</p>
 <ul>
-<li>лид-агент <strong>порождал 50 субагентов на простой запрос</strong>, который решался одним;</li>
-<li>субагенты <strong>дублировали работу</strong> — несколько одновременно искали одно и то же, потому что между ними не
+<li>лид-агент порождал 50 субагентов на простой запрос, который решался одним;</li>
+<li>субагенты дублировали работу — несколько одновременно искали одно и то же, потому что между ними не
   было разделения границ;</li>
-<li>агенты звали <strong>неверные инструменты</strong> или выдумывали несуществующие;</li>
-<li>система потребляла <strong>≈15× токенов</strong> относительно чата (и ≈4× даже у одиночного агента) — то есть
+<li>агенты звали неверные инструменты или выдумывали несуществующие;</li>
+<li>система потребляла ≈15× токенов относительно чата (и ≈4× даже у одиночного агента) — то есть
   неуправляемая координация не просто глючила, а кратно жгла бюджет.</li>
 </ul>
 <p><em>Источник: Anthropic, «How we built our multi-agent research system», 2025.</em></p>
 <p>Заметь, чего здесь <strong>не</strong> было: это не отказ модели (модель сильная) и не отказ полномочий из урока 1
 (никто не удалил прод). Это <strong>отказ структуры</strong>. Не было блока, который решает «сколько субагентов нужно»
-(router/planner с бюджетом), не было разграничения ролей (role boundaries), не было контроля завершения
-(стоп-критерий), не было реестра реальных инструментов (tool registry). Система была «одним большим
+(маршрутизатор/планировщик с бюджетом), не было разграничения ролей, не было контроля завершения
+(стоп-критерий), не было реестра реальных инструментов. Система была «одним большим
 агентом», которому поручили слишком много без внутренних швов.</p>
 <p>Отсюда тезис урока:</p>
 <blockquote>
@@ -332,9 +333,10 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 отдельных примитивов</strong>. Отказ почти всегда локализуется в <em>отсутствующем</em> или <em>безконтрактном</em> блоке.</p>
 </blockquote>
 <p>Дальше выведем канонический набор примитивов — не списком, а по одному, каждый как ответ на конкретную
-боль из этого роя.</p>
+боль из этого инцидента.</p>
 <hr />
-<h3>2. Деривация: от «LLM в цикле» к набору примитивов</h3>
+<p>Теперь, когда мы увидели, к чему приводит отсутствие структуры, выведем примитивы — каждый как ответ на конкретную боль из разбора инцидента.</p>
+<h3>2. От наивного агента к набору примитивов</h3>
 <p>Начнём с наивной архитектуры и будем добавлять блоки только тогда, когда без них что-то ломается.</p>
 <h4>2.1 Наивный агент</h4>
 <pre><code>while not done:
@@ -345,36 +347,36 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
     else:
         done = True
 </code></pre>
-<p>Это работает на демо. У этой петли есть каноническое имя — <strong>ReAct</strong> (reason→act→observe; Yao et al.,
+<p>Это работает на демо. У этой петли есть каноническое имя — <strong>ReAct</strong> (рассуждение→действие→наблюдение, reason→act→observe; Yao et al.,
 2022): модель чередует рассуждение и действие в одном цикле. Базовые вариации — <strong>Reflexion</strong> (само-рефлексия
 и повтор при провале) и <strong>Plan-and-Execute</strong> (план верхнего уровня + исполнение). Проблемы начинаются ровно
-те, что в cold-open. Идём по ним.</p>
+те, что в разборе инцидента. Идём по ним.</p>
 <h4>2.2 Боль → примитив (вывод набора)</h4>
 <ul>
-<li><strong>«Агент зовёт несуществующий/неверный инструмент».</strong> Нужен <strong>tool registry</strong> — каталог доступных
+<li><strong>«Агент зовёт несуществующий/неверный инструмент».</strong> Нужен <strong>реестр инструментов (tool registry)</strong> — каталог доступных
   инструментов с типизированными сигнатурами; исполнитель может звать только то, что в реестре. Побочно
   это точка, где живёт политика доступа из урока 1 (read-only vs write).</li>
-<li><strong>«Агент сделал необратимое без спроса».</strong> Между намерением и исполнением нужен <strong>policy engine</strong> —
+<li><strong>«Агент сделал необратимое без спроса».</strong> Между намерением и исполнением нужен <strong>движок политик (policy engine)</strong> —
   блок, который по типу действия и риску решает: auto / approval / block (реализация инварианта оси B
-  урока 1). Сам вызов инструмента выносится в <strong>executor</strong>, чтобы исполнение было одной
+  урока 1). Сам вызов инструмента выносится в <strong>исполнитель (executor)</strong>, чтобы исполнение было одной
   контролируемой точкой, а не разбросано по логике.</li>
 <li><strong>«Лид породил 50 субагентов / задача не туда».</strong> Нужно отделить <em>что делать</em> от <em>кто делает</em>:
-  <strong>planner</strong> раскладывает цель на шаги с бюджетом, <strong>router</strong> направляет шаг нужной роли/агенту.
-  Без planner'а нет контроля объёма работы; без router'а нет разделения границ (отсюда дублирование).</li>
+  <strong>планировщик (planner)</strong> раскладывает цель на шаги с бюджетом, <strong>маршрутизатор (router)</strong> направляет шаг нужной роли/агенту.
+  Без планировщика нет контроля объёма работы; без маршрутизатора нет разделения границ (отсюда дублирование).</li>
 <li><strong>«В окно не влезает / агент теряет нужное».</strong> Сборку входа на каждый шаг нельзя оставлять
-  случайной — нужен <strong>context builder</strong> (детально — этап 4): что положить в окно из памяти/retrieval, а
+  случайной — нужен <strong>построитель контекста (context builder)</strong> (детально — этап 4): что положить в окно из памяти/retrieval, а
   что вынести.</li>
-<li><strong>«Ошибка раннего агента тихо поехала дальше».</strong> Нужен <strong>verifier</strong> — проверка результата (формат,
+<li><strong>«Ошибка раннего агента тихо поехала дальше».</strong> Нужен <strong>верификатор (verifier)</strong> — проверка результата (формат,
   факты, выполнение критерия задачи) до того, как он станет входом следующего шага. Опционально
-  <strong>critic/reviewer</strong> — генерирует не «да/нет», а правки. (Глубоко — этап 6.)</li>
-<li><strong>«Каждый запуск стартует с нуля / нечем учиться».</strong> Нужен <strong>memory manager</strong> — что сохранить между
-  шагами и сессиями, с provenance и trust-level (этап 7).</li>
-<li><strong>«Непонятно, почему система так решила».</strong> Нужен <strong>trace/logging layer</strong> — журнал вызовов, решений
+  <strong>критик/рецензент (critic/reviewer)</strong> — генерирует не «да/нет», а правки. (Глубоко — этап 6.)</li>
+<li><strong>«Каждый запуск стартует с нуля / нечем учиться».</strong> Нужен <strong>менеджер памяти (memory manager)</strong> — что сохранить между
+  шагами и сессиями, с происхождением (provenance) и уровнем доверия (этап 7).</li>
+<li><strong>«Непонятно, почему система так решила».</strong> Нужен <strong>слой трассировки (trace layer)</strong> — журнал вызовов, решений
   маршрутизации, tool-call'ов, причин (этап 9). Для агентов это не «логи на потом», а условие
   воспроизводимости.</li>
-<li><strong>«Система не понимает, когда нужен человек».</strong> Нужен <strong>human escalation layer</strong> — точка прерывания и
+<li><strong>«Система не понимает, когда нужен человек».</strong> Нужен <strong>слой эскалации (human escalation layer)</strong> — точка прерывания и
   передачи решения (этап 12).</li>
-<li>И на входе — <strong>task intake</strong> (нормализация запроса в формализованную задачу) и <strong>classifier</strong>
+<li>И на входе — <strong>приём задачи (task intake)</strong> (нормализация запроса в формализованную задачу) и <strong>классификатор (classifier)</strong>
   (тип/домен задачи для маршрутизации).</li>
 </ul>
 <h4>2.3 Результат: канонический набор (и честная оговорка)</h4>
@@ -385,17 +387,18 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <p><strong>Важно:</strong> это <strong>функциональная</strong> декомпозиция, не физическая и не стандарт. В реальной системе несколько
 ролей могут жить в одном модуле или даже в одном промпте; маленькому агенту не нужны все 12. Ценность
 набора — диагностическая: когда что-то ломается, спрашиваешь «какого примитива не хватило или у какого нет
-контракта». Cold-open = отсутствие planner-бюджета + router-границ + стоп-критерия.</p>
-<p>Близкий практический ориентир — <strong>«12-factor agents»</strong> (HumanLayer): манифест надёжной агентной архитектуры,
-чьи факторы прямо ложатся на наши примитивы (<em>own your context window</em> → context-builder; <em>tools are
-structured outputs</em> → tool-registry; <em>stateless reducer</em> → lifecycle урока 3; <em>small, focused agents</em> →
-role boundaries).</p>
+контракта». Разбор инцидента = отсутствие бюджета планировщика + границ маршрутизатора + стоп-критерия.</p>
+<p>Близкий практический ориентир — <strong>«12-факторные агенты»</strong> (HumanLayer): манифест надёжной агентной архитектуры,
+чьи факторы прямо ложатся на наши примитивы (<em>own your context window</em> → построитель контекста; <em>tools are
+structured outputs</em> → реестр инструментов; <em>stateless reducer</em> → жизненный цикл урока 3; <em>small, focused agents</em> →
+границы ролей).</p>
 <h4>2.4 Новая проблема (мост к §3 и дальше)</h4>
 <p>Набор примитивов — абстрактный. Каждый фреймворк реализует его <strong>по-своему и под своими именами</strong>, и
 выбор реализации — нетривиальный архитектурный компромисс. Это §3. А контракты интерфейсов между
-примитивами <strong>никто не стандартизировал</strong> — это §5 (наш spine) и открытая проблема индустрии.</p>
+примитивами <strong>никто не стандартизировал</strong> — это §5 (наш опорный стержень) и открытая проблема индустрии.</p>
 <hr />
-<h3>3. Карта решений: граф vs handoffs vs роли vs декларатив</h3>
+<p>Имея канонический набор примитивов, посмотрим, как они воплощены в реальных фреймворках — и какую цену платит каждый подход.</p>
+<h3>3. Карта решений</h3>
 <p>Один и тот же набор примитивов воплощён в четырёх семействах фреймворков по-разному. Это <strong>не разногласие
 о том, что правильно, а разные метафоры</strong> — но с реальными инженерными последствиями.</p>
 <table>
@@ -465,11 +468,11 @@ role boundaries).</p>
 моделью в рантайме</strong> (OpenAI SDK). Это прямое продолжение оси A урока 1 (workflow↔agent), но уже на уровне
 оркестрации.</p>
 <p><strong>Лексика композиции (Anthropic «Building Effective Agents») — 5 паттернов поверх примитивов §2:</strong>
-- <strong>prompt chaining</strong> — линейная последовательность шагов (planner с линейным планом);
-- <strong>routing</strong> — классификация → ветка (classifier + router);
-- <strong>parallelization</strong> (sectioning/voting) — параллельные ветки + агрегация (router fan-out + verifier);
-- <strong>orchestrator-workers</strong> — лид декомпозирует, воркеры исполняют (planner + router; см. урок 11);
-- <strong>evaluator-optimizer</strong> — генерация + критика в цикле (verifier + critic).</p>
+- <strong>prompt chaining</strong> — линейная последовательность шагов (планировщик с линейным планом);
+- <strong>routing</strong> — классификация → ветка (классификатор + маршрутизатор);
+- <strong>parallelization</strong> (sectioning/voting) — параллельные ветки + агрегация (маршрутизатор fan-out + верификатор);
+- <strong>orchestrator-workers</strong> — лид декомпозирует, воркеры исполняют (планировщик + маршрутизатор; см. урок 11);
+- <strong>evaluator-optimizer</strong> — генерация + критика в цикле (верификатор + критик).</p>
 <p>Это не отдельные сущности, а имена типовых конфигураций наших примитивов.</p>
 <h4>3.1 Спорная точка: как читать бенчмарки фреймворков</h4>
 <p>CrewAI публикует, что он <strong>5.76× быстрее LangGraph</strong> на QA-задачах. Цифра реальная. Но независимый бенчмарк
@@ -487,10 +490,11 @@ role boundaries).</p>
   уровня + локальные цепочки).</li>
 <li><strong>Нет стандарта интерфейсов между примитивами.</strong> <code>StateGraph</code> (типизированное состояние) в LangGraph ≠
   ручной контекст в CrewAI ≠ JSON в Conductor. Переносимость между фреймворками страдает — отсюда наш
-  spine как <strong>нейтральный</strong> контракт.</li>
+  опорный стержень как <strong>нейтральный</strong> контракт.</li>
 </ul>
 <hr />
-<h3>4. Failure modes: отказ = отсутствующий или безконтрактный примитив</h3>
+<p>Теперь, зная ландшафт реализаций, систематизируем отказы через призму примитивов: каждый класс отказа — это дефицит конкретного блока.</p>
+<h3>4. Режимы отказа</h3>
 <p>Систематика отказов (Anthropic + MAST, arXiv 2503.13657) ложится прямо на набор §2: каждый класс — это
 дефицит конкретного примитива.</p>
 <table>
@@ -504,42 +508,43 @@ role boundaries).</p>
 <tbody>
 <tr>
 <td><strong>Неограниченная делегация</strong> (агенты бесконечно передают задачу)</td>
-<td>стоп-критерий в planner/router</td>
+<td>стоп-критерий в планировщике/маршрутизаторе</td>
 <td>specification (~42%)</td>
 </tr>
 <tr>
 <td><strong>Петля делегирования</strong> («50 субагентов на простой запрос»)</td>
-<td>бюджет в planner; границы ролей в router</td>
+<td>бюджет в планировщике; границы ролей в маршрутизаторе</td>
 <td>specification</td>
 </tr>
 <tr>
 <td><strong>Тихое распространение ошибки</strong> (каждый доверяет предыдущему)</td>
-<td>verifier между шагами</td>
+<td>верификатор между шагами</td>
 <td>task verification (~21%)</td>
 </tr>
 <tr>
 <td><strong>Игнорирование отказов</strong> (tool вернул error — поехали дальше)</td>
-<td>обработка ошибок в executor + verifier</td>
+<td>обработка ошибок в исполнителе + верификатор</td>
 <td>task verification</td>
 </tr>
 <tr>
 <td><strong>Отравление памяти</strong> (галлюцинация записана как факт, прочитана другими)</td>
-<td>write gate + trust-level в memory manager</td>
+<td>write gate + уровень доверия в менеджере памяти</td>
 <td>inter-agent (~37%)</td>
 </tr>
 <tr>
 <td><strong>Флуд токенов</strong> (диалог растёт без предела)</td>
-<td>бюджет в context builder + стоп-критерий</td>
+<td>бюджет в построителе контекста + стоп-критерий</td>
 <td>specification</td>
 </tr>
 </tbody>
 </table>
 <p>Это и есть практический смысл набора примитивов: он превращает расплывчатое «система глючит» в адресный
-диагноз «нет verifier'а между шагом N и N+1». Cold-open читается по таблице как specification-failure
+диагноз «нет верификатора между шагом N и N+1». Разбор инцидента читается по таблице как specification-failure
 (нет бюджета/границ) — типовой, не экзотический.</p>
 <hr />
-<h3>5. Вклад в reference-spine (центральный артефакт этапа)</h3>
-<p>Этот этап <strong>определяет сам spine</strong>: нейтральный оркестратор с контрактами интерфейсов. Дальше каждый этап
+<p>Когда каждый режим отказа привязан к конкретному примитиву, можно зафиксировать опорный стержень — нейтральный контракт интерфейсов, который не даст этим отказам случиться.</p>
+<h3>5. Опорный стержень</h3>
+<p>Этот этап <strong>определяет сам опорный стержень</strong>: нейтральный оркестратор с контрактами интерфейсов. Дальше каждый этап
 наполняет конкретный примитив. Фиксируем интерфейсы (псевдо-Python, типы — контракт, не реализация):</p>
 <pre><code class="language-python"># === SPINE / reference-orchestrator (этап 2) ===
 
@@ -566,7 +571,7 @@ class Planner(Protocol):
 class Router(Protocol):
     def route(self, step: &quot;Step&quot;) -&gt; &quot;Role&quot;: ...
         # инвариант: каждый шаг → ровно одна роль; роли не пересекаются (границы)
-        # БЕЗ router: дублирование работы (cold-open)
+        # БЕЗ router: дублирование работы (разбор инцидента)
 
 class ContextBuilder(Protocol):
     def build(self, step: &quot;Step&quot;, memory, retrieval) -&gt; &quot;Context&quot;: ...   # этап 4
@@ -600,14 +605,15 @@ class Escalation(Protocol):
     def to_human(self, ctx, reason) -&gt; None: ...                         # этап 12
 </code></pre>
 <p><strong>Контракт для всех следующих этапов:</strong> наполняя примитив, этап обязан указать (1) его интерфейс
-вход/выход, (2) инвариант, который он держит, (3) <strong>что ломается при его удалении</strong> (failure mode из §4),
+вход/выход, (2) инвариант, который он держит, (3) <strong>что ломается при его удалении</strong> (режим отказа из §4),
 (4) на какой уровень оси B он претендует и каким надзором это обеспечено (контракт урока 1).</p>
-<p>Spine проходит три сквозных типа задач (одни и те же примитивы, разные пути): <code>research-and-plan</code>,
+<p>Опорный стержень проходит три сквозных типа задач (одни и те же примитивы, разные пути): <code>research-and-plan</code>,
 <code>modify-code-and-verify</code>, <code>extract-facts-and-update-knowledge</code>. Их трассы мы прогоняем на каждом этапе.</p>
 <hr />
-<h3>6. Pset 2 — минимальный оркестратор и доказательство необходимости примитивов</h3>
+<p>Скелет с контрактами определён — теперь докажем необходимость примитивов через воспроизводимые тесты.</p>
+<h3>6. Практикум</h3>
 <p><strong>Задача.</strong> Реализовать скелет оркестратора, прогоняющий <code>Task</code> через примитивы, и <strong>тестами доказать</strong>,
-что удаление verifier'а и router'а ведёт к конкретным задокументированным отказам (§4).</p>
+что удаление верификатора и маршрутизатора ведёт к конкретным задокументированным отказам (§4).</p>
 <p><strong>Скелет</strong> (<code>orchestrator.py</code>):</p>
 <pre><code class="language-python">from typing import Protocol
 
@@ -632,7 +638,7 @@ class Orchestrator:
             results.append(res)
         return RunResult(status=&quot;ok&quot;, results=results)
 </code></pre>
-<p><strong>Тесты</strong> (каждый воспроизводит реальный failure mode из §4):</p>
+<p><strong>Тесты</strong> (каждый воспроизводит реальный режим отказа из §4):</p>
 <pre><code class="language-python">def test_missing_verifier_propagates_error_silently():
     # verifier-заглушка, всегда ok → ошибка раннего шага доезжает до финала
     orch = Orchestrator(..., verifier=AlwaysOkVerifier(), max_steps=10)
@@ -644,7 +650,7 @@ class Orchestrator:
 
 def test_no_budget_causes_delegation_loop():
     # planner без проверки бюджета → бесконечное расширение плана
-    with pytest.raises(BudgetExceeded):   # инвариант planner ловит cold-open Anthropic
+    with pytest.raises(BudgetExceeded):   # инвариант planner ловит инцидент Anthropic
         Orchestrator(planner=UnboundedPlanner(), ...).run(simple_task)
 
 def test_router_assigns_exactly_one_role():
@@ -656,14 +662,15 @@ def test_run_is_reproducible_from_trace():
     out = orch.run(task); trace = orch.trace.events
     assert replay(trace) == out           # инвариант trace-layer (мост к этапу 9)
 </code></pre>
-<p><strong>Эталон.</strong> Главная мысль pset'а: примитивы — не украшение, а <strong>несущие инварианты</strong>. Тест
-<code>test_missing_verifier...</code> показывает буквально cold-open урока 1 в миниатюре (система рапортует «ok» на
-сломанном результате). <code>test_no_budget...</code> — cold-open этого урока (рой субагентов). Удаление примитива не
+<p><strong>Эталон.</strong> Главная мысль практикума: примитивы — не украшение, а <strong>несущие инварианты</strong>. Тест
+<code>test_missing_verifier...</code> показывает буквально разбор инцидента из урока 1 в миниатюре (система рапортует «ok» на
+сломанном результате). <code>test_no_budget...</code> — разбор инцидента этого урока (рой субагентов). Удаление примитива не
 «ухудшает», а <strong>впускает конкретный класс отказа</strong>.</p>
 <p><strong>Расширение.</strong> Добавь <code>policy_engine</code> в <code>executor.run</code> и тест: деструктивное действие без approval →
 <code>status="blocked"</code> (смычка с осью B урока 1).</p>
 <hr />
-<h3>7. Диагностические вопросы (проверяют суждение)</h3>
+<p>Практикум дал инженерный опыт — теперь проверим способность к суждению на diagnostic questions.</p>
+<h3>7. Вопросы на суждение</h3>
 <ol>
 <li>Тебе показывают агента из одного большого промпта, который «и планирует, и исполняет, и проверяет».
    По §2 — это нормально или нет? Какой вопрос отделит «примитивы слиты осознанно» от «примитивов просто
@@ -676,46 +683,46 @@ def test_run_is_reproducible_from_trace():
    Какого примитива (или контракта) не хватило? К какому классу MAST это относится?</li>
 <li>Почему «набор из 12 примитивов» нельзя продавать как стандарт? Приведи случай, где правильно слить два
    примитива в один, и случай, где их обязательно разделить.</li>
-<li><strong>Open question</strong> (нерешённое, §3.2): спроектируй нейтральный формат сообщения между primitive'ами,
+<li><strong>Open question</strong> (нерешённое, §3.2): спроектируй нейтральный формат сообщения между примитивами,
    переносимый между LangGraph и Conductor. Что в нём придётся потерять и почему единого стандарта пока нет?</li>
 </ol>
 <hr />
-<h3>8. Глоссарий-дельта</h3>
+<h3>8. Глоссарий</h3>
 <ul>
-<li><strong>Примитив оркестратора</strong> — функциональный блок с контрактом интерфейса (intake, classifier, planner,
-  router, context-builder, executor, tool-registry, verifier, critic, policy-engine, memory-manager,
-  trace-layer, escalation). <strong>Конвенция, не стандарт.</strong></li>
+<li><strong>Примитив оркестратора</strong> — функциональный блок с контрактом интерфейса (приём задачи, классификатор, планировщик,
+  маршрутизатор, построитель контекста, исполнитель, реестр инструментов, верификатор, критик, движок политик, менеджер памяти,
+  слой трассировки, эскалация). <strong>Конвенция, не стандарт.</strong></li>
 <li><strong>Оркестратор</strong> — система, координирующая примитивы; разделение ответственности, не «умный промпт».</li>
-<li><strong>Handoff</strong> (OpenAI Agents SDK) — передача владения задачей другому агенту-специалисту; реализация
-  router'а через динамическую делегацию.</li>
-<li><strong>StateGraph</strong> (LangGraph) — граф узлов с типизированным состоянием и checkpointing; реализация
-  planner+router+context как явного графа.</li>
-<li><strong>Crew / Role / Flow</strong> (CrewAI) — команда агентов с ролями и задачами; Flows (<code>@start/@listen/@router</code>) —
+<li><strong>Передача владения</strong> — механизм OpenAI Agents SDK: передача задачи другому агенту-специалисту; реализация
+  маршрутизатора через динамическую делегацию.</li>
+<li><strong>Граф состояний</strong> — механизм LangGraph: граф узлов с типизированным состоянием и контрольными точками; реализация
+  планировщика, маршрутизатора и контекста как явного графа.</li>
+<li><strong>Команда / Роль / Поток</strong> — концепции CrewAI: команда агентов с ролями и задачами; потоки —
   декларативная управляющая логика.</li>
-<li><strong>Детерминированный роутинг</strong> (Conductor) — маршрут зашит в YAML-схему (Jinja2), не решается LLM →
+<li><strong>Детерминированная маршрутизация</strong> — подход Conductor: маршрут зашит в YAML-схему (Jinja2), не решается моделью →
   предсказуемость + нулевая токен-стоимость маршрутизации.</li>
-<li><strong>Anti-pattern (MAS)</strong> — неограниченная делегация, петля делегирования, тихое распространение ошибки,
+<li><strong>Анти-паттерн</strong> — неограниченная делегация, петля делегирования, тихое распространение ошибки,
   игнорирование отказов, отравление памяти, флуд токенов. Каждый = дефицит примитива (§4).</li>
-<li><strong>Role boundary</strong> — разграничение зон ответственности агентов; его отсутствие → дублирование работы.</li>
-<li><strong>Orchestrator-worker / lead-agent pattern</strong> (Anthropic) — иерархический паттерн: лид делегирует
+<li><strong>Граница роли</strong> — разграничение зон ответственности агентов; её отсутствие → дублирование работы.</li>
+<li><strong>Оркестратор-исполнитель / паттерн ведущего агента</strong> — иерархический паттерн Anthropic: лид делегирует
   субагентам и собирает результат.</li>
-<li><strong>ReAct</strong> — каноническая агентная петля reason→act→observe (Yao et al., 2022); Reflexion / Plan-and-Execute
-  — её вариации.</li>
-<li><strong>12-factor agents</strong> (HumanLayer) — практический манифест надёжной агентной архитектуры; факторы ↔ примитивы §2.</li>
-<li><strong>5 паттернов (Anthropic)</strong> — prompt chaining / routing / parallelization / orchestrator-workers /
-  evaluator-optimizer; лексика композиции примитивов.</li>
+<li><strong>ReAct</strong> — каноническая агентная петля «рассуждение→действие→наблюдение» (Yao et al., 2022); Reflexion и
+  «спланируй-и-исполни» — её вариации.</li>
+<li><strong>12-факторные агенты</strong> — практический манифест HumanLayer надёжной агентной архитектуры; факторы соответствуют примитивам §2.</li>
+<li><strong>Пять композиционных паттернов</strong> — последовательные цепочки / маршрутизация / распараллеливание / оркестратор-исполнители /
+  оценщик-оптимизатор (Anthropic); лексика композиции примитивов.</li>
 </ul>
 <hr />
-<h3>9. Первоисточники (верифицированы 2026-06-23)</h3>
+<h3>9. Первоисточники</h3>
 <ol>
 <li><strong>Anthropic — «How we built our multi-agent research system» (2025)</strong>.
-   <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank" rel="noopener">https://www.anthropic.com/engineering/multi-agent-research-system</a> — cold-open (рой субагентов,
+   <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank" rel="noopener">https://www.anthropic.com/engineering/multi-agent-research-system</a> — разбор инцидента (рой субагентов,
    дублирование), +90.2% мультиагент над одиночным, ≈4×/≈15× токенов, lead-agent pattern, анти-паттерны.</li>
 <li><strong>Anthropic — «Building Effective Agents» (2024/25)</strong>.
    <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">https://www.anthropic.com/engineering/building-effective-agents</a> — паттерны (sequential, parallel,
    routing, orchestrator-workers) и различие workflow/agent.</li>
 <li><strong>OpenAI — Agents SDK Docs</strong> (handoffs, guardrails, tracing, agents-as-tools).
-   <a href="https://openai.github.io/openai-agents-python/" target="_blank" rel="noopener">https://openai.github.io/openai-agents-python/</a> — реализация router/policy/trace.</li>
+   <a href="https://openai.github.io/openai-agents-python/" target="_blank" rel="noopener">https://openai.github.io/openai-agents-python/</a> — реализация маршрутизатора/политик/трассировки.</li>
 <li><strong>LangGraph Docs</strong> (StateGraph, nodes/edges, persistence/checkpointing, interrupts).
    <a href="https://langchain-ai.github.io/langgraph/" target="_blank" rel="noopener">https://langchain-ai.github.io/langgraph/</a> — граф-реализация примитивов + HITL.</li>
 <li><strong>CrewAI Docs</strong> (Agents, Tasks, Crews, Flows). <a href="https://docs.crewai.com/" target="_blank" rel="noopener">https://docs.crewai.com/</a> — ролевая реализация.</li>
@@ -742,14 +749,14 @@ def test_run_is_reproducible_from_trace():
 github.com/microsoft/conductor.</p>
 </blockquote>
 <hr />
-<p><em>Плотность — целевая (уровень лекции). Этап тяжёлый: он определяет spine, поэтому длиннее урока 1. Cold-open
-реален и сделал двойную работу (мотивировал и набор примитивов, и таблицу failure modes). Spine получил
-контракты интерфейсов, а не определения; pset доказывает необходимость примитивов через воспроизведение
+<p><em>Плотность — целевая (уровень лекции). Этап тяжёлый: он определяет опорный стержень, поэтому длиннее урока 1. Разбор инцидента
+реален и сделал двойную работу (мотивировал и набор примитивов, и таблицу режимов отказа). Опорный стержень получил
+контракты интерфейсов, а не определения; практикум доказывает необходимость примитивов через воспроизведение
 реальных отказов; vendor-бенчмарк превращён в навык чтения, а не в карантин.</em></p>
     </div>
     <nav class="pager">
       <a class="pg-prev" href="lesson-01.html"><span class="pk">← Урок 01</span>Зрелость автономии</a>
-      <a class="pg-next" href="lesson-03.html"><span class="pk">Урок 03 →</span>Task lifecycle и durable execution</a>
+      <a class="pg-next" href="lesson-03.html"><span class="pk">Урок 03 →</span>Жизненный цикл задачи</a>
     </nav>
     <footer id="footer">
       <p>Дизайн-язык адаптирован из <a href="https://github.com/ThariqS/html-effectiveness"

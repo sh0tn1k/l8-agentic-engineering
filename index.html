@@ -253,23 +253,23 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
     <nav>
 <a href="index.html" class="active">▲ Главная</a>
 <a class="lead">Карта</a>
-<a href="index.html#spine"><span class="n">◆</span>Reference-spine</a>
+<a href="index.html#spine"><span class="n">◆</span>Опорный стержень</a>
 <a href="index.html#how"><span class="n">?</span>Как читать</a>
 <a class="lead">Уроки</a>
 <a href="lesson-01.html"><span class="n">01</span>Зрелость автономии</a>
-<a href="lesson-02.html"><span class="n">02</span>Примитивы и reference-spine</a>
-<a href="lesson-03.html"><span class="n">03</span>Task lifecycle и durable execution</a>
-<a href="lesson-04.html"><span class="n">04</span>Context engineering</a>
-<a href="lesson-05.html"><span class="n">05</span>Инструменты, права, policy</a>
-<a href="lesson-06.html"><span class="n">06</span>Evals, verifier, trajectory</a>
+<a href="lesson-02.html"><span class="n">02</span>Примитивы и опорный стержень</a>
+<a href="lesson-03.html"><span class="n">03</span>Жизненный цикл задачи</a>
+<a href="lesson-04.html"><span class="n">04</span>Инженерия контекста</a>
+<a href="lesson-05.html"><span class="n">05</span>Инструменты, права и политика</a>
+<a href="lesson-06.html"><span class="n">06</span>Оценка, верификатор и траектория</a>
 <a href="lesson-07.html"><span class="n">07</span>Память и жизненный цикл знания</a>
-<a href="lesson-08.html"><span class="n">08</span>Retrieval: RAG, hybrid, GraphRAG</a>
-<a href="lesson-09.html"><span class="n">09</span>Observability и воспроизводимость</a>
-<a href="lesson-10.html"><span class="n">10</span>Безопасность: injection, threat model</a>
-<a href="lesson-11.html"><span class="n">11</span>Мультиагентность: MCP / A2A</a>
-<a href="lesson-12.html"><span class="n">12</span>Human-in-the-loop и operating model</a>
-<a href="lesson-13.html"><span class="n">13</span>Экономика и production readiness (capstone)</a>
-<a href="lesson-14.html"><span class="n">14</span>Фронт и горизонт-сканирование</a>
+<a href="lesson-08.html"><span class="n">08</span>Поиск: RAG, гибридный и графовый</a>
+<a href="lesson-09.html"><span class="n">09</span>Наблюдаемость и воспроизводимость</a>
+<a href="lesson-10.html"><span class="n">10</span>Безопасность: внедрение и модель угроз</a>
+<a href="lesson-11.html"><span class="n">11</span>Мультиагентность: MCP и A2A</a>
+<a href="lesson-12.html"><span class="n">12</span>Человек в цикле и модель эксплуатации</a>
+<a href="lesson-13.html"><span class="n">13</span>Экономика и готовность к производству</a>
+<a href="lesson-14.html"><span class="n">14</span>Передний край и сканирование горизонта</a>
 <a class="lead">Конец</a>
 <a href="index.html#footer"><span class="n">§</span>Метод и источники</a>
     </nav>
@@ -279,9 +279,9 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
     <header class="masthead">
       <div class="eyebrow">Учебник для инженеров проф-уровня в ИИ</div>
       <h1 class="title">L8+ <em>Agentic Engineering</em></h1>
-      <p class="lede">Учебник для сильных инженеров: от автономии до production-blueprint. Деривация от «что такое автономия» до собранного
-        production-blueprint и протокола, не дающего ему устареть — 14 уроков, каждый с реальным сломанным
-        прогоном, выводом «проблема → решение → новая проблема», вкладом в сквозную систему и pset.</p>
+       <p class="lede">Учебник для сильных инженеров: от автономии до производственного чертежа. Деривация от «что такое автономия» до собранного
+        производственного чертежа и протокола, не дающего ему устареть — 14 уроков, каждый с реальным сломанным
+        прогоном, выводом «проблема → решение → новая проблема», вкладом в сквозную систему и практикумом.</p>
       <div class="disclaimer">
         <b>«L8+»</b> — внутреннее обозначение курса, <b>не отраслевой стандарт</b> (признанные таксономии —
         L0–L5, производны от SAE J3016; см. урок 1). <b>Актуально на 2026-06-23.</b>
@@ -292,9 +292,9 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
     </header>
 
     <div class="panel" id="spine">
-      <h2>Reference-spine: сквозная система</h2>
-      <p class="sub">Каждый урок добавляет примитив с контрактом интерфейса и инвариантом «что ломается без него». К финалу — собранный L8+ blueprint, не 14 разрозненных конспектов.</p>
-      <div class="flow">intake → classifier → planner → router → context-builder → executor(+tool-registry) → verifier(+critic) → memory-manager ; сквозь всё: policy, trace, escalation</div>
+      <h2>Опорный стержень: сквозная система</h2>
+      <p class="sub">Каждый урок добавляет примитив с контрактом интерфейса и инвариантом «что ломается без него». К финалу — собранный производственный чертёж, не 14 разрозненных конспектов.</p>
+      <div class="flow">приём задачи → классификатор → планировщик → маршрутизатор → сборщик контекста → исполнитель(+реестр инструментов) → верификатор(+критик) → управление памятью ; сквозь всё: политики, трассировка, эскалация</div>
       <ol class="inv">
   <li>Автономия = f(права, надзор), не способности (урок 1)</li>
   <li>Lifecycle: машина состояний + idempotency + event log + replay (уроки 3, 9)</li>
@@ -311,9 +311,9 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
       <h2>Как читать</h2>
       <ul>
         <li><b>Линейно</b> — деривация выстроена так, что каждый урок опирается на предыдущие.</li>
-        <li><b>Структура урока</b> (одинаковая у всех 14): статус → cold-open (реальный сломанный прогон) →
-          деривация → карта решений (tradeoff'ы) → failure modes → вклад в spine → pset (скелет/тесты/эталон)
-          → диагностические вопросы → глоссарий-дельта → первоисточники (+ карантин).</li>
+        <li><b>Структура урока</b> (одинаковая у всех 14): статус → разбор инцидента (реальный сломанный прогон) →
+          деривация → карта решений → режимы отказа → вклад в опорный стержень → практикум (скелет/тесты/эталон)
+          → вопросы на суждение → глоссарий → первоисточники (+ карантин).</li>
         <li><b>Спорное оставлено спорным</b> — где академия/прод/фреймворки расходятся, урок даёт критерий
           выбора, а не «правильный ответ».</li>
         <li>Уроки 3, 4, 6, 7, 10 содержат <b>интерактивные виджеты</b> — потрогать механику руками.</li>
@@ -328,75 +328,75 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
     <h2>Зрелость автономии</h2>
     <span class="badge b-core">ядро [устоявшееся]</span>
   </div>
-  <div class="tagline">Уровень агента ≠ его способности</div>
+  <div class="tagline">Уровень агента — не его способности</div>
   <div class="card-meta">
-    <div class="meta-item"><span class="k">Cold-open</span>Replit удалил прод-БД (права без тормоза)</div>
-    <div class="meta-item"><span class="k">В spine</span>оси A (динамичность) / B (полномочия)</div>
+    <div class="meta-item"><span class="k">Инцидент</span>Replit: агент удалил промышленную базу данных</div>
+    <div class="meta-item"><span class="k">В стержень</span>Оси динамичности и полномочий</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
 <a class="lcard" href="lesson-02.html">
   <div class="sec-head">
     <span class="idx">02</span>
-    <h2>Примитивы и reference-spine</h2>
+    <h2>Примитивы и опорный стержень</h2>
     <span class="badge b-core">[конвенция, не стандарт]</span>
   </div>
   <div class="tagline">Из чего собран оркестратор</div>
   <div class="card-meta">
-    <div class="meta-item"><span class="k">Cold-open</span>Anthropic: рой из 50 субагентов</div>
-    <div class="meta-item"><span class="k">В spine</span>12 примитивов с контрактами</div>
+    <div class="meta-item"><span class="k">Инцидент</span>Anthropic: рой из 50 подагентов</div>
+    <div class="meta-item"><span class="k">В стержень</span>12 примитивов с контрактами</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
 <a class="lcard" href="lesson-03.html">
   <div class="sec-head">
     <span class="idx">03</span>
-    <h2>Task lifecycle и durable execution</h2>
-    <span class="badge b-emerging">[устоявшееся] DS + [формирующееся] на LLM</span>
+    <h2>Жизненный цикл задачи</h2>
+    <span class="badge b-emerging">[устоявшееся] + [формирующееся] на LLM</span>
   </div>
-  <div class="tagline">Надёжность поверх недетерминированного LLM</div>
+  <div class="tagline">Надёжность поверх недетерминированной языковой модели</div>
   <div class="card-meta">
-    <div class="meta-item"><span class="k">Cold-open</span>Replit: compounding error + нет recovery</div>
-    <div class="meta-item"><span class="k">В spine</span>машина состояний + idempotency + event-log</div>
+    <div class="meta-item"><span class="k">Инцидент</span>Replit: накопление ошибок + нет восстановления</div>
+    <div class="meta-item"><span class="k">В стержень</span>Машина состояний, идемпотентность, журнал событий</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
 <a class="lcard" href="lesson-04.html">
   <div class="sec-head">
     <span class="idx">04</span>
-    <h2>Context engineering</h2>
+    <h2>Инженерия контекста</h2>
     <span class="badge b-core">[устоявшееся] деградация</span>
   </div>
-  <div class="tagline">Контекст — бюджет внимания, не хранилище</div>
+  <div class="tagline">Контекст — бюджет внимания, а не хранилище</div>
   <div class="card-meta">
-    <div class="meta-item"><span class="k">Cold-open</span>Du et al.: деградация при идеальном retrieval</div>
-    <div class="meta-item"><span class="k">В spine</span>context-builder (бюджет + 4 операции)</div>
+    <div class="meta-item"><span class="k">Инцидент</span>Du et al.: деградация даже при идеальном поиске</div>
+    <div class="meta-item"><span class="k">В стержень</span>Сборщик контекста (бюджет + 4 операции)</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
 <a class="lcard" href="lesson-05.html">
   <div class="sec-head">
     <span class="idx">05</span>
-    <h2>Инструменты, права, policy</h2>
+    <h2>Инструменты, права и политика</h2>
     <span class="badge b-emerging">[устоявшееся] IAM + [формирующееся] на агентах</span>
   </div>
-  <div class="tagline">Agent proposes, system decides</div>
+  <div class="tagline">Агент предлагает — система решает</div>
   <div class="card-meta">
-    <div class="meta-item"><span class="k">Cold-open</span>Взлом Мексики 195M / EchoLeak</div>
-    <div class="meta-item"><span class="k">В spine</span>policy-engine (trust-aware)</div>
+    <div class="meta-item"><span class="k">Инцидент</span>Взлом Мексики: 195 млн записей / EchoLeak</div>
+    <div class="meta-item"><span class="k">В стержень</span>Движок политик с учётом доверия</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
 <a class="lcard" href="lesson-06.html">
   <div class="sec-head">
     <span class="idx">06</span>
-    <h2>Evals, verifier, trajectory</h2>
-    <span class="badge b-disputed">[формирующееся] trajectory; [спорное] LLM-judge</span>
+    <h2>Оценка, верификатор и траектория</h2>
+    <span class="badge b-disputed">[формирующееся] траектория; [спорное] модель-судья</span>
   </div>
   <div class="tagline">Финального ответа недостаточно</div>
   <div class="card-meta">
-    <div class="meta-item"><span class="k">Cold-open</span>WebArena 14% / tau-bench &lt;50% + pass^k</div>
-    <div class="meta-item"><span class="k">В spine</span>verifier + eval-harness (pass^k)</div>
+    <div class="meta-item"><span class="k">Инцидент</span>WebArena: 14% / tau-bench: менее 50% + pass^k</div>
+    <div class="meta-item"><span class="k">В стержень</span>Верификатор + оснастка оценки (pass^k)</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
@@ -408,107 +408,107 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
   </div>
   <div class="tagline">Что агент хранит и чему верит</div>
   <div class="card-meta">
-    <div class="meta-item"><span class="k">Cold-open</span>Memory poisoning — эксплойт, который ждёт</div>
-    <div class="meta-item"><span class="k">В spine</span>memory_manager (write-gate/provenance/trust)</div>
+    <div class="meta-item"><span class="k">Инцидент</span>Отравление памяти — эксплойт, который ждёт</div>
+    <div class="meta-item"><span class="k">В стержень</span>Управление памятью (шлюз записи/происхождение/доверие)</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
 <a class="lcard" href="lesson-08.html">
   <div class="sec-head">
     <span class="idx">08</span>
-    <h2>Retrieval: RAG, hybrid, GraphRAG</h2>
-    <span class="badge b-emerging">[устоявшееся] vector; [формирующееся] GraphRAG</span>
+    <h2>Поиск: RAG, гибридный и графовый</h2>
+    <span class="badge b-emerging">[устоявшееся] векторный; [формирующееся] графовый RAG</span>
   </div>
-  <div class="tagline">Доказуемость источника, не похожесть</div>
+  <div class="tagline">Привязка к источнику, а не семантическая похожесть</div>
   <div class="card-meta">
-    <div class="meta-item"><span class="k">Cold-open</span>Stanford: legal RAG галлюцинирует 17–33%</div>
-    <div class="meta-item"><span class="k">В spine</span>retrieval pipeline + source-grounding</div>
+    <div class="meta-item"><span class="k">Инцидент</span>Stanford: юридический RAG ошибается в 17–33% случаев</div>
+    <div class="meta-item"><span class="k">В стержень</span>Конвейер поиска + привязка к источнику</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
 <a class="lcard" href="lesson-09.html">
   <div class="sec-head">
     <span class="idx">09</span>
-    <h2>Observability и воспроизводимость</h2>
-    <span class="badge b-disputed">[устоявшееся] tracing; [спорное] replay</span>
+    <h2>Наблюдаемость и воспроизводимость</h2>
+    <span class="badge b-disputed">[устоявшееся] трассировка; [спорное] воспроизведение</span>
   </div>
   <div class="tagline">Видеть то, что нельзя повторить</div>
   <div class="card-meta">
-    <div class="meta-item"><span class="k">Cold-open</span>Replit: silent failure + невоспроизводимость</div>
-    <div class="meta-item"><span class="k">В spine</span>trace-layer + deterministic replay</div>
+    <div class="meta-item"><span class="k">Инцидент</span>Replit: тихий отказ + невоспроизводимость</div>
+    <div class="meta-item"><span class="k">В стержень</span>Слой трассировки + детерминированное воспроизведение</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
 <a class="lcard" href="lesson-10.html">
   <div class="sec-head">
     <span class="idx">10</span>
-    <h2>Безопасность: injection, threat model</h2>
-    <span class="badge b-hype">[нерешённое] prompt injection</span>
+    <h2>Безопасность: внедрение и модель угроз</h2>
+    <span class="badge b-hype">[нерешённое] внедрение в промпт</span>
   </div>
   <div class="tagline">Почему фильтры не спасают</div>
   <div class="card-meta">
-    <div class="meta-item"><span class="k">Cold-open</span>Nasr: защиты обойдены &gt;90%, человек 100%</div>
-    <div class="meta-item"><span class="k">В spine</span>threat model + Rule of Two</div>
+    <div class="meta-item"><span class="k">Инцидент</span>Nasr: защиты обойдены более чем на 90%, человек — 100%</div>
+    <div class="meta-item"><span class="k">В стержень</span>Модель угроз + правило двух</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
 <a class="lcard" href="lesson-11.html">
   <div class="sec-head">
     <span class="idx">11</span>
-    <h2>Мультиагентность: MCP / A2A</h2>
+    <h2>Мультиагентность: MCP и A2A</h2>
     <span class="badge b-disputed">[формирующееся]; польза [спорное]</span>
   </div>
-  <div class="tagline">MCP вертикаль, A2A горизонталь</div>
+  <div class="tagline">MCP — вертикаль, A2A — горизонталь</div>
   <div class="card-meta">
-    <div class="meta-item"><span class="k">Cold-open</span>Anthropic +90.2% / 15× / MAST 37%</div>
-    <div class="meta-item"><span class="k">В spine</span>координация + протоколы + Rule of Two на субагента</div>
+    <div class="meta-item"><span class="k">Инцидент</span>Anthropic: +90.2% / ×15 токенов / MAST 37%</div>
+    <div class="meta-item"><span class="k">В стержень</span>Координация, протоколы и правило двух на подагентов</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
 <a class="lcard" href="lesson-12.html">
   <div class="sec-head">
     <span class="idx">12</span>
-    <h2>Human-in-the-loop и operating model</h2>
-    <span class="badge b-core">[устоявшееся] фреймворки; AI Act 08.2026</span>
+    <h2>Человек в цикле и модель эксплуатации</h2>
+    <span class="badge b-core">[устоявшееся] подходы; AI Act 08.2026</span>
   </div>
-  <div class="tagline">Надзор, не вырождающийся в штамп</div>
+  <div class="tagline">Надзор, не вырождающийся в формальность</div>
   <div class="card-meta">
-    <div class="meta-item"><span class="k">Cold-open</span>Air Canada: ответственны за слова бота</div>
-    <div class="meta-item"><span class="k">В spine</span>escalation + RACI (accountable=human)</div>
+    <div class="meta-item"><span class="k">Инцидент</span>Air Canada: компания отвечает за слова бота</div>
+    <div class="meta-item"><span class="k">В стержень</span>Эскалация + RACI (ответственный — человек)</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
 <a class="lcard" href="lesson-13.html">
   <div class="sec-head">
     <span class="idx">13</span>
-    <h2>Экономика и production readiness (capstone)</h2>
-    <span class="badge b-disputed">[спорное] unit-экономика</span>
+    <h2>Экономика и готовность к производству</h2>
+    <span class="badge b-disputed">[спорное] удельная экономика</span>
   </div>
-  <div class="tagline">Настоящая цена = inference + verification + failure</div>
+  <div class="tagline">Реальная цена = вывод + проверка + отказ</div>
   <div class="card-meta">
-    <div class="meta-item"><span class="k">Cold-open</span>Amazon Q: 6.3 млн потерянных заказов</div>
-    <div class="meta-item"><span class="k">В spine</span>полный L8+ blueprint + cost model + readiness gate</div>
+    <div class="meta-item"><span class="k">Инцидент</span>Amazon Q: 6.3 млн потерянных заказов</div>
+    <div class="meta-item"><span class="k">В стержень</span>Полный чертёж + модель затрат + шлюз готовности</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
 <a class="lcard" href="lesson-14.html">
   <div class="sec-head">
     <span class="idx">14</span>
-    <h2>Фронт и горизонт-сканирование</h2>
-    <span class="badge b-special">ОСОБЫЙ: snapshot до 2026-09-23 + protocol</span>
+    <h2>Передний край и сканирование горизонта</h2>
+    <span class="badge b-special">ОСОБЫЙ: снимок до 2026-09-23 + протокол</span>
   </div>
-  <div class="tagline">Не догонять тренды, а оценивать их</div>
+  <div class="tagline">Не догонять тенденции, а оценивать их</div>
   <div class="card-meta">
-    <div class="meta-item"><span class="k">Cold-open</span>Даже tau-bench/SWE-bench устаревают</div>
-    <div class="meta-item"><span class="k">В spine</span>horizon-scanning protocol (анти-устаревание)</div>
+    <div class="meta-item"><span class="k">Инцидент</span>Даже tau-bench и SWE-bench устаревают</div>
+    <div class="meta-item"><span class="k">В стержень</span>Протокол сканирования горизонта (защита от устаревания)</div>
   </div>
   <span class="expand-hint">открыть урок →</span>
 </a>
     </div>
 
     <footer id="footer">
-      <p class="k">Прод отличается от демо наличием всех инвариантов spine, положительной unit-экономикой и
-        проходимым production-readiness gate.</p>
+      <p class="k">Прод отличается от демо наличием всех инвариантов опорного стержня, положительной удельной экономикой и
+        проходимым шлюзом готовности к производству.</p>
       <p>Метод: research-досье (GPT Deep Research) → инженерная сборка с verification gate (Claude). Все
         источники верифицированы на 2026-06-23. Frontier-snapshot протухает — пересмотр до
         2026-09-23 по horizon-scanning protocol (урок 14).</p>

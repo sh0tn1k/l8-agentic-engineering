@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="data:,">
-<title>Урок 11. Мультиагентность: MCP / A2A — L8+ Agentic Engineering</title>
+<title>Урок 11. Мультиагентность: MCP и A2A — L8+ Agentic Engineering</title>
 <!-- Design language adapted from ThariqS/html-effectiveness (Apache-2.0, (c) Anthropic PBC). -->
 <style>
 :root{
@@ -253,23 +253,23 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
     <nav>
 <a href="index.html">▲ Главная</a>
 <a class="lead">Карта</a>
-<a href="index.html#spine"><span class="n">◆</span>Reference-spine</a>
+<a href="index.html#spine"><span class="n">◆</span>Опорный стержень</a>
 <a href="index.html#how"><span class="n">?</span>Как читать</a>
 <a class="lead">Уроки</a>
 <a href="lesson-01.html"><span class="n">01</span>Зрелость автономии</a>
-<a href="lesson-02.html"><span class="n">02</span>Примитивы и reference-spine</a>
-<a href="lesson-03.html"><span class="n">03</span>Task lifecycle и durable execution</a>
-<a href="lesson-04.html"><span class="n">04</span>Context engineering</a>
-<a href="lesson-05.html"><span class="n">05</span>Инструменты, права, policy</a>
-<a href="lesson-06.html"><span class="n">06</span>Evals, verifier, trajectory</a>
+<a href="lesson-02.html"><span class="n">02</span>Примитивы и опорный стержень</a>
+<a href="lesson-03.html"><span class="n">03</span>Жизненный цикл задачи</a>
+<a href="lesson-04.html"><span class="n">04</span>Инженерия контекста</a>
+<a href="lesson-05.html"><span class="n">05</span>Инструменты, права и политика</a>
+<a href="lesson-06.html"><span class="n">06</span>Оценка, верификатор и траектория</a>
 <a href="lesson-07.html"><span class="n">07</span>Память и жизненный цикл знания</a>
-<a href="lesson-08.html"><span class="n">08</span>Retrieval: RAG, hybrid, GraphRAG</a>
-<a href="lesson-09.html"><span class="n">09</span>Observability и воспроизводимость</a>
-<a href="lesson-10.html"><span class="n">10</span>Безопасность: injection, threat model</a>
-<a href="lesson-11.html" class="active"><span class="n">11</span>Мультиагентность: MCP / A2A</a>
-<a href="lesson-12.html"><span class="n">12</span>Human-in-the-loop и operating model</a>
-<a href="lesson-13.html"><span class="n">13</span>Экономика и production readiness (capstone)</a>
-<a href="lesson-14.html"><span class="n">14</span>Фронт и горизонт-сканирование</a>
+<a href="lesson-08.html"><span class="n">08</span>Поиск: RAG, гибридный и графовый</a>
+<a href="lesson-09.html"><span class="n">09</span>Наблюдаемость и воспроизводимость</a>
+<a href="lesson-10.html"><span class="n">10</span>Безопасность: внедрение и модель угроз</a>
+<a href="lesson-11.html" class="active"><span class="n">11</span>Мультиагентность: MCP и A2A</a>
+<a href="lesson-12.html"><span class="n">12</span>Человек в цикле и модель эксплуатации</a>
+<a href="lesson-13.html"><span class="n">13</span>Экономика и готовность к производству</a>
+<a href="lesson-14.html"><span class="n">14</span>Передний край и сканирование горизонта</a>
 <a class="lead">Конец</a>
 <a href="index.html#footer"><span class="n">§</span>Метод и источники</a>
     </nav>
@@ -279,25 +279,35 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
     <div class="crumb"><a href="index.html">← Все уроки</a></div>
     <header class="lesson-head">
       <div class="eyebrow">Урок 11<span class="badge b-disputed" style="margin-left:6px">[формирующееся]; польза [спорное]</span></div>
-      <h1 class="title">Мультиагентность: MCP / A2A</h1>
-      <p class="lede">MCP вертикаль, A2A горизонталь</p>
+      <h1 class="title">Мультиагентность: MCP и A2A</h1>
+      <p class="lede">MCP — вертикаль, A2A — горизонталь</p>
       <div class="card-meta">
-        <div class="meta-item"><span class="k">Cold-open</span>Anthropic +90.2% / 15× / MAST 37%</div>
-        <div class="meta-item"><span class="k">В spine</span>координация + протоколы + Rule of Two на субагента</div>
+        <div class="meta-item"><span class="k">Инцидент</span>Anthropic: +90.2% / ×15 токенов / MAST 37%</div>
+        <div class="meta-item"><span class="k">В стержень</span>Координация, протоколы и правило двух на подагентов</div>
       </div>
     </header>
     <div class="lesson-body">
       <div class="status"><p><strong>Статус:</strong> актуально на 2026-06-23, пересмотреть до 2026-09.
-MCP (агент↔инструмент) и A2A (агент↔агент) — <strong>[формирующееся]</strong> (MCP 2024; A2A v1.0 2026, Linux
-Foundation, 150+ орг). Ролевые архитектуры (Coordinator-Implementor-Verifier) — <strong>[формирующееся]</strong>.
-«Польза мультиагентности vs single-agent» — <strong>[спорное]</strong>. Расширяет router/orchestrator (урок 2), threat
-model и Rule of Two (урок 10), conflict-policy (урок 7).</p></div>
+Протокол контекста модели (MCP; агент↔инструмент) и протокол агент-агент (A2A; агент↔агент) — <strong>[формирующееся]</strong> (MCP 2024; A2A v1.0 2026, Linux
+Foundation, 150+ орг). Ролевые архитектуры (координатор–исполнитель–верификатор) — <strong>[формирующееся]</strong>.
+«Польза мультиагентности vs single-agent» — <strong>[спорное]</strong>. Расширяет router/orchestrator (урок 2), модель угроз
+и Rule of Two (урок 10), conflict-policy (урок 7).</p></div>
+<h3>Чему вы научитесь</h3>
+<p>После этого урока вы сможете:</p>
+<ul>
+<li>Обоснованно выбирать между одним агентом и мультиагентной системой, опираясь на характер задачи</li>
+<li>Различать протокол контекста модели (MCP) и протокол агент-агент (A2A) — вертикаль и горизонталь агентной архитектуры — и применять каждый по назначению</li>
+<li>Проектировать ролевую архитектуру «координатор–исполнитель–верификатор» с непересекающимися границами ролей</li>
+<li>Изолировать контексты подагентов для предотвращения молчаливой перезаписи и дрейфа контекста</li>
+<li>Разрешать конфликты между агентами арбитражем или голосованием, без молчаливой перезаписи</li>
+<li>Применять Rule of Two к каждому подагенту</li>
+</ul>
 <hr />
 <h3>0. Зачем этот урок</h3>
 <p>Десять этапов мы строили <strong>одного</strong> агента-оркестратора. Теперь вопрос: когда нужно <strong>несколько</strong> агентов,
 как они координируются, не мешая друг другу, и как агенты от <strong>разных</strong> вендоров вообще разговаривают. Это
 усиленный этап: после него у нас есть критерий «сколько агентов», протокол передачи и — главное —
-правильное (не перепутанное) понимание MCP vs A2A.</p>
+правильное (не перепутанное) понимание MCP и A2A.</p>
 <p>Две мысли, которые урок должен оставить:</p>
 <blockquote>
 <p><strong>(1)</strong> «Больше агентов» — <strong>не бесплатно и не автоматически лучше</strong>. Мультиагент выигрывает на
@@ -308,21 +318,22 @@ agentic-проектов отменят к 2027 (Gartner). Сначала спр
 (агент↔инструмент/данные, Anthropic), <strong>A2A — горизонталь</strong> (агент↔агент, Google→Linux Foundation). Это
 не конкуренты; путать их — типовая ошибка.</p>
 </blockquote>
+<p>Посмотрим, как это работает на практике — и где ломается.</p>
 <hr />
-<h3>1. Cold-open: мультиагент, который выиграл +90% и сжёг 15× — и тот, что породил рой</h3>
+<h3>1. Разбор инцидента</h3>
 <p>Мультиагентность продают как «просто добавь агентов — будет умнее». Реальность <strong>двойственна</strong>, и обе
 стороны верифицированы:</p>
 <ul>
 <li><strong>Выигрывает (иногда):</strong> Anthropic («How we built our multi-agent research system») — связка Opus-4-lead +
-  Sonnet-4-субагенты <strong>обошла одиночного Opus 4 на +90.2%</strong> на внутреннем research-eval. Для
+  Sonnet-4-подагенты <strong>обошла одиночного Opus 4 на +90.2%</strong> на внутреннем research-eval. Для
   распараллеливаемой широты (искать по многим направлениям) мультиагент реально лучше.</li>
 <li><strong>Платит дорого:</strong> та же система — <strong>≈15× токенов</strong> против чата. Координация не бесплатна.</li>
 <li><strong>Добавляет новый класс отказов:</strong> MAST (arXiv 2503.13657, верифицировано в уроках 2–3) — <strong>37% отказов
-  MAS — это inter-agent misalignment</strong>: агенты не передают критичное, расходятся в целях. Координация сама
+  MAS — это рассогласование агентов (inter-agent misalignment)</strong>: агенты не передают критичное, расходятся в целях. Координация сама
   — крупный источник сбоев.</li>
 <li><strong>Часто не окупается:</strong> Gartner — <strong>&gt;40% agentic-AI проектов отменят к 2027</strong> (стоимость, неясная
   ценность, риски).</li>
-<li><strong>Может выродиться в рой:</strong> ранний провал Anthropic (урок 2) — лид породил <strong>50 субагентов на простой
+<li><strong>Может выродиться в рой:</strong> ранний провал Anthropic (урок 2) — ведущий агент породил <strong>50 подагентов на простой
   запрос</strong>, решаемый одним.</li>
 </ul>
 <p>Отсюда тезис урока:</p>
@@ -334,35 +345,36 @@ agentic-проектов отменят к 2027 (Gartner). Сначала спр
 </blockquote>
 <p><em>(Карантин: «200мс→4с латентность» (4-й рецидив фабрикации), «41–86.7% / 1642 прогона», «42.68% vs 2.92%»,
 «79% используют/96% расширяют» — не подтверждены; беру верифицированные Anthropic/MAST/Gartner. §9.)</em></p>
+<p>От наблюдений перейдём к архитектурным принципам.</p>
 <hr />
-<h3>2. Деривация: от одного агента к скоординированной сети</h3>
+<h3>2. От одиночного агента к сети</h3>
 <h4>2.1 Боль → механизм</h4>
 <ul>
 <li><strong>«Нужен ли вообще второй агент?»</strong> Дефолт — single-agent + tools (проще, дешевле, меньше точек отказа).
   Мультиагент оправдан при: параллельной широте (Anthropic research), разделении зон безопасности (каждый
-  агент — минимум прав, урок 10), разных командах-владельцах. Иначе — это «рой» (cold-open) и 15× счёт зря.</li>
-<li><strong>«Агенты дублируют работу» (50 субагентов).</strong> Вводим <strong>роли с границами</strong>: паттерн
-  <strong>Coordinator–Implementor–Verifier</strong> (координатор декомпозирует, исполнители делают, верификатор
-  проверяет — урок 6). Role boundaries устраняют дублирование. Конкретная реализация — <strong>Magentic-One</strong>
-  (Microsoft): Orchestrator + специалисты. Отдельный паттерн — <strong>multiagent debate</strong> (Du et al.): несколько
+  агент — минимум прав, урок 10), разных командах-владельцах. Иначе — это «рой» (разбор инцидента) и 15× счёт зря.</li>
+<li><strong>«Агенты дублируют работу» (50 подагентов).</strong> Вводим <strong>роли с границами ролей (role boundaries)</strong>: паттерн
+  <strong>координатор–исполнитель–верификатор (Coordinator–Implementor–Verifier, CIV)</strong> — координатор декомпозирует, исполнители делают, верификатор
+  проверяет (урок 6). Границы ролей устраняют дублирование. Конкретная реализация — <strong>Magentic-One</strong>
+  (Microsoft): Orchestrator + специалисты. Отдельный паттерн — <strong>мультиагентные дебаты (multiagent debate)</strong> (Du et al.): несколько
   моделей спорят и сходятся к ответу (консенсус ради качества, не декомпозиция).</li>
-<li><strong>«Как передать задачу/контекст».</strong> Вводим <strong>handoff-протокол</strong>: триажный агент → специалист (sales /
+<li><strong>«Как передать задачу/контекст».</strong> Вводим <strong>протокол передачи (handoff)</strong>: триажный агент → специалист (sales /
   refund / human). Явная схема «кто что делает и кому передаёт».</li>
-<li><strong>«Общий контекст рассинхронизировался» (context drift).</strong> Один агент зовёт <code>f()</code>, другой уже переименовал
-  её в <code>g()</code>. Вводим выбор <strong>shared vs private context</strong> + синхронизацию; для кода — <strong>изоляцию</strong> (git
-  worktree), чтобы не было <strong>silent overwrite</strong> (два агента стёрли правки друг друга).</li>
-<li><strong>«Агенты дали противоречивые решения».</strong> Вводим <strong>conflict resolution</strong> (не молчаливый overwrite —
+<li><strong>«Общий контекст рассинхронизировался» — дрейф контекста (context drift).</strong> Один агент зовёт <code>f()</code>, другой уже переименовал
+  её в <code>g()</code>. Вводим выбор <strong>общего и приватного контекста (shared vs private)</strong> + синхронизацию; для кода — <strong>изоляцию</strong> (git
+  worktree), чтобы не было <strong>молчаливой перезаписи (silent overwrite)</strong> (два агента стёрли правки друг друга).</li>
+<li><strong>«Агенты дали противоречивые решения».</strong> Вводим <strong>разрешение конфликтов</strong> (не молчаливая перезапись —
   урок 7!): арбитр, голосование, или приоритет по trust/score. Сложное — на человека (урок 12).</li>
-<li><strong>«Агенты от разных вендоров не понимают друг друга».</strong> Вводим <strong>inter-agent протоколы</strong> — §2.2.</li>
+<li><strong>«Агенты от разных вендоров не понимают друг друга».</strong> Вводим <strong>межагентные протоколы</strong> — §2.2.</li>
 </ul>
-<h4>2.2 MCP vs A2A: вертикаль и горизонталь (не путать)</h4>
+<h4>2.2 MCP и A2A: вертикаль и горизонталь (не путать)</h4>
 <p>Это центральный и самый путаемый пункт. Два протокола, <strong>разные оси</strong>, <strong>дополняют</strong> друг друга:</p>
 <table>
 <thead>
 <tr>
 <th></th>
-<th><strong>MCP (Model Context Protocol)</strong></th>
-<th><strong>A2A (Agent2Agent)</strong></th>
+<th><strong>MCP</strong></th>
+<th><strong>A2A</strong></th>
 </tr>
 </thead>
 <tbody>
@@ -394,16 +406,17 @@ agentic-проектов отменят к 2027 (Gartner). Сначала спр
 <p>MCP и A2A — два доминирующих, но <strong>ландшафт фрагментируется</strong>: есть ещё ACP (IBM/BeeAI), ANP и др.;
 систематизация — «A Survey of AI Agent Protocols» (Yang et al., 2504.16736). Тренд к стандартизации идёт, но
 не устаканился.</p>
-<h4>2.3 Новая проблема: мультиагент расширяет threat model (мост к уроку 10)</h4>
-<p>Каждый новый агент — новая поверхность атаки. <strong>Rogue agent</strong> (скомпрометированный агент заражает соседей
+<h4>2.3 Новая проблема: мультиагент расширяет модель угроз (мост к уроку 10)</h4>
+<p>Каждый новый агент — новая поверхность атаки. <strong>Скомпрометированный агент (rogue agent)</strong> (скомпрометированный агент заражает соседей
 через shared context/сообщения), перехват протокола, каскадное распространение poisoning (урок 7). Поэтому
-<strong>Rule of Two (урок 10) применяется к КАЖДОМУ субагенту</strong>, а доверие между агентами — через Signed Agent
+<strong>Rule of Two (урок 10) применяется к КАЖДОМУ подагенту</strong>, а доверие между агентами — через Signed Agent
 Cards. Мультиагентность не отменяет безопасность — она её умножает.</p>
 <h4>2.4 Новая проблема (мост к §3): протоколы незрелы, польза спорна</h4>
-<p>MCP/A2A — 2024–2026, без долгих полевых испытаний; реализации расходятся. И фундаментально: «мультиагент vs
+<p>MCP и A2A — 2024–2026, без долгих полевых испытаний; реализации расходятся. И фундаментально: «мультиагент vs
 один агент + tools» не решён (Gartner 40% отмен). Это §3.</p>
+<p>От принципов — к практическому выбору.</p>
 <hr />
-<h3>3. Карта решений: сколько агентов и как они говорят</h3>
+<h3>3. Карта решений</h3>
 <table>
 <thead>
 <tr>
@@ -430,7 +443,7 @@ Cards. Мультиагентность не отменяет безопасно
 <td><strong>Контекст</strong></td>
 <td>shared vs private</td>
 <td>shared: общая картина; private: изоляция, нет drift</td>
-<td>shared → context drift, silent overwrite</td>
+<td>shared → дрейф контекста, молчаливая перезапись</td>
 </tr>
 <tr>
 <td><strong>Протокол</strong></td>
@@ -450,13 +463,14 @@ Cards. Мультиагентность не отменяет безопасно
   реальный параллелизм/разделение зон.</li>
 <li><strong>«Больше агентов» вредит.</strong> Накладные (context switching, синхронизация) могут перевесить параллелизм.
   Для однофайловых/простых задач один LLM лучше CIV.</li>
-<li><strong>Зрелость протоколов.</strong> MCP/A2A молоды, без долгих полевых испытаний, версии и multi-tenancy ещё
+<li><strong>Зрелость протоколов.</strong> MCP и A2A молоды, без долгих полевых испытаний, версии и multi-tenancy ещё
   дорабатываются. Между реализациями интерфейс может расходиться.</li>
 <li><strong>Метрики мультиагентности.</strong> Нет стандарта: критерий успеха локален (верный финал), системных метрик
   (частота конфликтов, эффективность обмена) в стандарте нет.</li>
 </ul>
+<p>У каждого выбора есть теневая сторона — систематизируем отказы.</p>
 <hr />
-<h3>4. Failure modes мультиагентности</h3>
+<h3>4. Режимы отказа</h3>
 <table>
 <thead>
 <tr>
@@ -469,47 +483,48 @@ Cards. Мультиагентность не отменяет безопасно
 <tbody>
 <tr>
 <td><strong>Дублирование / рой</strong></td>
-<td>нет границ ролей (50 субагентов)</td>
-<td>role boundaries + бюджет (урок 2)</td>
+<td>нет границ ролей (50 подагентов)</td>
+<td>границы ролей + бюджет (урок 2)</td>
 <td>specification</td>
 </tr>
 <tr>
-<td><strong>Inter-agent misalignment</strong></td>
+<td><strong>Рассогласование агентов</strong></td>
 <td>не передали критичное, разошлись в цели</td>
-<td>handoff-протокол, shared-context дисциплина</td>
+<td>протокол передачи, дисциплина общих контекстов</td>
 <td><strong>inter-agent (37%)</strong></td>
 </tr>
 <tr>
-<td><strong>Context drift</strong></td>
+<td><strong>Дрейф контекста</strong></td>
 <td>один агент не знает об изменениях другого</td>
-<td>синхронизация / private context</td>
+<td>синхронизация / приватный контекст</td>
 <td>inter-agent</td>
 </tr>
 <tr>
-<td><strong>Silent overwrite</strong></td>
+<td><strong>Молчаливая перезапись</strong></td>
 <td>два агента стёрли правки друг друга</td>
 <td>изоляция (git worktree)</td>
 <td>inter-agent</td>
 </tr>
 <tr>
-<td><strong>Decision conflict</strong></td>
+<td><strong>Конфликт решений</strong></td>
 <td>противоречивые решения молча перезаписаны</td>
 <td>арбитр/голосование, НЕ overwrite (урок 7)</td>
 <td>inter-agent</td>
 </tr>
 <tr>
-<td><strong>Rogue agent</strong></td>
+<td><strong>Скомпрометированный агент</strong></td>
 <td>скомпрометированный агент заражает соседей</td>
-<td>Rule of Two на субагента + Signed Agent Cards (урок 10)</td>
+<td>Rule of Two на подагента + Signed Agent Cards (урок 10)</td>
 <td>—</td>
 </tr>
 </tbody>
 </table>
-<p>Cold-open: мультиагент-выигрыш (+90.2%) <strong>и</strong> доминирование inter-agent отказов (37%) — две стороны одного
+<p>Разбор инцидента: мультиагент-выигрыш (+90.2%) <strong>и</strong> доминирование межагентных отказов (37%) — две стороны одного
 профиля.</p>
+<p>Закрепим выводы в архитектурном контракте.</p>
 <hr />
-<h3>5. Вклад в reference-spine: multi-agent контракт</h3>
-<p>Router/orchestrator (урок 2) обобщается на координацию сети агентов; добавляются роли, handoff, протоколы,
+<h3>5. Опорный стержень</h3>
+<p>Router/orchestrator (урок 2) обобщается на координацию сети агентов; добавляются роли, протокол передачи, протоколы,
 trust-границы.</p>
 <pre><code class="language-python">@dataclass
 class AgentCard:                 # A2A: визитка для обнаружения/делегирования
@@ -526,13 +541,13 @@ class Handoff:
 class Coordinator(Protocol):     # CIV: Coordinator–Implementor–Verifier
     def should_spawn_multiagent(self, task) -&gt; bool:
         ...  # ИНВАРИАНТ: True только если параллелизуемо/разные зоны безопасности
-             # иначе single-agent (анти-рой, cold-open) — мультиагент стоит ~15× токенов
+             # иначе single-agent (анти-рой, разбор инцидента) — мультиагент стоит ~15× токенов
     def assign_roles(self, task) -&gt; list[&quot;RoleBinding&quot;]:
-        ...  # role boundaries: непересекающиеся зоны (анти-дублирование)
+        ...  # границы ролей: непересекающиеся зоны (анти-дублирование)
     def handoff(self, h: Handoff) -&gt; None:
         ...  # передача контекста; private по умолчанию для изоляции
     def resolve_conflict(self, decisions) -&gt; &quot;Resolution&quot;:
-        ...  # арбитр/голосование/trust-приоритет — НЕ молчаливый overwrite (урок 7)
+        ...  # арбитр/голосование/trust-приоритет — НЕ молчаливая перезапись (урок 7)
 
 # Протоколы (НЕ путать оси):
 #   MCP  — вертикаль: как агент дотягивается до tools (урок 5 tool_registry)
@@ -540,17 +555,18 @@ class Coordinator(Protocol):     # CIV: Coordinator–Implementor–Verifier
 
 class SubAgentSecurity(Protocol):
     def check(self, sub_agent) -&gt; bool:
-        ...  # Rule of Two (урок 10) на КАЖДОГО субагента; доверие — через Signed Agent Card
+        ...  # Rule of Two (урок 10) на КАЖДОГО подагента; доверие — через Signed Agent Card
 </code></pre>
 <p><strong>Контракт для следующих этапов:</strong> HITL (урок 12) — канал для conflict-эскалации и approval; экономика
 (урок 13) считает 15× стоимость мультиагента в unit-экономику; security (урок 10) распространяется на
-межагентные границы. Cold-open = мультиагент без проверки <code>should_spawn</code> (рой) и без role boundaries
-(дублирование, 37% inter-agent отказов).</p>
+межагентные границы. Разбор инцидента = мультиагент без проверки <code>should_spawn</code> (рой) и без границ ролей
+(дублирование, 37% межагентных отказов).</p>
+<p>Проверим контракт кодом.</p>
 <hr />
-<h3>6. Pset 11 — координатор с границами ролей, изоляцией и Rule of Two</h3>
+<h3>6. Практикум</h3>
 <p><strong>Задача.</strong> Реализовать координатор, который (а) не плодит агентов на простой задаче; (б) задаёт
 непересекающиеся роли; (в) изолирует контекст (анти silent-overwrite); (г) разрешает конфликт без overwrite;
-(д) применяет Rule of Two к субагентам.</p>
+(д) применяет Rule of Two к подагентам.</p>
 <p><strong>Скелет</strong> (<code>coordinator.py</code>):</p>
 <pre><code class="language-python">def should_spawn_multiagent(task) -&gt; bool:
     # мультиагент стоит ~15× токенов (Anthropic) — оправдан только при параллелизме/разделении
@@ -558,7 +574,7 @@ class SubAgentSecurity(Protocol):
 
 def assign_roles(task):
     roles = decompose(task)                       # CIV: coordinator/implementor/verifier
-    assert no_overlap(roles)                      # role boundaries (анти-дублирование)
+    assert no_overlap(roles)                      # границы ролей (анти-дублирование)
     return roles
 
 def run(task):
@@ -566,7 +582,7 @@ def run(task):
         return single_agent.run(task)             # дефолт: один агент (анти-рой)
     bindings = assign_roles(task)
     for b in bindings:
-        assert rule_of_two_ok(b.agent.caps)       # урок 10 на каждого субагента
+        assert rule_of_two_ok(b.agent.caps)       # урок 10 на каждого подагента
     results = parallel_run(bindings, context_mode=&quot;private&quot;)   # изоляция (анти overwrite/drift)
     return resolve_conflict(collect(results))
 
@@ -576,14 +592,14 @@ def resolve_conflict(decisions):
 </code></pre>
 <p><strong>Тесты:</strong></p>
 <pre><code class="language-python">def test_simple_task_uses_single_agent():
-    assert should_spawn_multiagent(simple_faq_task) is False     # анти-рой (cold-open)
+    assert should_spawn_multiagent(simple_faq_task) is False     # анти-рой (разбор инцидента)
 
 def test_parallelizable_task_spawns_multi():
     assert should_spawn_multiagent(broad_research_task) is True
 
 def test_roles_do_not_overlap():
     roles = assign_roles(task)
-    assert no_overlap(roles)                                     # анти-дублирование (50 субагентов)
+    assert no_overlap(roles)                                     # анти-дублирование (50 подагентов)
 
 def test_private_context_prevents_silent_overwrite():
     out = run(two_agents_editing_same_file)
@@ -598,49 +614,52 @@ def test_subagent_obeys_rule_of_two():
     assert not passes_security(sub)                              # rogue-профиль блокируется
 </code></pre>
 <p><strong>Эталон.</strong> Главные мысли: (1) <code>test_simple_task_uses_single_agent</code> — дефолт один агент, мультиагент только
-по необходимости (cold-open «рой» + 15× стоимость); (2) role boundaries против дублирования; (3) private
-context против silent overwrite/drift; (4) конфликт — арбитром, не overwrite (урок 7); (5) Rule of Two на
-каждого субагента (урок 10) — мультиагентность не отменяет безопасность.</p>
+по необходимости (разбор инцидента «рой» + 15× стоимость); (2) границы ролей против дублирования; (3) приватный
+контекст против молчаливой перезаписи и дрейфа контекста; (4) конфликт — арбитром, не overwrite (урок 7); (5) Rule of Two на
+каждого подагента (урок 10) — мультиагентность не отменяет безопасность.</p>
 <p><strong>Расширение.</strong> Добавь A2A-слой: <code>AgentCard</code> с подписью; делегирование задачи внешнему агенту проходит, только
 если его Signed Agent Card валиден (доверительная граница). Покажи тестом, что неподписанный агент в
 делегирование не допускается (анти rogue-agent).</p>
+<p>Проверим глубину инженерного суждения.</p>
 <hr />
-<h3>7. Диагностические вопросы (проверяют суждение)</h3>
+<h3>7. Вопросы на суждение</h3>
 <ol>
 <li>PM требует «сделать мультиагентную систему, это современнее». По §1 (Gartner, MAST, 15×) — какие три
    вопроса зададут, прежде чем плодить агентов? Когда честный ответ — «хватит одного агента с ролями»?</li>
 <li>Коллега говорит: «используем A2A, чтобы агент дотянулся до базы данных». Что не так с этой фразой
    (§2.2)? Какой протокол для чего?</li>
-<li>Два агента параллельно правят один файл, и правки одного исчезли. Какой failure mode (§4) и какие два
+<li>Два агента параллельно правят один файл, и правки одного исчезли. Какой режим отказа (§4) и какие два
    механизма (§2.1, §5) это предотвращают?</li>
 <li>Мультиагент дал +90.2% у Anthropic, но 37% отказов MAS — координация. Как примирить эти факты —
    когда разделение труда окупается, а когда вносит больше отказов, чем пользы (§3.1)?</li>
-<li>Вы добавили субагента, читающего внешние письма и имеющего доступ к внутренней БД и почте. Почему это
-   нарушает Rule of Two (урок 10) на уровне субагента и чем грозит в мультиагентной сети (rogue)?</li>
+<li>Вы добавили подагента, читающего внешние письма и имеющего доступ к внутренней БД и почте. Почему это
+   нарушает Rule of Two (урок 10) на уровне подагента и чем грозит в мультиагентной сети (rogue)?</li>
 <li><strong>Open question</strong> (§3.1): предложи метрику, отвечающую «окупилась ли мультиагентность на этой задаче»
    (учти качество, токены, частоту конфликтов). Чем её можно заиграть?</li>
 </ol>
+<p>Сведём ключевые понятия.</p>
 <hr />
-<h3>8. Глоссарий-дельта</h3>
+<h3>8. Глоссарий</h3>
 <ul>
-<li><strong>Multi-agent vs single-agent</strong> — сеть специализированных агентов vs один агент с инструментами. Дефолт —
+<li><strong>Мультиагентная и одиночная системы</strong> — сеть специализированных агентов vs один агент с инструментами. Дефолт —
   один; мультиагент при параллелизме/разделении зон.</li>
-<li><strong>MCP (Model Context Protocol)</strong> — <strong>вертикаль</strong>: агент↔инструмент/данные (Anthropic, 2024). Не путать с A2A.</li>
-<li><strong>A2A (Agent2Agent)</strong> — <strong>горизонталь</strong>: агент↔агент (Google→Linux Foundation, v1.0 2026, 150+ орг).
+<li><strong>Протокол контекста модели</strong> — <strong>вертикаль</strong>: агент↔инструмент/данные (Anthropic, 2024). Не путать с A2A.</li>
+<li><strong>Протокол агент-агент</strong> — <strong>горизонталь</strong>: агент↔агент (Google→Linux Foundation, v1.0 2026, 150+ орг).
   Обнаружение, делегирование, обмен.</li>
 <li><strong>AgentCard / Signed Agent Card</strong> — JSON-визитка агента (name/url/capabilities) / её крипто-подписанная
-  версия для доверия (A2A).</li>
-<li><strong>CIV (Coordinator–Implementor–Verifier)</strong> — ролевой паттерн: декомпозиция / исполнение / проверка.</li>
-<li><strong>Role boundaries</strong> — непересекающиеся зоны ответственности; против дублирования (рой).</li>
-<li><strong>Handoff / delegation</strong> — передача задачи/контекста между агентами.</li>
-<li><strong>Shared vs private context</strong> — общий пул vs изоляция; shared → context drift / silent overwrite.</li>
-<li><strong>Context drift</strong> — рассинхрон представлений агентов (один не знает об изменениях другого).</li>
-<li><strong>Silent overwrite</strong> — параллельные правки стирают друг друга (лечится изоляцией, git worktree).</li>
-<li><strong>Rogue agent</strong> — скомпрометированный агент заражает сеть; противоядие — Rule of Two + Signed Cards (урок 10).</li>
-<li><strong>Arbiter / consensus</strong> — разрешение конфликта решений (голосование/trust-приоритет), не overwrite (урок 7).</li>
+  версия для доверия.</li>
+<li><strong>Координатор–исполнитель–верификатор (CIV)</strong> — ролевой паттерн: декомпозиция / исполнение / проверка.</li>
+<li><strong>Границы ролей</strong> — непересекающиеся зоны ответственности; против дублирования (рой).</li>
+<li><strong>Передача / делегирование</strong> — передача задачи/контекста между агентами.</li>
+<li><strong>Общий и приватный контекст</strong> — общий пул vs изоляция; общий контекст → дрейф контекста / молчаливая перезапись.</li>
+<li><strong>Дрейф контекста</strong> — рассинхрон представлений агентов (один не знает об изменениях другого).</li>
+<li><strong>Молчаливая перезапись</strong> — параллельные правки стирают друг друга (лечится изоляцией, git worktree).</li>
+<li><strong>Скомпрометированный агент</strong> — скомпрометированный агент заражает сеть; противоядие — Rule of Two + Signed Cards (урок 10).</li>
+<li><strong>Арбитраж / консенсус</strong> — разрешение конфликта решений (голосование/trust-приоритет), не overwrite (урок 7).</li>
 </ul>
+<p>Сверим с источниками.</p>
 <hr />
-<h3>9. Первоисточники (верифицированы 2026-06-23)</h3>
+<h3>9. Первоисточники</h3>
 <ol>
 <li><strong>A2A (Agent2Agent) Protocol</strong> — Linux Foundation: v1.0 (2026), 150+ организаций, Signed Agent Cards,
    web-aligned. <a href="https://www.linuxfoundation.org/press/a2a-protocol-surpasses-150-organizations-lands-in-major-cloud-platforms-and-sees-enterprise-production-use-in-first-year" target="_blank" rel="noopener">https://www.linuxfoundation.org/press/a2a-protocol-surpasses-150-organizations-lands-in-major-cloud-platforms-and-sees-enterprise-production-use-in-first-year</a>
@@ -649,9 +668,9 @@ context против silent overwrite/drift; (4) конфликт — арбит
    агент↔инструмент/данные.</li>
 <li><strong>Anthropic — «How we built our multi-agent research system»</strong> (2025).
    <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank" rel="noopener">https://www.anthropic.com/engineering/multi-agent-research-system</a> — +90.2% над одиночным, ≈15× токенов,
-   провал «50 субагентов».</li>
+   провал «50 подагентов».</li>
 <li><strong>Cemri, Pan et al. — «Why Do Multi-Agent LLM Systems Fail?» (MAST)</strong>, arXiv 2503.13657 (2025).
-   <a href="https://arxiv.org/abs/2503.13657" target="_blank" rel="noopener">https://arxiv.org/abs/2503.13657</a> — 37% отказов MAS = inter-agent misalignment.</li>
+   <a href="https://arxiv.org/abs/2503.13657" target="_blank" rel="noopener">https://arxiv.org/abs/2503.13657</a> — 37% отказов MAS = рассогласование агентов.</li>
 <li><strong>Tran, Dao et al. — «Multi-Agent Collaboration Mechanisms: A Survey of LLMs»</strong>, arXiv 2501.06322 (2025).
    <a href="https://arxiv.org/abs/2501.06322" target="_blank" rel="noopener">https://arxiv.org/abs/2501.06322</a> — таксономия паттернов координации (centralized/decentralized,
    role-based). <em>(Досье ошибочно приписало «Galileo AI» — это академический survey, Tran et al.)</em></li>
@@ -674,17 +693,17 @@ Tran et al. (НЕ Galileo); EchoLeak в досье описан неверно (
 (AugmentCode) — как [формирующиеся] паттерны, без жёстких заявлений о результатах.</p>
 </blockquote>
 <hr />
-<p><em>Плотность — целевая. Усиленный этап, длинный закономерно. Cold-open — двойственность мультиагентности на
+<p><em>Плотность — целевая. Усиленный этап, длинный закономерно. Разбор инцидента — двойственность мультиагентности на
 верифицированных числах (Anthropic +90.2% / 15×, MAST 37%, Gartner 40% отмен): инструмент с резко
 нелинейным профилем, дефолт — один агент. Центральный пункт §2.2 — MCP (вертикаль) vs A2A (горизонталь),
-поданный как «не путать», что снимает главный риск этого этапа. Spine обобщил координацию (роли, handoff,
-протоколы, Rule of Two на субагентов); pset кодирует «не плодить агентов зря» + изоляцию + conflict без
+поданный как «не путать», что снимает главный риск этого этапа. Опорный стержень обобщил координацию (роли, протокол передачи,
+протоколы, Rule of Two на подагентов); практикум кодирует «не плодить агентов зря» + изоляцию + conflict без
 overwrite. Gate подтвердил протоколы (направление верное!) и срезал 4-й рецидив «200мс→4с» и рецидив
 «1642 прогона».</em></p>
     </div>
     <nav class="pager">
-      <a class="pg-prev" href="lesson-10.html"><span class="pk">← Урок 10</span>Безопасность: injection, threat model</a>
-      <a class="pg-next" href="lesson-12.html"><span class="pk">Урок 12 →</span>Human-in-the-loop и operating model</a>
+      <a class="pg-prev" href="lesson-10.html"><span class="pk">← Урок 10</span>Безопасность: внедрение и модель угроз</a>
+      <a class="pg-next" href="lesson-12.html"><span class="pk">Урок 12 →</span>Человек в цикле и модель эксплуатации</a>
     </nav>
     <footer id="footer">
       <p>Дизайн-язык адаптирован из <a href="https://github.com/ThariqS/html-effectiveness"

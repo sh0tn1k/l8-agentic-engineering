@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="data:,">
-<title>Урок 12. Human-in-the-loop и operating model — L8+ Agentic Engineering</title>
+<title>Урок 12. Человек в цикле и модель эксплуатации — L8+ Agentic Engineering</title>
 <!-- Design language adapted from ThariqS/html-effectiveness (Apache-2.0, (c) Anthropic PBC). -->
 <style>
 :root{
@@ -253,23 +253,23 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
     <nav>
 <a href="index.html">▲ Главная</a>
 <a class="lead">Карта</a>
-<a href="index.html#spine"><span class="n">◆</span>Reference-spine</a>
+<a href="index.html#spine"><span class="n">◆</span>Опорный стержень</a>
 <a href="index.html#how"><span class="n">?</span>Как читать</a>
 <a class="lead">Уроки</a>
 <a href="lesson-01.html"><span class="n">01</span>Зрелость автономии</a>
-<a href="lesson-02.html"><span class="n">02</span>Примитивы и reference-spine</a>
-<a href="lesson-03.html"><span class="n">03</span>Task lifecycle и durable execution</a>
-<a href="lesson-04.html"><span class="n">04</span>Context engineering</a>
-<a href="lesson-05.html"><span class="n">05</span>Инструменты, права, policy</a>
-<a href="lesson-06.html"><span class="n">06</span>Evals, verifier, trajectory</a>
+<a href="lesson-02.html"><span class="n">02</span>Примитивы и опорный стержень</a>
+<a href="lesson-03.html"><span class="n">03</span>Жизненный цикл задачи</a>
+<a href="lesson-04.html"><span class="n">04</span>Инженерия контекста</a>
+<a href="lesson-05.html"><span class="n">05</span>Инструменты, права и политика</a>
+<a href="lesson-06.html"><span class="n">06</span>Оценка, верификатор и траектория</a>
 <a href="lesson-07.html"><span class="n">07</span>Память и жизненный цикл знания</a>
-<a href="lesson-08.html"><span class="n">08</span>Retrieval: RAG, hybrid, GraphRAG</a>
-<a href="lesson-09.html"><span class="n">09</span>Observability и воспроизводимость</a>
-<a href="lesson-10.html"><span class="n">10</span>Безопасность: injection, threat model</a>
-<a href="lesson-11.html"><span class="n">11</span>Мультиагентность: MCP / A2A</a>
-<a href="lesson-12.html" class="active"><span class="n">12</span>Human-in-the-loop и operating model</a>
-<a href="lesson-13.html"><span class="n">13</span>Экономика и production readiness (capstone)</a>
-<a href="lesson-14.html"><span class="n">14</span>Фронт и горизонт-сканирование</a>
+<a href="lesson-08.html"><span class="n">08</span>Поиск: RAG, гибридный и графовый</a>
+<a href="lesson-09.html"><span class="n">09</span>Наблюдаемость и воспроизводимость</a>
+<a href="lesson-10.html"><span class="n">10</span>Безопасность: внедрение и модель угроз</a>
+<a href="lesson-11.html"><span class="n">11</span>Мультиагентность: MCP и A2A</a>
+<a href="lesson-12.html" class="active"><span class="n">12</span>Человек в цикле и модель эксплуатации</a>
+<a href="lesson-13.html"><span class="n">13</span>Экономика и готовность к производству</a>
+<a href="lesson-14.html"><span class="n">14</span>Передний край и сканирование горизонта</a>
 <a class="lead">Конец</a>
 <a href="index.html#footer"><span class="n">§</span>Метод и источники</a>
     </nav>
@@ -278,101 +278,119 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
   <main>
     <div class="crumb"><a href="index.html">← Все уроки</a></div>
     <header class="lesson-head">
-      <div class="eyebrow">Урок 12<span class="badge b-core" style="margin-left:6px">[устоявшееся] фреймворки; AI Act 08.2026</span></div>
-      <h1 class="title">Human-in-the-loop и operating model</h1>
-      <p class="lede">Надзор, не вырождающийся в штамп</p>
+      <div class="eyebrow">Урок 12<span class="badge b-core" style="margin-left:6px">[устоявшееся] подходы; AI Act 08.2026</span></div>
+      <h1 class="title">Человек в цикле и модель эксплуатации</h1>
+      <p class="lede">Надзор, не вырождающийся в формальность</p>
       <div class="card-meta">
-        <div class="meta-item"><span class="k">Cold-open</span>Air Canada: ответственны за слова бота</div>
-        <div class="meta-item"><span class="k">В spine</span>escalation + RACI (accountable=human)</div>
+        <div class="meta-item"><span class="k">Инцидент</span>Air Canada: компания отвечает за слова бота</div>
+        <div class="meta-item"><span class="k">В стержень</span>Эскалация + RACI (ответственный — человек)</div>
       </div>
     </header>
     <div class="lesson-body">
       <div class="status"><p><strong>Статус:</strong> актуально на 2026-06-23, пересмотреть до 2026-09.
-HITL-паттерны в фреймворках (LangGraph interrupts, ADK callbacks) — <strong>[устоявшееся]</strong>. Модели автономии и
-tiered-gating — <strong>[формирующееся]</strong>. SOP/RACI для агентов — <strong>[формирующееся, местами хайп]</strong>.
+Паттерны человека в цикле (human-in-the-loop, HITL) во фреймворках (LangGraph interrupts, ADK callbacks) — <strong>[устоявшееся]</strong>. Модели
+автономии и ярусное шлюзование (tiered-gating) — <strong>[формирующееся]</strong>. SOP/RACI для агентов — <strong>[формирующееся, местами хайп]</strong>.
 Регуляторное требование надзора (EU AI Act Art. 14, high-risk) — <strong>[устоявшееся, с 02.08.2026]</strong>.
-Реализует escalation-примитив (урок 2) и статус <code>waiting_approval</code> (урок 3); канал для всего, что вернуло
+Реализует примитив эскалации (урок 2) и статус <code>waiting_approval</code> (урок 3); канал для всего, что вернуло
 «approval/human» (уроки 5, 6, 7, 10, 11).</p></div>
+<hr />
+<h3>Чему вы научитесь</h3>
+<ul>
+<li>Проектировать осмысленный надзор человека в цикле, а не формальный штамп.</li>
+<li>Различать модели автономии и выбирать уровень участия человека под класс решения.</li>
+<li>Строить маршрутизатор эскалации по обратимости и контекстным триггерам.</li>
+<li>Внедрять политику уведомлений (notification policy) против утомления от подтверждений.</li>
+<li>Закреплять ответственность через матрицу RACI и обнаруживать вырождение надзора метрикой доли переопределений (override rate).</li>
+<li>Проектировать запасной план (fallback) на случай недоступности человека.</li>
+</ul>
 <hr />
 <h3>0. Зачем этот урок</h3>
 <p>Множество прошлых примитивов в нужный момент возвращали «approval» или «human»: policy на деструктив
 (урок 5), verifier на спорное (урок 6), conflict resolution (уроки 7, 11), security на опасную комбинацию
 (урок 10). Все они указывали <strong>сюда</strong> — на человека в петле. Этот этап про то, <strong>когда</strong> звать человека,
-<strong>как</strong> не превратить это в фикцию, и <strong>кто отвечает</strong>, когда агент ошибётся. Это операционная модель
+<strong>как</strong> не превратить это в фикцию, и <strong>кто отвечает</strong>, когда агент ошибётся. Это модель эксплуатации
 системы — мост к экономике (урок 13).</p>
 <p>Две мысли, которые урок должен оставить:</p>
 <blockquote>
-<p><strong>(1)</strong> Accountability <strong>не передаётся агенту</strong>. Что бы агент ни сделал/сказал — отвечает оператор
+<p><strong>(1)</strong> Ответственность <strong>не передаётся агенту</strong>. Что бы агент ни сделал/сказал — отвечает оператор
 (Air Canada проиграла суд за ответ чат-бота; EU AI Act с 08.2026 обязывает человеческий надзор для
-high-risk). Поэтому HITL — не «костыль», а архитектурный и юридический элемент.
-<strong>(2)</strong> Наивный HITL <strong>вырождается в штамп</strong>: если человек одобряет всё подряд, наступает confirmation
-fatigue → он кликает «approve» механически → надзор становится <strong>театром</strong> (и атакуемой поверхностью,
-урок 10). HITL надо <strong>проектировать</strong> так, чтобы сохранить подлинное человеческое внимание, а не просто
-вставить кнопку.</p>
+high-risk). Поэтому человек в цикле — не «костыль», а архитектурный и юридический элемент.
+<strong>(2)</strong> Наивный человек в цикле <strong>вырождается в штамп</strong>: если человек одобряет всё подряд, наступает
+утомление от подтверждений → он кликает «approve» механически → надзор становится <strong>театром</strong> (и
+атакуемой поверхностью, урок 10). Человека в цикле надо <strong>проектировать</strong> так, чтобы сохранить подлинное
+человеческое внимание, а не просто вставить кнопку.</p>
 </blockquote>
 <hr />
-<h3>1. Cold-open: ты отвечаешь за агента — но плохой надзор хуже, чем его отсутствие</h3>
+<h3>1. Разбор инцидента</h3>
 <p>Февраль 2024. Чат-бот Air Canada <strong>дал клиенту неверную информацию</strong> о тарифах (bereavement fare). Когда
 клиент потребовал компенсацию, Air Canada заявила в трибунале, что <strong>чат-бот — «отдельная сущность»</strong>, за
 которую компания не отвечает. Трибунал (BC Civil Resolution Tribunal) <strong>отверг</strong> это и обязал авиакомпанию
 выплатить ущерб.
 <em>Источники: BBC, 2024-02; American Bar Association.</em></p>
-<p>Вывод №1: <strong>accountability не передаётся агенту.</strong> Что бы агент ни сделал — отвечаешь ты. Это не только
+<p>Вывод №1: <strong>ответственность не передаётся агенту.</strong> Что бы агент ни сделал — отвечаешь ты. Это не только
 прецедент, но и закон: <strong>EU AI Act, статья 14</strong> требует человеческого надзора для high-risk систем
-(основная дата применения — <strong>2 августа 2026</strong>). Значит, для критичных доменов HITL не опция, а
+(основная дата применения — <strong>2 августа 2026</strong>). Значит, для критичных доменов человек в цикле не опция, а
 обязательство.</p>
 <p>Казалось бы, решение очевидно: вставить «человека на одобрение». Но тут вторая ловушка:</p>
-<p>Вывод №2: <strong>наивный HITL вырождается в штамп.</strong> Если оператор получает сотни запросов «approve/reject»,
-наступает <strong>confirmation/alert fatigue</strong> — он начинает кликать «approve» не глядя. Надзор превращается в
-<strong>театр</strong>: формально есть, фактически нет. Хуже — это <strong>атакуемая поверхность</strong> (урок 10): атакующий шлёт
-цепочку безобидных запросов, зная, что уставший оператор пропустит вредоносный (clickthrough vulnerability).
-Человек, который штампует, — это <strong>уязвимость, а не контроль</strong>.</p>
+<p>Вывод №2: <strong>наивный человек в цикле вырождается в штамп.</strong> Если оператор получает сотни запросов
+«approve/reject», наступает <strong>утомление от подтверждений / утомление от оповещений</strong> — он начинает кликать
+«approve» не глядя. Надзор превращается в <strong>театр</strong>: формально есть, фактически нет. Хуже — это <strong>атакуемая
+поверхность</strong> (урок 10): атакующий шлёт цепочку безобидных запросов, зная, что уставший оператор пропустит
+вредоносный (уязвимость сквозного прохода, clickthrough vulnerability). Человек, который штампует, — это
+<strong>уязвимость, а не контроль</strong>.</p>
 <p>Отсюда тезис урока:</p>
 <blockquote>
 <p>Ты всегда отвечаешь за агента, поэтому надзор обязателен — но <strong>надзор без дизайна бесполезен</strong>. Цель не
 «вставить approval», а <strong>сохранить подлинное внимание человека</strong>: звать его только на решения, где он
 реально нужен, давать достаточный контекст, не топить в шуме и <strong>измерять</strong>, не штампует ли он.</p>
 </blockquote>
-<p>У обоих явлений есть канонические имена в human-factors: «штамп от усталости» — это <strong>automation bias /
-complacency</strong> (Parasuraman &amp; Riley, «Use, Misuse, Disuse, Abuse», 1997), а сам идеал «надзор, который не
-вырождается в штамп» — <strong>meaningful human control</strong> (Santoni de Sio &amp; van den Hoven, 2018). Курс не изобретает
-эту проблему, а инженерно её решает.</p>
+<p>У обоих явлений есть канонические имена в инженерной психологии: «штамп от усталости» — это <strong>склонность к
+автоматизации / самоуспокоенность</strong> (automation bias / complacency, Parasuraman &amp; Riley, «Use, Misuse,
+Disuse, Abuse», 1997), а сам идеал «надзор, который не вырождается в штамп» — <strong>осмысленный человеческий
+контроль</strong> (meaningful human control, Santoni de Sio &amp; van den Hoven, 2018). Курс не изобретает эту
+проблему, а инженерно её решает.</p>
 <p><em>(Карантин: «88% проектов не доходят до прода», «70% multi-step проваливаются», «$47K за 11 дней» — не
 верифицированы независимо; верифицированный MIT-факт — 95% GenAI-пилотов не дают ROI, но причина — gap
-обучения/интеграции, не «отсутствие HITL». §9.)</em></p>
+обучения/интеграции, не «отсутствие человека в цикле». §9.)</em></p>
 <hr />
-<h3>2. Деривация: от «вставить человека» к спроектированному надзору</h3>
+<p><em>Разбор инцидента задаёт юридическую рамку: отвечаешь ты, а не агент. Теперь выведем из неё инженерные механизмы.</em></p>
+<h3>2. Проектирование надзора</h3>
 <h4>2.1 Боль → механизм</h4>
 <ul>
-<li><strong>«Кто отвечает, когда агент неправ?»</strong> (Air Canada). Вводим <strong>RACI</strong>: агент — <em>Responsible</em> (делает),
-  человек — <em>Accountable</em> (отвечает), риск-команда — <em>Consulted</em>, руководство — <em>Informed</em>. Ответственность
-  явно закреплена за человеком, не за моделью.</li>
+<li><strong>«Кто отвечает, когда агент неправ?»</strong> (Air Canada). Вводим <strong>RACI</strong>: агент — <em>исполнитель</em> (Responsible, делает),
+  человек — <em>ответственный</em> (Accountable, отвечает), риск-команда — <em>консультируемая</em> (Consulted), руководство —
+  <em>информируемое</em> (Informed). Ответственность явно закреплена за человеком, не за моделью.</li>
 <li><strong>«Где ставить человека?»</strong> Вводим <strong>модели автономии</strong> (продолжение оси B урока 1, action modes урока 5):
-  manual → assisted (агент предлагает, человек утверждает) → supervised → bounded-autonomy →
-  autonomous-with-escalation. Разные категории решений — разные режимы. Это переоткрытие классических
-  <strong>Levels of Automation</strong> (Sheridan, 1980 — 10 уровней; Parasuraman/Sheridan/Wickens, 2000) — human-factors
-  аналог SAE J3016 из урока 1.</li>
-<li><strong>«Какие решения требуют человека?»</strong> Вводим <strong>tiered gating по риску/обратимости</strong> (связь с risk tiers
-  урока 5): read-only / reversible / external / irreversible. Необратимое и внешнее — всегда через человека;
-  read-only — auto. Плюс <strong>контекст-триггеры</strong>: confidence-порог, сумма транзакции, VIP-клиент.</li>
-<li><strong>«Прервать и ждать или действовать и аудировать?»</strong> Вводим <strong>sync vs async</strong>: синхронный
-  checkpoint (LangGraph <code>interrupt</code>: approve/edit/reject/respond) для необратимого; асинхронный аудит для
+  ручной режим (manual) → ассистируемый (assisted, агент предлагает, человек утверждает) → контролируемый
+  (supervised) → ограниченная автономия (bounded-autonomy) → автономия с эскалацией (autonomous-with-escalation).
+  Разные категории решений — разные режимы. Это переоткрытие классических <strong>уровней автоматизации</strong> (Levels of
+  Automation, Sheridan, 1980 — 10 уровней; Parasuraman/Sheridan/Wickens, 2000) — аналог SAE J3016 из урока 1
+  в инженерной психологии.</li>
+<li><strong>«Какие решения требуют человека?»</strong> Вводим <strong>ярусное шлюзование по риску/обратимости</strong> (tiered gating, связь
+  с risk tiers урока 5): только чтение (read-only) / обратимое (reversible) / внешнее (external) / необратимое
+  (irreversible). Необратимое и внешнее — всегда через человека; только чтение — автоматически. Плюс
+  <strong>контекст-триггеры</strong>: порог уверенности (confidence), сумма транзакции, VIP-клиент.</li>
+<li><strong>«Прервать и ждать или действовать и аудировать?»</strong> Вводим <strong>синхронный и асинхронный режим</strong>: синхронная
+  блокировка (LangGraph <code>interrupt</code>: approve/edit/reject/respond) для необратимого; асинхронный аудит для
   обратимого. По обратимости.</li>
-<li><strong>«Человек штампует не глядя» (cold-open вывод 2).</strong> Вводим <strong>notification policy против fatigue</strong>:
-  звать человека <strong>только</strong> на высокоценные решения (не на каждое), батчить мелкое, давать <strong>context package</strong>
-  (что агент хочет сделать, почему, данные, план отката), и <strong>измерять override rate</strong> — если человек почти
-  всегда одобряет, надзор фиктивен (либо гейтов слишком много, либо он штампует).</li>
-<li><strong>«Человек недоступен».</strong> Вводим <strong>fallback</strong>: что делать, если оператора нет (очередь с SLA, деградация
-  до read-only, безопасный отказ). Связь со стоп-критерием урока 3 (анти-«$47K-loop»).</li>
-<li><strong>«Нужен разбор постфактум».</strong> Вводим <strong>decision record (ADR) + audit trail</strong> (урок 9): контекст,
-  решение, последствия каждого human-вмешательства.</li>
+<li><strong>«Человек штампует не глядя» (вывод 2 из разбора инцидента).</strong> Вводим <strong>политику уведомлений против
+  утомления</strong>: звать человека <strong>только</strong> на высокоценные решения (не на каждое), группировать мелкое
+  (batching), давать <strong>пакет контекста</strong> (context package: что агент хочет сделать, почему, данные, план
+  отката), и <strong>измерять долю переопределений</strong> (override rate) — если человек почти всегда одобряет, надзор
+  фиктивен (либо шлюзов слишком много, либо он штампует).</li>
+<li><strong>«Человек недоступен».</strong> Вводим <strong>запасной план</strong> (fallback): что делать, если оператора нет — очередь
+  с соглашением об уровне обслуживания (SLA), деградация до «только чтение», безопасный отказ. Связь со
+  стоп-критерием урока 3 (анти-«$47K-loop»).</li>
+<li><strong>«Нужен разбор постфактум».</strong> Вводим <strong>запись решения</strong> (decision record, ADR) + <strong>аудиторский след</strong>
+  (audit trail, урок 9): контекст, решение, последствия каждого человеческого вмешательства.</li>
 </ul>
 <h4>2.2 Новая проблема (мост к §3 и уроку 13)</h4>
 <p>Где именно проводить границу автономии — зависит от домена и регулятора (банк ≠ SRE ≠ медицина), и это
-<strong>не решается технически</strong>. И HITL стоит денег/времени (человек в петле = латентность часами) — это входит
-в unit-экономику (урок 13). Баланс «безопасность vs пропускная способность» — §3.</p>
+<strong>не решается технически</strong>. И человек в цикле стоит денег/времени (человек в петле = латентность часами) —
+это входит в unit-экономику (урок 13). Баланс «безопасность vs пропускная способность» — §3.</p>
 <hr />
-<h3>3. Карта решений: режимы надзора</h3>
+<p><em>Спроектировав механизмы, перейдём к карте инженерных решений.</em></p>
+<h3>3. Карта решений</h3>
 <table>
 <thead>
 <tr>
@@ -385,49 +403,51 @@ complacency</strong> (Parasuraman &amp; Riley, «Use, Misuse, Disuse, Abuse», 1
 <tbody>
 <tr>
 <td><strong>Модель автономии</strong></td>
-<td>manual / assisted / supervised / bounded / autonomous-with-escalation</td>
+<td>ручной / ассистируемый / контролируемый / ограниченная автономия / автономия с эскалацией</td>
 <td>по критичности категории решения</td>
 <td>больше человека → надёжнее, но медленнее/дороже</td>
 </tr>
 <tr>
 <td><strong>Когда звать</strong></td>
-<td>static checkpoints (всегда на деструктив) + context-triggers (confidence/сумма/VIP)</td>
+<td>статические блок-посты (static checkpoints, всегда на деструктив) + контекст-триггеры (confidence/сумма/VIP)</td>
 <td>static — необратимое; trigger — пограничное</td>
-<td>плохая настройка → fatigue или дыры</td>
+<td>плохая настройка → утомление или дыры</td>
 </tr>
 <tr>
-<td><strong>Sync vs async</strong></td>
-<td>interrupt-and-wait vs act-then-audit</td>
-<td>sync — необратимое; async — обратимое</td>
-<td>sync ломает UX/латентность; async пропускает</td>
+<td><strong>Синхронно vs асинхронно</strong></td>
+<td>прервать-и-ждать (interrupt-and-wait) vs действовать-потом-аудировать (act-then-audit)</td>
+<td>синхронно — необратимое; асинхронно — обратимое</td>
+<td>синхронно ломает UX/латентность; асинхронно пропускает</td>
 </tr>
 <tr>
-<td><strong>Гранулярность гейтов</strong></td>
-<td>каждый шаг vs только high-value</td>
-<td>реже = меньше fatigue</td>
+<td><strong>Гранулярность шлюзов</strong></td>
+<td>каждый шаг vs только высокоценные (high-value)</td>
+<td>реже = меньше утомления</td>
 <td>реже = больше пропусков</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Ключевой принцип дизайна:</strong> минимизировать число обращений к человеку при сохранении покрытия критичных
-решений. Звать часто и по мелочи → fatigue → штамп. Звать только там, где человек реально меняет исход.</p>
+решений. Звать часто и по мелочи → утомление → штамп. Звать только там, где человек реально меняет исход.</p>
 <h4>3.1 Спорные точки (оставляем спорными)</h4>
 <ul>
-<li><strong>Граница автономии.</strong> Какие решения «слишком критичны» для авто — зависит от домена и регулятора (AI Act,
-  GDPR). Где порог — бизнес-и-этическое суждение, не техническое.</li>
-<li><strong>HITL: архитектура или костыль?</strong> Зрелая практика — часть дизайна; многие инженеры считают временным
-  прототипным «крашкостом». Как формализовать (в какую фазу, какие интерфейсы) — не устоялось.</li>
-<li><strong>Accountability при штампе.</strong> Если оператор формально «одобрил», но кликнул не глядя — кто виноват:
+<li><strong>Граница автономии.</strong> Какие решения «слишком критичны» для автоматического режима — зависит от домена и
+  регулятора (AI Act, GDPR). Где порог — бизнес-и-этическое суждение, не техническое.</li>
+<li><strong>Человек в цикле: архитектура или костыль?</strong> Зрелая практика — часть дизайна; многие инженеры считают
+  временным прототипным «крашкостом». Как формализовать (в какую фазу, какие интерфейсы) — не устоялось.</li>
+<li><strong>Ответственность при штампе.</strong> Если оператор формально «одобрил», но кликнул не глядя — кто виноват:
   модель, оператор, владелец? Нельзя просто переложить вину на оператора, которого система довела до
-  штампа. У этого есть имя — <strong>«moral crumple zone»</strong> (Elish, 2019): человек поглощает вину за сбой системы,
-  который не мог реально предотвратить. Назвать так — значит спрашивать, не сам ли дизайн довёл до штампа, а
-  не списывать на «человеческий фактор». Открытый этико-правовой вопрос.</li>
-<li><strong>Метрики HITL.</strong> Нет единого стандарта (override rate, time-to-resolution предлагаются practitioner'ами,
-  но не нормированы). Как мерить «качество» блокировки/одобрения — под каждую систему.</li>
-<li><strong>Sync vs async граница.</strong> Где «достаточно безопасно» для async — на усмотрение архитектора.</li>
+  штампа. У этого есть имя — <strong>«зона моральной деформации»</strong> (moral crumple zone, Elish, 2019): человек
+  поглощает вину за сбой системы, который не мог реально предотвратить. Назвать так — значит спрашивать,
+  не сам ли дизайн довёл до штампа, а не списывать на «человеческий фактор». Открытый этико-правовой вопрос.</li>
+<li><strong>Метрики человека в цикле.</strong> Нет единого стандарта (доля переопределений, время до разрешения предлагаются
+  практиками, но не нормированы). Как мерить «качество» блокировки/одобрения — под каждую систему.</li>
+<li><strong>Граница синхронного и асинхронного.</strong> Где «достаточно безопасно» для асинхронного режима — на усмотрение
+  архитектора.</li>
 </ul>
 <hr />
-<h3>4. Failure modes операционной модели</h3>
+<p><em>Карта даёт выбор режимов. Теперь посмотрим, где эти режимы ломаются.</em></p>
+<h3>4. Режимы отказа</h3>
 <table>
 <thead>
 <tr>
@@ -438,40 +458,42 @@ complacency</strong> (Parasuraman &amp; Riley, «Use, Misuse, Disuse, Abuse», 1
 </thead>
 <tbody>
 <tr>
-<td><strong>Confirmation/alert fatigue</strong></td>
+<td><strong>Утомление от подтверждений/оповещений</strong></td>
 <td>сотни запросов → штамп → надзор-театр</td>
-<td>notification policy (только high-value), батчинг, override-rate мониторинг</td>
+<td>политика уведомлений (только high-value), группировка (batching), мониторинг доли переопределений</td>
 </tr>
 <tr>
-<td><strong>Clickthrough vulnerability</strong></td>
-<td>атакующий шлёт benign-цепочку, уставший оператор пропускает вредоносное</td>
-<td>реже гейты + контекст-package + аномалия (урок 10)</td>
+<td><strong>Уязвимость сквозного прохода</strong></td>
+<td>атакующий шлёт безобидную цепочку, уставший оператор пропускает вредоносное</td>
+<td>реже шлюзы + пакет контекста + детектор аномалий (урок 10)</td>
 </tr>
 <tr>
-<td><strong>No stop / loop</strong></td>
-<td>нет капа шагов/бюджета → «$47K-loop»</td>
+<td><strong>Отсутствие стоп-критерия / зацикливание</strong></td>
+<td>нет ограничения шагов/бюджета → «$47K-loop»</td>
 <td>стоп-критерий (урок 3) + эскалация цикла человеку</td>
 </tr>
 <tr>
-<td><strong>Human-unavailable bottleneck</strong></td>
+<td><strong>Узкое место из-за недоступности человека</strong></td>
 <td>оператора нет → система висит/ломается</td>
-<td>fallback (очередь+SLA, деградация до read-only)</td>
+<td>запасной план (очередь+SLA, деградация до «только чтение»)</td>
 </tr>
 <tr>
-<td><strong>Accountability gap</strong></td>
+<td><strong>Разрыв ответственности</strong></td>
 <td>«это агент виноват» (Air Canada)</td>
-<td>RACI: человек — Accountable, явно</td>
+<td>RACI: человек — ответственный (Accountable), явно</td>
 </tr>
 <tr>
-<td><strong>Silent slip (async)</strong></td>
+<td><strong>Тихое проскальзывание (асинхронный режим)</strong></td>
 <td>агент проскользнул мимо аудита</td>
-<td>sync для необратимого; пост-аудит обратимого</td>
+<td>синхронный режим для необратимого; пост-аудит обратимого</td>
 </tr>
 </tbody>
 </table>
-<p>Cold-open покрывает строки 1, 2, 5: без дизайна надзор либо фикция (штамп), либо отсутствует (accountability gap).</p>
+<p>Разбор инцидента покрывает строки 1, 2, 5: без дизайна надзор либо фикция (штамп), либо отсутствует
+(разрыв ответственности).</p>
 <hr />
-<h3>5. Вклад в reference-spine: escalation + operating model</h3>
+<p><em>Режимы отказа показывают, что ломается. Закрепим правильную модель в опорном стержне.</em></p>
+<h3>5. Опорный стержень</h3>
 <p>Наполняем <code>Escalation</code> из урока 2 и статус <code>waiting_approval</code> из урока 3.</p>
 <pre><code class="language-python">class Reversibility(IntEnum):
     READ_ONLY = 0; REVERSIBLE = 1; EXTERNAL = 2; IRREVERSIBLE = 3
@@ -499,22 +521,24 @@ class Escalation(Protocol):
         #  + context-triggers (confidence/сумма/VIP) поднимают уровень
     def notify(self, decision, ctx: ContextPackage) -&gt; None:
         ...
-        # NOTIFICATION POLICY (анти-fatigue): только high-value -&gt; человеку; мелкое батчить;
+        # ПОЛИТИКА УВЕДОМЛЕНИЙ (анти-утомление): только high-value -&gt; человеку; мелкое группировать;
         # всегда прикладывать ContextPackage (осознанное решение, не штамп)
     def fallback(self, action) -&gt; &quot;queue | degrade_readonly | safe_reject&quot;:
         ...  # если человек недоступен — не висеть бесконечно
     def override_rate(self) -&gt; float:
-        ...  # метрика штампа: ~всегда approve =&gt; надзор фиктивен ИЛИ гейтов слишком много
+        ...  # метрика штампа: ~всегда approve =&gt; надзор фиктивен ИЛИ шлюзов слишком много
 </code></pre>
-<p><strong>Контракт:</strong> HITL — общий канал для <code>approval</code>/<code>human</code>-вердиктов из уроков 5 (policy), 6 (verifier), 7/11
-(conflict), 10 (security Rule-of-Two). Каждое вмешательство → decision record + audit trail (урок 9).
-Экономика HITL (латентность, стоимость оператора) идёт в unit-экономику урока 13. Cold-open = HITL без
-notification policy (fatigue → штамп) и без RACI (accountability gap).</p>
+<p><strong>Контракт:</strong> человек в цикле — общий канал для <code>approval</code>/<code>human</code>-вердиктов из уроков 5 (policy), 6
+(verifier), 7/11 (conflict), 10 (security Rule-of-Two). Каждое вмешательство → запись решения +
+аудиторский след (урок 9). Экономика человека в цикле (латентность, стоимость оператора) идёт в
+unit-экономику урока 13. Разбор инцидента = человек в цикле без политики уведомлений (утомление → штамп) и
+без RACI (разрыв ответственности).</p>
 <hr />
-<h3>6. Pset 12 — escalation router + notification policy против fatigue</h3>
-<p><strong>Задача.</strong> Реализовать маршрутизацию по обратимости/триггерам, notification policy (не топить человека),
-context package и метрику override-rate. Доказать тестами: необратимое — синхронно с контекстом; мелкое не
-флудит человека; rubber-stamping детектируется.</p>
+<p><em>Опорный стержень задал контракт. Реализуем его в коде.</em></p>
+<h3>6. Практикум</h3>
+<p><strong>Задача.</strong> Реализовать маршрутизацию по обратимости/триггерам, политику уведомлений (не топить человека),
+пакет контекста и метрику доли переопределений. Доказать тестами: необратимое — синхронно с контекстом;
+мелкое не флудит человека; штамповка детектируется.</p>
 <p><strong>Скелет</strong> (<code>escalation.py</code>):</p>
 <pre><code class="language-python">def route(action, ctx) -&gt; str:
     if action.reversibility &gt;= Reversibility.EXTERNAL:
@@ -529,11 +553,11 @@ def notify(decision, ctx):
     if decision == &quot;sync_approve&quot; and is_high_value(ctx):
         send_to_human(ctx_package(ctx))             # только high-value, с полным контекстом
     else:
-        batch_for_periodic_review(ctx)              # мелкое — батчем (анти-fatigue)
+        batch_for_periodic_review(ctx)              # мелкое — группой (анти-утомление)
 
 def health_check(stats):
-    # rubber-stamp детектор: если человек почти всегда approve — надзор фиктивен
-    return stats.override_rate &gt;= MIN_EXPECTED      # слишком низкий override =&gt; штамп/лишние гейты
+    # детектор штампа: если человек почти всегда approve — надзор фиктивен
+    return stats.override_rate &gt;= MIN_EXPECTED      # слишком низкая доля переопределений =&gt; штамп/лишние шлюзы
 </code></pre>
 <p><strong>Тесты:</strong></p>
 <pre><code class="language-python">def test_irreversible_action_requires_sync_human():
@@ -557,78 +581,86 @@ def test_fallback_when_human_unavailable():
     assert fallback(critical_action) in (&quot;queue&quot;, &quot;degrade_readonly&quot;, &quot;safe_reject&quot;)  # не висеть
 </code></pre>
 <p><strong>Эталон.</strong> Главные мысли: (1) необратимое — синхронно через человека с <strong>полным контекстом</strong>
-(<code>test_human_gets_context_package</code>) — иначе это штамп; (2) read-only не идёт человеку (<code>test_read_only_is_auto</code>)
-— анти-fatigue; (3) <code>test_rubber_stamping_is_detected</code> — <strong>суть этапа</strong>: низкий override-rate = надзор
-фиктивен, его надо мерить; (4) fallback не даёт системе висеть без оператора (анти-«$47K-loop», урок 3).</p>
+(<code>test_human_gets_context_package</code>) — иначе это штамп; (2) только чтение не идёт человеку
+(<code>test_read_only_is_auto</code>) — анти-утомление; (3) <code>test_rubber_stamping_is_detected</code> — <strong>суть этапа</strong>:
+низкая доля переопределений = надзор фиктивен, его надо мерить; (4) запасной план не даёт системе висеть
+без оператора (анти-«$47K-loop», урок 3).</p>
 <p><strong>Расширение.</strong> Добавь RACI-таблицу и тест: для каждого класса решения <code>accountable == "human"</code> (никогда не
-agent) — операционализация Air Canada. Свяжи с decision record (audit, урок 9).</p>
+agent) — операционализация Air Canada. Свяжи с записью решения (audit, урок 9).</p>
 <hr />
-<h3>7. Диагностические вопросы (проверяют суждение)</h3>
+<p><em>Код написан. Проверим инженерное суждение.</em></p>
+<h3>7. Вопросы на суждение</h3>
 <ol>
-<li>Команда добавила «approve на каждое действие агента» и считает систему безопасной. По §1 (cold-open
-   вывод 2) — почему это может быть <strong>опаснее</strong>, чем меньше гейтов? Что мерить, чтобы поймать вырождение?</li>
+<li>Команда добавила «approve на каждое действие агента» и считает систему безопасной. По §1 (вывод 2 из
+   разбора инцидента) — почему это может быть <strong>опаснее</strong>, чем меньше шлюзов? Что мерить, чтобы поймать
+   вырождение?</li>
 <li>Air Canada: компания сказала «виноват чат-бот». Почему это не сработало и как RACI (§2.1) кодирует
-   правильный ответ? Кто <code>Accountable</code>?</li>
-<li>Дано: возврат средств клиенту (внешнее, необратимое) vs пометка тикета (read-only). Как router (§5)
-   разведёт их по sync/async/auto и почему флудить человека вторым — вредно?</li>
-<li>Оператор получает 300 запросов в день и одобряет 99.8%. Это хороший надзор? Что говорит override-rate и
-   что чинить — оператора, гейты или контекст-package?</li>
-<li>EU AI Act требует human oversight для high-risk с 08.2026. Чем «надзор для галочки» (штамп) не
-   удовлетворяет духу требования, даже если формально человек «в петле»?</li>
-<li><strong>Open question</strong> (§3.1): если оператор кликнул «approve» не глядя и агент навредил — как ты распределишь
-   ответственность (модель/оператор/владелец)? Где система сама виновата, что довела до штампа?</li>
+   правильный ответ? Кто ответственный (Accountable)?</li>
+<li>Дано: возврат средств клиенту (внешнее, необратимое) vs пометка тикета (только чтение). Как
+   маршрутизатор (§5) разведёт их по синхронному/асинхронному/автоматическому режиму и почему флудить
+   человека вторым — вредно?</li>
+<li>Оператор получает 300 запросов в день и одобряет 99.8%. Это хороший надзор? Что говорит доля
+   переопределений и что чинить — оператора, шлюзы или пакет контекста?</li>
+<li>EU AI Act требует человеческого надзора (human oversight) для high-risk с 08.2026. Чем «надзор для
+   галочки» (штамп) не удовлетворяет духу требования, даже если формально человек «в петле»?</li>
+<li><strong>Открытый вопрос</strong> (§3.1): если оператор кликнул «approve» не глядя и агент навредил — как ты
+   распределишь ответственность (модель/оператор/владелец)? Где система сама виновата, что довела до
+   штампа?</li>
 </ol>
 <hr />
-<h3>8. Глоссарий-дельта</h3>
+<h3>8. Глоссарий</h3>
 <ul>
-<li><strong>HITL (human-in-the-loop)</strong> — обязательное участие человека в ключевых точках; архитектурный и
-  юридический элемент (AI Act Art. 14), не костыль.</li>
-<li><strong>Human-on-the-loop (async audit)</strong> — агент действует, человек ревьюит постфактум (для обратимого).</li>
-<li><strong>Модели автономии</strong> — manual / assisted / supervised / bounded-autonomy / autonomous-with-escalation
-  (продолжение оси B урока 1).</li>
-<li><strong>Levels of Automation (Sheridan/Parasuraman)</strong> — классическая human-factors-шкала автономии (10 уровней,
-  1980; модель 2000); первоисточник «моделей автономии».</li>
-<li><strong>Automation bias / complacency</strong> — доверие к автоматике → механическое одобрение (Parasuraman &amp; Riley,
-  1997); академическое имя «штампа от усталости».</li>
-<li><strong>Meaningful Human Control (MHC)</strong> — надзор, реально влияющий на исход, а не формальный (Santoni de Sio &amp;
+<li><strong>Человек в цикле (HITL)</strong> — обязательное участие человека в ключевых точках; архитектурный и юридический
+  элемент (AI Act Art. 14), не костыль.</li>
+<li><strong>Человек над циклом</strong> — агент действует, человек проверяет постфактум, асинхронный аудит (для обратимого).</li>
+<li><strong>Модели автономии</strong> — ручной / ассистируемый / контролируемый / ограниченная автономия / автономия с
+  эскалацией (продолжение оси B урока 1).</li>
+<li><strong>Уровни автоматизации</strong> — классическая шкала автономии в инженерной психологии (10 уровней, Sheridan, 1980;
+  модель Parasuraman/Sheridan/Wickens, 2000); первоисточник «моделей автономии».</li>
+<li><strong>Склонность к автоматизации / самоуспокоенность</strong> — доверие к автоматике, ведущее к механическому
+  одобрению (Parasuraman &amp; Riley, 1997); академическое имя «штампа от усталости».</li>
+<li><strong>Осмысленный человеческий контроль</strong> — надзор, реально влияющий на исход, а не формальный (Santoni de Sio &amp;
   van den Hoven, 2018); каноническое имя тезиса урока.</li>
-<li><strong>Moral crumple zone (Elish, 2019)</strong> — человек поглощает вину за сбой системы, который не мог предотвратить.</li>
-<li><strong>Tiered gating</strong> — гейты по риску/обратимости (read-only / reversible / external / irreversible).</li>
-<li><strong>Approval gate</strong> — точка блокировки действия до разрешения человека.</li>
-<li><strong>Context package</strong> — пакет для осознанного решения: действие, обоснование, evidence, план отката
+<li><strong>Зона моральной деформации</strong> — человек поглощает вину за сбой системы, который не мог предотвратить
+  (Elish, 2019).</li>
+<li><strong>Ярусное шлюзование</strong> — шлюзы по риску/обратимости (только чтение / обратимое / внешнее / необратимое).</li>
+<li><strong>Шлюз подтверждения</strong> — точка блокировки действия до разрешения человека.</li>
+<li><strong>Пакет контекста</strong> — пакет для осознанного решения: действие, обоснование, данные (evidence), план отката
   (анти-штамп).</li>
-<li><strong>RACI</strong> — Responsible (агент) / Accountable (человек) / Consulted / Informed; accountability не
-  передаётся агенту (Air Canada).</li>
-<li><strong>Confirmation / alert fatigue</strong> — частые запросы → механический «approve» → надзор-театр.</li>
-<li><strong>Clickthrough vulnerability</strong> — атака на уставшего оператора (benign-цепочка + вредоносное; урок 10).</li>
-<li><strong>Override rate</strong> — доля, где человек переопределяет агента; слишком низкая = штамп.</li>
-<li><strong>Notification policy</strong> — правила, кого/когда звать, чтобы не топить в шуме.</li>
-<li><strong>SOP / Decision record (ADR)</strong> — регламент повторяемых действий / запись ключевого решения (audit, урок 9).</li>
-<li><strong>Fallback</strong> — поведение при недоступности человека (очередь+SLA / деградация до read-only / безопасный отказ).</li>
+<li><strong>Матрица RACI</strong> — исполнитель (агент) / ответственный (человек) / консультируемый / информируемый;
+  ответственность не передаётся агенту (Air Canada).</li>
+<li><strong>Утомление от подтверждений / оповещений</strong> — частые запросы → механический «approve» → надзор-театр.</li>
+<li><strong>Уязвимость сквозного прохода</strong> — атака на уставшего оператора (безобидная цепочка + вредоносное; урок 10).</li>
+<li><strong>Доля переопределений</strong> — доля случаев, где человек переопределяет агента; слишком низкая = штамп.</li>
+<li><strong>Политика уведомлений</strong> — правила, кого/когда звать, чтобы не топить в шуме.</li>
+<li><strong>Стандартная операционная процедура / запись решения</strong> — регламент повторяемых действий / запись ключевого
+  решения (аудит, урок 9).</li>
+<li><strong>Запасной план</strong> — поведение при недоступности человека (очередь + соглашение об уровне обслуживания /
+  деградация до «только чтение» / безопасный отказ).</li>
 </ul>
 <hr />
-<h3>9. Первоисточники (верифицированы 2026-06-23)</h3>
+<h3>9. Первоисточники</h3>
 <ol>
 <li><strong>Air Canada / Moffatt</strong> — BC Civil Resolution Tribunal (2024-02): компания ответственна за дезинформацию
    чат-бота, $812; довод «чат-бот — отдельная сущность» отвергнут.
    <a href="https://www.bbc.com/travel/article/20240222-air-canada-chatbot-misinformation-what-travellers-should-know" target="_blank" rel="noopener">https://www.bbc.com/travel/article/20240222-air-canada-chatbot-misinformation-what-travellers-should-know</a>
    · <a href="https://www.americanbar.org/groups/business_law/resources/business-law-today/2024-february/bc-tribunal-confirms-companies-remain-liable-information-provided-ai-chatbot/" target="_blank" rel="noopener">https://www.americanbar.org/groups/business_law/resources/business-law-today/2024-february/bc-tribunal-confirms-companies-remain-liable-information-provided-ai-chatbot/</a>
-   — cold-open: accountability не передаётся.</li>
+   — разбор инцидента: ответственность не передаётся.</li>
 <li><strong>EU AI Act, Article 14 — Human Oversight</strong> (high-risk; основная дата применения 2026-08-02).
    <a href="https://artificialintelligenceact.eu/article/14/" target="_blank" rel="noopener">https://artificialintelligenceact.eu/article/14/</a> · <a href="https://www.aiactblog.nl/en/ai-act/artikel/14" target="_blank" rel="noopener">https://www.aiactblog.nl/en/ai-act/artikel/14</a> —
    надзор как юридическое требование.</li>
 <li><strong>MIT report — «95% of enterprise GenAI pilots fail to deliver ROI»</strong> (2025; «GenAI Divide»).
    <a href="https://fortune.com/2025/08/18/mit-report-95-percent-generative-ai-pilots-at-companies-failing-cfo/" target="_blank" rel="noopener">https://fortune.com/2025/08/18/mit-report-95-percent-generative-ai-pilots-at-companies-failing-cfo/</a> —
-   масштаб провала внедрений (причина — gap обучения/интеграции, не специфично HITL).</li>
+   масштаб провала внедрений (причина — gap обучения/интеграции, не специфично для человека в цикле).</li>
 <li><strong>LangChain — Human-in-the-loop middleware / LangGraph interrupts</strong> (approve/edit/reject/respond,
-   <code>interrupt_on</code>). <a href="https://docs.langchain.com/oss/python/langchain/human-in-the-loop" target="_blank" rel="noopener">https://docs.langchain.com/oss/python/langchain/human-in-the-loop</a> — реальный HITL-API.</li>
+   <code>interrupt_on</code>). <a href="https://docs.langchain.com/oss/python/langchain/human-in-the-loop" target="_blank" rel="noopener">https://docs.langchain.com/oss/python/langchain/human-in-the-loop</a> — реальный API человека в цикле.</li>
 <li><strong>Google ADK — before/after tool callbacks</strong> для перехвата вызова и запроса подтверждения.
-   <a href="https://google.github.io/adk-docs/" target="_blank" rel="noopener">https://google.github.io/adk-docs/</a> — HITL через callback.</li>
+   <a href="https://google.github.io/adk-docs/" target="_blank" rel="noopener">https://google.github.io/adk-docs/</a> — человек в цикле через callback.</li>
 <li><strong>Replit «Rogue Agent» (июль 2025)</strong> — Fortune / AI Incident DB #1152 (уроки 1, 3) — кейс «человек мог
    предотвратить необратимое».</li>
 <li><strong>Parasuraman &amp; Riley — «Humans and Automation: Use, Misuse, Disuse, Abuse»</strong> (1997) +
    Parasuraman/Sheridan/Wickens «A Model for Types and Levels of Human Interaction with Automation» (2000).
-   <a href="https://web.mit.edu/16.459/www/parasuraman.pdf" target="_blank" rel="noopener">https://web.mit.edu/16.459/www/parasuraman.pdf</a> — Levels of Automation + automation bias (§2.1, §1).</li>
+   <a href="https://web.mit.edu/16.459/www/parasuraman.pdf" target="_blank" rel="noopener">https://web.mit.edu/16.459/www/parasuraman.pdf</a> — уровни автоматизации + склонность к автоматизации (§2.1, §1).</li>
 <li><strong>Santoni de Sio &amp; van den Hoven — «Meaningful Human Control over Autonomous Systems: A Philosophical
    Account»</strong> (2018) — каноническое имя тезиса (§0/§1).</li>
 <li><strong>Elish — «Moral Crumple Zones: Cautionary Tales in Human-Robot Interaction»</strong> (2019) — ответственность
@@ -636,26 +668,25 @@ agent) — операционализация Air Canada. Свяжи с decision
 </ol>
 <blockquote class="quarantine">
 <p><strong>Карантин:</strong> «88% проектов не доходят до прода», «70% multi-step без надзора проваливаются» — агрегаты
-без источника (взят верифицированный MIT 95%, но в корректной формулировке про ROI/обучение, не про HITL);
-«$47K за 11 дней» (Anhaia, Dev.to) — единичный блог-анекдот, подан как иллюстрация, не факт; «confidence
-90%→реально 75% → цепочка 42%» — иллюстративная арифметика, не измерение; пороги «override &lt;15% / алерт</p>
-<blockquote>
-<p>20% / feedback 70–85%» (Beam.ai) — practitioner-ориентиры, не отраслевой стандарт. <strong>Правки:</strong> Replit —
-июль 2025 (не «2023»), не конфлатить с Copilot.</p>
-</blockquote>
+без источника (взят верифицированный MIT 95%, но в корректной формулировке про ROI/обучение, не про
+человека в цикле); «$47K за 11 дней» (Anhaia, Dev.to) — единичный блог-анекдот, подан как иллюстрация,
+не факт; «confidence 90%→реально 75% → цепочка 42%» — иллюстративная арифметика, не измерение; пороги
+«override &lt;15% / алерт &gt;20% / feedback 70–85%» (Beam.ai) — ориентиры практиков, не отраслевой стандарт.
+<strong>Правки:</strong> Replit — июль 2025 (не «2023»), не конфлатить с Copilot.</p>
 </blockquote>
 <hr />
-<p><em>Плотность — целевая. Этап средне-тяжёлый. Cold-open — двойная проблема на верифицированном: ты отвечаешь за
-агента (Air Canada + AI Act Art. 14), но наивный HITL вырождается в штамп (fatigue → clickthrough, урок 10).
-Главный сдвиг: цель не «вставить approval», а </em><em>спроектировать надзор, сохраняющий внимание</em><em> (звать редко и
-по делу, давать контекст, мерить override-rate). Spine наполнил escalation + waiting_approval, свёл сюда все
-«approval/human» прошлых уроков, закрепил RACI (accountable=human). Pset кодирует анти-fatigue и
-rubber-stamp детектор. Gate подтвердил ядро (Air Canada, AI Act, MIT 95%, LangGraph) и срезал агрегаты +
-поправил формулировку MIT (не про HITL).</em></p>
+<p><em>Плотность — целевая. Этап средне-тяжёлый. Разбор инцидента — двойная проблема на верифицированном: ты
+отвечаешь за агента (Air Canada + AI Act Art. 14), но наивный человек в цикле вырождается в штамп
+(утомление → сквозной проход, урок 10). Главный сдвиг: цель не «вставить approval», а </em><em>спроектировать
+надзор, сохраняющий внимание</em><em> (звать редко и по делу, давать контекст, мерить долю переопределений).
+Опорный стержень наполнил эскалацию + waiting_approval, свёл сюда все «approval/human» прошлых уроков,
+закрепил RACI (ответственный = человек). Практикум кодирует анти-утомление и детектор штампа. Шлюз
+подтвердил ядро (Air Canada, AI Act, MIT 95%, LangGraph) и срезал агрегаты + поправил формулировку MIT
+(не про человека в цикле).</em></p>
     </div>
     <nav class="pager">
-      <a class="pg-prev" href="lesson-11.html"><span class="pk">← Урок 11</span>Мультиагентность: MCP / A2A</a>
-      <a class="pg-next" href="lesson-13.html"><span class="pk">Урок 13 →</span>Экономика и production readiness (capstone)</a>
+      <a class="pg-prev" href="lesson-11.html"><span class="pk">← Урок 11</span>Мультиагентность: MCP и A2A</a>
+      <a class="pg-next" href="lesson-13.html"><span class="pk">Урок 13 →</span>Экономика и готовность к производству</a>
     </nav>
     <footer id="footer">
       <p>Дизайн-язык адаптирован из <a href="https://github.com/ThariqS/html-effectiveness"

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="data:,">
-<title>Урок 14. Фронт и горизонт-сканирование — L8+ Agentic Engineering</title>
+<title>Урок 14. Передний край и сканирование горизонта — L8+ Agentic Engineering</title>
 <!-- Design language adapted from ThariqS/html-effectiveness (Apache-2.0, (c) Anthropic PBC). -->
 <style>
 :root{
@@ -253,23 +253,23 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
     <nav>
 <a href="index.html">▲ Главная</a>
 <a class="lead">Карта</a>
-<a href="index.html#spine"><span class="n">◆</span>Reference-spine</a>
+<a href="index.html#spine"><span class="n">◆</span>Опорный стержень</a>
 <a href="index.html#how"><span class="n">?</span>Как читать</a>
 <a class="lead">Уроки</a>
 <a href="lesson-01.html"><span class="n">01</span>Зрелость автономии</a>
-<a href="lesson-02.html"><span class="n">02</span>Примитивы и reference-spine</a>
-<a href="lesson-03.html"><span class="n">03</span>Task lifecycle и durable execution</a>
-<a href="lesson-04.html"><span class="n">04</span>Context engineering</a>
-<a href="lesson-05.html"><span class="n">05</span>Инструменты, права, policy</a>
-<a href="lesson-06.html"><span class="n">06</span>Evals, verifier, trajectory</a>
+<a href="lesson-02.html"><span class="n">02</span>Примитивы и опорный стержень</a>
+<a href="lesson-03.html"><span class="n">03</span>Жизненный цикл задачи</a>
+<a href="lesson-04.html"><span class="n">04</span>Инженерия контекста</a>
+<a href="lesson-05.html"><span class="n">05</span>Инструменты, права и политика</a>
+<a href="lesson-06.html"><span class="n">06</span>Оценка, верификатор и траектория</a>
 <a href="lesson-07.html"><span class="n">07</span>Память и жизненный цикл знания</a>
-<a href="lesson-08.html"><span class="n">08</span>Retrieval: RAG, hybrid, GraphRAG</a>
-<a href="lesson-09.html"><span class="n">09</span>Observability и воспроизводимость</a>
-<a href="lesson-10.html"><span class="n">10</span>Безопасность: injection, threat model</a>
-<a href="lesson-11.html"><span class="n">11</span>Мультиагентность: MCP / A2A</a>
-<a href="lesson-12.html"><span class="n">12</span>Human-in-the-loop и operating model</a>
-<a href="lesson-13.html"><span class="n">13</span>Экономика и production readiness (capstone)</a>
-<a href="lesson-14.html" class="active"><span class="n">14</span>Фронт и горизонт-сканирование</a>
+<a href="lesson-08.html"><span class="n">08</span>Поиск: RAG, гибридный и графовый</a>
+<a href="lesson-09.html"><span class="n">09</span>Наблюдаемость и воспроизводимость</a>
+<a href="lesson-10.html"><span class="n">10</span>Безопасность: внедрение и модель угроз</a>
+<a href="lesson-11.html"><span class="n">11</span>Мультиагентность: MCP и A2A</a>
+<a href="lesson-12.html"><span class="n">12</span>Человек в цикле и модель эксплуатации</a>
+<a href="lesson-13.html"><span class="n">13</span>Экономика и готовность к производству</a>
+<a href="lesson-14.html" class="active"><span class="n">14</span>Передний край и сканирование горизонта</a>
 <a class="lead">Конец</a>
 <a href="index.html#footer"><span class="n">§</span>Метод и источники</a>
     </nav>
@@ -278,37 +278,46 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
   <main>
     <div class="crumb"><a href="index.html">← Все уроки</a></div>
     <header class="lesson-head">
-      <div class="eyebrow">Урок 14<span class="badge b-special" style="margin-left:6px">ОСОБЫЙ: snapshot до 2026-09-23 + protocol</span></div>
-      <h1 class="title">Фронт и горизонт-сканирование</h1>
-      <p class="lede">Не догонять тренды, а оценивать их</p>
+      <div class="eyebrow">Урок 14<span class="badge b-special" style="margin-left:6px">ОСОБЫЙ: снимок до 2026-09-23 + протокол</span></div>
+      <h1 class="title">Передний край и сканирование горизонта</h1>
+      <p class="lede">Не догонять тенденции, а оценивать их</p>
       <div class="card-meta">
-        <div class="meta-item"><span class="k">Cold-open</span>Даже tau-bench/SWE-bench устаревают</div>
-        <div class="meta-item"><span class="k">В spine</span>horizon-scanning protocol (анти-устаревание)</div>
+        <div class="meta-item"><span class="k">Инцидент</span>Даже tau-bench и SWE-bench устаревают</div>
+        <div class="meta-item"><span class="k">В стержень</span>Протокол сканирования горизонта (защита от устаревания)</div>
       </div>
     </header>
     <div class="lesson-body">
       <div class="status"><p><strong>ОСОБЫЙ СТАТУС.</strong> Этот этап устроен иначе, чем уроки 1–13. Те — про устойчивое ядро (годы). Этот — про
-движущийся фронт (кварталы). Поэтому здесь <strong>два выхода</strong>: (A) датированный <strong>Frontier snapshot</strong> (заведомо
-протухающий) и (B) главный артефакт — <strong>horizon-scanning protocol</strong> (повторяемый навык). Recency-правило
-доминирует: любой блок без <strong>даты</strong> и <strong>флага зрелости</strong> в урок не идёт.
-<strong>Snapshot актуален на 2026-06-23. Пересмотреть до 2026-09-23.</strong></p></div>
+движущийся передний край (кварталы). Поэтому здесь <strong>два выхода</strong>: (A) датированный <strong>снимок переднего края</strong>
+(заведомо протухающий) и (B) главный артефакт — <strong>протокол сканирования горизонта</strong> (повторяемый навык).
+Recency-правило доминирует: любой блок без <strong>даты</strong> и <strong>флага зрелости</strong> в урок не идёт.
+<strong>Снимок актуален на 2026-06-23. Пересмотреть до 2026-09-23.</strong></p></div>
+<hr />
+<h3>Чему вы научитесь</h3>
+<ul>
+<li>Прогонять ежеквартальный <strong>протокол сканирования горизонта</strong>: обход источников, фильтрация нитей, обновление снимка.</li>
+<li>Отличать <strong>сигнал от хайпа</strong> по рубрике из шести осей: подтверждённость, широта, зрелость (maturity), зона влияния, обратимость, безопасность.</li>
+<li>Привязывать каждую новую нить к устойчивому ядру (этапы 1–13) и решать, меняет ли она архитектуру.</li>
+<li>Составлять <strong>фальсифицируемые предсказания</strong> с датой проверки и критерием «сбылось/нет» — чтобы не обманывать себя задним числом.</li>
+<li>Отличать устаревающий снимок от переносимого навыка: список тенденций протухает за квартал, протокол оценки — нет.</li>
+</ul>
 <hr />
 <h3>0. Зачем этот этап другой</h3>
-<p>Уроки 1–13 дали blueprint, устойчивый на годы. Но если выучить «тренды 2026», знание протухнет за квартал.
-Цель этапа — не список трендов, а <strong>переносимый навык</strong>: уметь взять любую новую работу/протокол/бенчмарк и
-за час решить — это сигнал или хайп, и меняет ли оно архитектуру из уроков 1–13. Snapshot прилагается, но он
+<p>Уроки 1–13 дали blueprint, устойчивый на годы. Но если выучить «тенденции 2026», знание протухнет за квартал.
+Цель этапа — не список тенденций, а <strong>переносимый навык</strong>: уметь взять любую новую работу/протокол/бенчмарк и
+за час решить — это сигнал или хайп, и меняет ли оно архитектуру из уроков 1–13. Снимок прилагается, но он
 <strong>заведомо устаревающий раздел</strong>, а не канон.</p>
 <p>Две мысли, которые этап должен оставить:</p>
 <blockquote>
-<p><strong>(1)</strong> Список трендов протухает; <strong>протокол оценки</strong> — нет. Главный артефакт — повторяемый ежеквартальный
-процесс + рубрика «сигнал vs хайп», а не снимок текущего фронта.
+<p><strong>(1)</strong> Список тенденций протухает; <strong>протокол оценки</strong> — нет. Главный артефакт — повторяемый ежеквартальный
+процесс + рубрика «сигнал vs хайп», а не снимок текущего переднего края.
 <strong>(2)</strong> Новое оценивается <strong>не по новизне, а по подтверждённости, широте, зрелости, зоне влияния (какой
 этап 1–13) и обратимости</strong>. То, что меняет capstone (этап 13), требует пересборки blueprint; то, что
 «paper без кода», идёт в карантин.</p>
 </blockquote>
 <hr />
-<h3>1. Cold-open: то, что мы процитировали сегодня, уже устаревает</h3>
-<p>Этот курс девять раз ловил фабрикации через verification gate — но даже <strong>верифицированный</strong> фронтир-факт
+<h3>1. Разбор инцидента</h3>
+<p>Этот курс девять раз ловил фабрикации через verification gate — но даже <strong>верифицированный</strong> факт с переднего края
 тлеет на глазах:</p>
 <ul>
 <li><strong>tau-bench</strong> (arXiv 2406.12045, урок 6) — реальный бенчмарк. Но его авторы уже выпустили обновление —
@@ -321,49 +330,51 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 </ul>
 <p>Вывод, ломающий наивную модель «выучу актуальное состояние»:</p>
 <blockquote>
-<p>Даже корректный снимок фронта <strong>протухает за квартал</strong>. Поэтому ценность не в снимке, а в <strong>протоколе</strong>,
+<p>Даже корректный снимок переднего края <strong>протухает за квартал</strong>. Поэтому ценность не в снимке, а в <strong>протоколе</strong>,
 который читатель прогоняет сам: где смотреть, как отличить сигнал от хайпа, как привязать новое к
 устойчивому ядру и решить, меняет ли оно архитектуру. Навык переносим; снимок — нет.</p>
 </blockquote>
 <p><em>(Дисциплина этапа: каждый пункт ниже несёт дату и флаг зрелости. Непроверенные в gate цитаты помечены
 отдельно и не идут в core — см. §9.)</em></p>
+<p>Так выглядит холодный старт: мы смотрим на конкретные примеры протухания фактов и выводим из этого потребность в протоколе, а не в памяти. Следующий раздел выводит этот протокол систематически.</p>
 <hr />
-<h3>2. Деривация: от «знать тренды» к «уметь их оценивать»</h3>
-<h4>2.1 Ядро vs фронт</h4>
+<h3>2. От памяти к фильтру</h3>
+<h4>2.1 Ядро vs передний край</h4>
 <p>Сначала разделение: <strong>устойчивое ядро</strong> (этапы 1–13 — примитивы, инварианты, threat model, экономика) меняется
-медленно. <strong>Фронт</strong> (новые методы обучения, протоколы, бенчмарки) — быстро. Ошибка — учить фронт как ядро:
-через квартал переучивать всё. Решение — относиться к фронту через <strong>фильтр</strong>, а не через память.</p>
+медленно. <strong>Передний край</strong> (новые методы обучения, протоколы, бенчмарки) — быстро. Ошибка — учить передний край как ядро:
+через квартал переучивать всё. Решение — относиться к переднему краю через <strong>фильтр</strong>, а не через память.</p>
 <h4>2.2 Боль → артефакт</h4>
 <ul>
-<li><strong>«Как отличить сигнал от хайпа?»</strong> → <strong>trend-evaluation rubric</strong> (§3.1): оси подтверждённости, широты,
+<li><strong>«Как отличить сигнал от хайпа?»</strong> → <strong>рубрика оценки тенденций</strong> (§3.1): оси подтверждённости, широты,
   зрелости, зоны влияния, обратимости, безопасности. Балл решает: карантин / appendix / core.</li>
-<li><strong>«Где вообще смотреть и как часто?»</strong> → <strong>living watchlist</strong> (§3.3): venue/лаборатории/трекеры/бенчмарки
+<li><strong>«Где вообще смотреть и как часто?»</strong> → <strong>живой список наблюдения</strong> (§3.3): venue/лаборатории/трекеры/бенчмарки
   с пометкой надёжности и каденсом обхода.</li>
-<li><strong>«Как не обмануть себя задним числом?»</strong> → <strong>falsifiable predictions log</strong> (§3.4): 5–10 предсказаний с
+<li><strong>«Как не обмануть себя задним числом?»</strong> → <strong>журнал фальсифицируемых предсказаний</strong> (§3.4): 5–10 предсказаний с
   <strong>датой проверки</strong> и критерием «сбылось/нет». Дисциплинирует против ретроспективного хайпа.</li>
 <li><strong>«Меняет ли новое мою архитектуру?»</strong> → привязка каждой нити к <strong>этапу 1–13</strong>: что она <em>расширяет</em>, а что
   <em>угрожает обесценить</em>. Если задевает capstone (этап 13) — пересобрать blueprint.</li>
 </ul>
 <h4>2.3 Главный выход — процесс, не снимок</h4>
-<p>Сводим в <strong>horizon-scanning protocol</strong> (§3.0): ежеквартальный цикл, который читатель прогоняет сам. Snapshot
+<p>Сводим в <strong>протокол сканирования горизонта</strong> (§3.0): ежеквартальный цикл, который читатель прогоняет сам. Снимок
 (§3.2) — лишь результат <strong>одного</strong> прогона на 2026-06-23, приложенный как пример и заведомо устаревающий.</p>
+<p>Имея деривацию, переходим к конкретным артефактам, которые она порождает.</p>
 <hr />
-<h3>3. Артефакты этапа</h3>
-<h4>3.0 Horizon-scanning protocol (ГЛАВНЫЙ артефакт, повторяемый ежеквартально)</h4>
+<h3>3. Карта решений</h3>
+<h4>3.0 Протокол сканирования горизонта (ГЛАВНЫЙ артефакт, повторяемый ежеквартально)</h4>
 <pre><code>КАЖДЫЙ КВАРТАЛ (следующий прогон — до 2026-09-23):
-  1. ОБХОД watchlist (§3.3): собрать новые работы/протоколы/бенчмарки/инциденты.
-  2. ФИЛЬТР каждой кандидат-нити по trend-evaluation rubric (§3.1):
-        score 0–1 -&gt; карантин (не подавать как факт)
-        score 2   -&gt; appendix (frontier extension, с evals)
-        score 3   -&gt; кандидат в core (меняет архитектуру)
+  1. ОБХОД живого списка наблюдения (§3.3): собрать новые работы/протоколы/бенчмарки/инциденты.
+  2. ФИЛЬТР каждой кандидат-нити по рубрике оценки тенденций (§3.1):
+         score 0–1 -&gt; карантин (не подавать как факт)
+         score 2   -&gt; appendix (расширение переднего края, с evals)
+         score 3   -&gt; кандидат в core (меняет архитектуру)
   3. ПРИВЯЗКА к этапам 1–13: что расширяет / что угрожает обесценить.
-        если задевает этап 13 (capstone) -&gt; пересобрать blueprint.
-  4. ПРОВЕРКА falsifiable predictions (§3.4): сбылось / нет / открыто; обновить.
-  5. ОБНОВИТЬ snapshot (§3.2) с новой датой и сроком годности.
+         если задевает этап 13 (capstone) -&gt; пересобрать blueprint.
+  4. ПРОВЕРКА фальсифицируемых предсказаний (§3.4): сбылось / нет / открыто; обновить.
+  5. ОБНОВИТЬ снимок (§3.2) с новой датой и сроком годности.
   6. VERIFICATION GATE на всё новое: рабочий URL, независимое воспроизведение, дата.
-        свежие термины — высокий риск галлюцинаций; цитаты сверять (урок цены: проверяли весь курс).
+         свежие термины — высокий риск галлюцинаций; цитаты сверять (урок цены: проверяли весь курс).
 </code></pre>
-<h4>3.1 Trend-evaluation rubric (как отличать сигнал от хайпа)</h4>
+<h4>3.1 Рубрика оценки тенденций (как отличать сигнал от хайпа)</h4>
 <table>
 <thead>
 <tr>
@@ -426,7 +437,7 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 </tr>
 </tbody>
 </table>
-<h4>3.2 Frontier snapshot (актуально 2026-06-23, пересмотреть до 2026-09-23 — ЗАВЕДОМО ПРОТУХАЮЩИЙ)</h4>
+<h4>3.2 Снимок переднего края (актуально 2026-06-23, пересмотреть до 2026-09-23 — ЗАВЕДОМО ПРОТУХАЮЩИЙ)</h4>
 <table>
 <thead>
 <tr>
@@ -439,35 +450,35 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 </thead>
 <tbody>
 <tr>
-<td><strong>Agentic RL</strong> (Search-R1, WebSailor)</td>
+<td><strong>Агентное обучение с подкреплением (Agentic RL)</strong> (Search-R1, WebSailor)</td>
 <td>[формирующееся]</td>
 <td>6, 5, 3, 13</td>
-<td>frontier extension, не production default</td>
+<td>расширение переднего края, не production default</td>
 <td>✅ verified (2503.09516, 2507.02592)</td>
 </tr>
 <tr>
-<td><strong>RLM / context-as-environment</strong></td>
+<td><strong>RLM / контекст-как-среда</strong></td>
 <td>[формирующееся]</td>
 <td>4, 8, 13</td>
 <td>альтернатива compaction/RAG, требует evals</td>
 <td>✅ verified (2512.24601)</td>
 </tr>
 <tr>
-<td><strong>Context rot / aggregation</strong></td>
+<td><strong>Гниение контекста / агрегация</strong></td>
 <td>[устоявшееся как проблема]</td>
 <td>4, 6, 8</td>
 <td>обязательный anti-pattern «окно ≠ память»</td>
 <td>✅ verified (OOLONG 2511.02817)</td>
 </tr>
 <tr>
-<td><strong>Verifier/reward models</strong></td>
+<td><strong>Модели верификатора/вознаграждения</strong></td>
 <td>[формирующееся]</td>
 <td>6, 10, 13</td>
-<td>open problem: verifier gap + reward hacking</td>
+<td>открытая проблема (open problem): verifier gap + reward hacking</td>
 <td>✅ verified (AgentPRM 2511.08325)</td>
 </tr>
 <tr>
-<td><strong>Cost-tiered fleets / SLM</strong></td>
+<td><strong>Ценово-ярусные парки (cost-tiered fleets) / SLM</strong></td>
 <td>[формирующееся]</td>
 <td>2, 5, 13</td>
 <td>model routing в cost model capstone</td>
@@ -488,14 +499,14 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <td>✅ verified (v1.0, Linux Foundation)</td>
 </tr>
 <tr>
-<td><strong>Structural containment</strong></td>
+<td><strong>Структурная изоляция</strong></td>
 <td>[формирующееся, high-priority]</td>
 <td>7, 10, 13</td>
 <td>memory integrity + policy gate обязательны</td>
 <td>✅ verified (Containment Gap 2606.12797)</td>
 </tr>
 <tr>
-<td><strong>Observability standardization</strong></td>
+<td><strong>Стандартизация наблюдаемости</strong></td>
 <td>[формирующееся]</td>
 <td>9, 13</td>
 <td>trace schema (OTel GenAI) обязателен</td>
@@ -509,14 +520,14 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <td>✅ verified (OpenAI CUA/Operator; Anthropic Computer Use)</td>
 </tr>
 <tr>
-<td><strong>Reasoning models + continual learning</strong></td>
+<td><strong>Модели рассуждения + непрерывное обучение</strong></td>
 <td>reasoning [устоявшееся] / continual [формирующееся]</td>
 <td>6, 7, 13</td>
 <td>сдвиг от scaling к reasoning-post-training + inference-time</td>
 <td>✅ reasoning в проде; continual — формирующееся</td>
 </tr>
 <tr>
-<td><strong>Engineer creator→curator</strong></td>
+<td><strong>Инженер: создатель→куратор</strong></td>
 <td>[спорное]</td>
 <td>мета</td>
 <td>привязать к обязанностям (evals/policy/review), не лозунг</td>
@@ -524,7 +535,7 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 </tr>
 </tbody>
 </table>
-<h4>3.3 Living watchlist (с надёжностью и каденсом)</h4>
+<h4>3.3 Живой список наблюдения (с надёжностью и каденсом)</h4>
 <table>
 <thead>
 <tr>
@@ -542,37 +553,37 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <td>ежемесячно</td>
 </tr>
 <tr>
-<td>Agentic RL</td>
+<td>Агентное обучение с подкреплением</td>
 <td>arXiv cs.AI/CL/LG: <code>agentic RL</code>, <code>tool-use RL</code>, <code>web-agent RL</code>, <code>process reward model</code></td>
 <td>средняя/высокая</td>
 <td>еженедельно</td>
 </tr>
 <tr>
-<td>Benchmarks</td>
+<td>Бенчмарки</td>
 <td>SWE-bench(Verified)/Live, τ-bench→τ²-bench, BrowseComp, WebArena, GAIA</td>
 <td>средняя (contamination!)</td>
 <td>ежемесячно</td>
 </tr>
 <tr>
-<td>Security</td>
+<td>Безопасность</td>
 <td>OWASP Agentic, AgentDojo, EchoLeak-class, Unit42/Aim/Varonis</td>
 <td>высокая для первичных disclosures</td>
 <td>ежемесячно</td>
 </tr>
 <tr>
-<td>Observability</td>
+<td>Наблюдаемость</td>
 <td>OTel GenAI conventions, OpenAI Agents SDK, LangSmith/LangGraph</td>
 <td>средняя/высокая</td>
 <td>ежемесячно</td>
 </tr>
 <tr>
-<td>Postmortems</td>
+<td>Посмертные разборы</td>
 <td>incidentdatabase.ai, vendor eng-blogs, legal cases, vectara/awesome-agent-failures</td>
 <td>средняя</td>
 <td>квартально</td>
 </tr>
 <tr>
-<td>Frontier labs</td>
+<td>Лаборатории переднего края</td>
 <td>OpenAI, Anthropic, DeepMind, Meta, NVIDIA, Sierra, Princeton/CMU</td>
 <td>средняя (vendor bias)</td>
 <td>еженедельно</td>
@@ -585,7 +596,7 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 </tr>
 </tbody>
 </table>
-<h4>3.4 Falsifiable predictions log (с датами проверки)</h4>
+<h4>3.4 Журнал фальсифицируемых предсказаний (с датами проверки)</h4>
 <table>
 <thead>
 <tr>
@@ -597,7 +608,7 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 </thead>
 <tbody>
 <tr>
-<td>A2A — de facto inter-agent протокол enterprise</td>
+<td>A2A — de facto протокол взаимодействия агентов в enterprise</td>
 <td>2026-12-31</td>
 <td>≥3 независимых production-интеграции вне Google/MS/IBM/Salesforce</td>
 <td>открыто</td>
@@ -609,7 +620,7 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <td>вероятно</td>
 </tr>
 <tr>
-<td>Agentic RL — прирост на web/search/tool, но не default training</td>
+<td>Агентное обучение с подкреплением — прирост на web/search/tool, но не default training</td>
 <td>2026-12-31</td>
 <td>≥3 papers+code, мало production вне лабораторий</td>
 <td>вероятно</td>
@@ -621,25 +632,25 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <td>вероятно</td>
 </tr>
 <tr>
-<td>Verifier/reward станут узким местом scaling</td>
+<td>Верификатор/вознаграждение станут узким местом scaling</td>
 <td>2026-12-31</td>
 <td>papers явно связывают провалы с verifier gap/reward hacking</td>
 <td>открыто</td>
 </tr>
 <tr>
-<td>Tiered fleets войдут в production blueprint</td>
+<td>Ярусные парки войдут в production blueprint</td>
 <td>2026-12-31</td>
 <td>≥3 vendor/framework docs: routing/cascades как first-class</td>
 <td>открыто</td>
 </tr>
 <tr>
-<td>Multi-agent «рой» без protocol/boundary — anti-pattern</td>
+<td>Многоагентный «рой» без protocol/boundary — anti-pattern</td>
 <td>2026-09-23</td>
 <td>новые case studies показывают overhead/drift vs single-agent+tools</td>
 <td>вероятно</td>
 </tr>
 <tr>
-<td>Security сместится от prompt-filters к structural containment</td>
+<td>Безопасность сместится от prompt-filters к структурной изоляции</td>
 <td>2026-12-31</td>
 <td>новые tools требуют memory integrity, capability tokens, policy gates</td>
 <td>вероятно</td>
@@ -651,15 +662,16 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <td>открыто</td>
 </tr>
 <tr>
-<td>«Creator→curator» закрепится как operating model (не исчезновение программиста)</td>
+<td>«Создатель→куратор» закрепится как operating model (не исчезновение программиста)</td>
 <td>2027-03-31</td>
 <td>job/process docs требуют evals/review/orchestration/policy</td>
 <td>открыто</td>
 </tr>
 </tbody>
 </table>
+<p>Карта решений дала полный набор инструментов. Теперь посмотрим, как именно новые нити взаимодействуют с ядром — что расширяют, а что угрожают обесценить.</p>
 <hr />
-<h3>4. Как фронт привязан к ядру (расширяет / угрожает)</h3>
+<h3>4. Режимы отказа</h3>
 <table>
 <thead>
 <tr>
@@ -670,7 +682,7 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 </thead>
 <tbody>
 <tr>
-<td>Agentic RL</td>
+<td>Агентное обучение с подкреплением</td>
 <td>6 (как обучать tool-use/verifier)</td>
 <td>частично 2 (prompted ReAct как дефолт)</td>
 </tr>
@@ -680,17 +692,17 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <td>тезис «compaction достаточно»</td>
 </tr>
 <tr>
-<td>Verifier/reward models</td>
+<td>Модели верификатора/вознаграждения</td>
 <td>6 (process reward), 10 (security evals)</td>
 <td>«LLM-judge финала достаточно»</td>
 </tr>
 <tr>
-<td>Cost-tiered fleets</td>
+<td>Ценово-ярусные парки</td>
 <td>13 (cost model), 2 (router)</td>
 <td>«одна frontier-модель на всё»</td>
 </tr>
 <tr>
-<td>Containment Gap</td>
+<td>Структурная изоляция</td>
 <td>7 (memory integrity), 10 (threat model)</td>
 <td>«агрегатных метрик достаточно» (урок 6!)</td>
 </tr>
@@ -707,24 +719,26 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 </tbody>
 </table>
 <p>Это и есть смысл привязки: новое не «интересно вообще», а <strong>меняет конкретный инвариант spine или нет</strong>.
-Containment Gap — яркий пример: memory poisoning, <strong>сохраняющий общую accuracy</strong> при росте targeted-ошибок,
+Структурная изоляция — яркий пример: memory poisoning, <strong>сохраняющий общую accuracy</strong> при росте targeted-ошибок,
 напрямую бьёт по уроку 6 (агрегатная метрика слепа) и уроку 7 (нужен memory integrity validator).</p>
+<p>Разобрав режимы отказа, закрепим это всё в опорном стержне как обязательство.</p>
 <hr />
-<h3>5. Вклад в reference-spine: протокол анти-устаревания + обязательство пересмотра</h3>
+<h3>5. Опорный стержень</h3>
 <p>Этап 14 добавляет к spine не примитив, а <strong>процесс поддержания</strong>: blueprint живёт, только если раз в квартал
-прогонять horizon-scanning. Контракт:</p>
+прогонять сканирование горизонта. Контракт:</p>
 <pre><code>SPINE / frontier-maintenance (этап 14):
-  Инвариант: blueprint (этап 13) сопровождается ДАТОЙ и сроком годности frontier-раздела.
-  Обязательство: каждый квартал прогнать §3.0; обновить snapshot; пересмотреть predictions.
-  Гейт: ни одна frontier-нить не входит в core без rubric-score 3 (verified + воспроизведено).
+  Инвариант: blueprint (этап 13) сопровождается ДАТОЙ и сроком годности раздела о переднем крае.
+  Обязательство: каждый квартал прогнать §3.0; обновить снимок; пересмотреть предсказания.
+  Гейт: ни одна нить переднего края не входит в core без rubric-score 3 (verified + воспроизведено).
   Триггер пересборки: нить со «зоной влияния = меняет spine» → ревизия capstone (этап 13).
   Следующий обязательный пересмотр: до 2026-09-23.
 </code></pre>
 <p>Это замыкает курс: уроки 1–13 дают систему, урок 14 даёт <strong>механизм, не дающий ей устареть</strong> молча.</p>
+<p>Теория зафиксирована — теперь практическая проверка через код.</p>
 <hr />
-<h3>6. Pset 14 — прогон trend-evaluation rubric</h3>
+<h3>6. Практикум</h3>
 <p><strong>Задача.</strong> Реализовать оценщик нити по рубрике (§3.1) и решатель «карантин/appendix/core», + генератор
-falsifiable-предсказания с датой проверки. Доказать: blog-claim → карантин; paper+код+репликация → core;
+фальсифицируемого предсказания с датой проверки. Доказать: blog-claim → карантин; paper+код+репликация → core;
 нить, меняющая этап 13 → триггер пересборки.</p>
 <p><strong>Скелет</strong> (<code>horizon_scan.py</code>):</p>
 <pre><code class="language-python">@dataclass
@@ -769,62 +783,63 @@ verified+воспроизведённое в core (тот же gate, что мы
 <code>test_thread_touching_stage13...</code> — нить, задевающая capstone, обязывает пересобрать blueprint; (3) предсказание
 без даты и критерия невалидно (<code>make_prediction</code>) — дисциплина против «время покажет».</p>
 <p><strong>Расширение.</strong> Прогони рубрику на реальной свежей нити (что вышло после 2026-06-23) и реши её судьбу;
-обнови snapshot §3.2 с новой датой. Это и есть один цикл протокола §3.0.</p>
+обнови снимок §3.2 с новой датой. Это и есть один цикл протокола §3.0.</p>
+<p>Практикум дал hands-on опыт. Проверим теперь навык суждения — без кода, но с той же рубрикой.</p>
 <hr />
-<h3>7. Диагностические вопросы (проверяют навык, не память)</h3>
+<h3>7. Вопросы на суждение</h3>
 <ol>
 <li>Вышла статья «новый метод X бьёт RAG на 40%». Прогони её по рубрике (§3.1): какие 6 вопросов задашь и
    при каком ответе пустишь в core, а при каком — в карантин?</li>
-<li>Почему «выучить тренды 2026» — проигрышная стратегия (§1)? Приведи пример из курса, где даже
+<li>Почему «выучить тенденции 2026» — проигрышная стратегия (§1)? Приведи пример из курса, где даже
    верифицированный факт уже устарел (tau-bench, SWE-bench).</li>
-<li>Нить «cost-tiered fleets» задевает этап 13. Что по §5 это обязывает сделать и почему нельзя просто
+<li>Нить «ценово-ярусные парки» задевает этап 13. Что по §5 это обязывает сделать и почему нельзя просто
    «добавить в appendix»?</li>
-<li>Containment Gap: memory poisoning сохраняет общую accuracy. Почему это страшнее обычной атаки и какие
+<li>Структурная изоляция: memory poisoning сохраняет общую accuracy. Почему это страшнее обычной атаки и какие
    два урока (6, 7) она заставляет пересмотреть?</li>
-<li>Как отличить «creator→curator» как реальный operating-model-сдвиг от маркетингового лозунга (§3.2,
+<li>Как отличить «создатель→куратор» как реальный operating-model-сдвиг от маркетингового лозунга (§3.2,
    последняя строка)? К каким конкретным обязанностям его привязать?</li>
-<li><strong>Open question:</strong> сформулируй фальсифицируемое предсказание про любую нить snapshot с датой проверки и
-   критерием «не взлетел». Что именно ты признаешь как «тренд не оправдался»?</li>
+<li><strong>Открытый вопрос:</strong> сформулируй фальсифицируемое предсказание про любую нить снимка с датой проверки и
+   критерием «не взлетел». Что именно ты признаешь как «тенденция не оправдалась»?</li>
 </ol>
 <hr />
-<h3>8. Глоссарий-дельта</h3>
+<h3>8. Глоссарий</h3>
 <ul>
-<li><strong>Frontier snapshot</strong> — датированный срез фронта со сроком годности; заведомо протухает.</li>
-<li><strong>Horizon-scanning protocol</strong> — повторяемый ежеквартальный процесс оценки нового (главный артефакт этапа).</li>
-<li><strong>Trend-evaluation rubric</strong> — оси оценки нити: подтверждённость / широта / зрелость / зона влияния /
+<li><strong>Снимок переднего края</strong> — датированный срез переднего края со сроком годности; заведомо протухает.</li>
+<li><strong>Протокол сканирования горизонта</strong> — повторяемый ежеквартальный процесс оценки нового (главный артефакт этапа).</li>
+<li><strong>Рубрика оценки тенденций</strong> — оси оценки нити: подтверждённость / широта / зрелость / зона влияния /
   обратимость / безопасность.</li>
-<li><strong>Falsifiable prediction</strong> — прогноз с <strong>датой проверки</strong> и критерием «сбылось/нет» (анти ретро-хайп).</li>
-<li><strong>Living watchlist</strong> — список источников фронта с надёжностью и каденсом обхода.</li>
-<li><strong>Agentic RL</strong> — RL на многошаговых tool/search/web-траекториях (Search-R1, WebSailor). [формирующееся].</li>
-<li><strong>RLM</strong> — context-as-environment, рекурсивные под-вызовы (2512.24601). [формирующееся].</li>
-<li><strong>Verifier gap</strong> — узкое место: нельзя надёжно оценить/выбрать траекторию при scaling (мост к уроку 6).</li>
-<li><strong>Cost-tiered fleet / SLM</strong> — дешёвые малые модели на частое, frontier на сложное (NVIDIA 2506.02153).</li>
-<li><strong>Structural containment</strong> — memory integrity, capability tokens, policy gates вместо одних prompt-filters
+<li><strong>Фальсифицируемое предсказание</strong> — прогноз (forecast) с <strong>датой проверки</strong> и критерием «сбылось/нет» (анти ретро-хайп).</li>
+<li><strong>Живой список наблюдения</strong> — список источников переднего края с надёжностью и каденсом обхода.</li>
+<li><strong>Агентное обучение с подкреплением</strong> — обучение с подкреплением на многошаговых tool/search/web-траекториях (Search-R1, WebSailor). [формирующееся].</li>
+<li><strong>RLM</strong> — контекст-как-среда, рекурсивные под-вызовы (2512.24601). [формирующееся].</li>
+<li><strong>Разрыв верификатора</strong> — узкое место: нельзя надёжно оценить/выбрать траекторию при scaling (мост к уроку 6).</li>
+<li><strong>Ценово-ярусный парк / SLM</strong> — дешёвые малые модели на частое, frontier на сложное (NVIDIA 2506.02153).</li>
+<li><strong>Структурная изоляция</strong> — memory integrity, capability tokens, policy gates вместо одних prompt-filters
   (Containment Gap 2606.12797).</li>
-<li><strong>Creator→curator</strong> — сдвиг роли инженера к постановке целей/evals/review/policy/orchestration (не
+<li><strong>Создатель→куратор</strong> — сдвиг роли инженера к постановке целей/evals/review/policy/orchestration (не
   исчезновение программиста). [спорное].</li>
 </ul>
 <hr />
-<h3>9. Первоисточники (верифицированы 2026-06-23)</h3>
+<h3>9. Первоисточники</h3>
 <ol>
 <li><strong>Search-R1</strong> — arXiv 2503.09516 (+ github.com/PeterGriffinJin/Search-R1). <a href="https://arxiv.org/abs/2503.09516" target="_blank" rel="noopener">https://arxiv.org/abs/2503.09516</a>
-   — agentic RL для reasoning+search.</li>
+   — агентное обучение с подкреплением для reasoning+search.</li>
 <li><strong>WebSailor</strong> — arXiv 2507.02592 (Alibaba Tongyi). <a href="https://arxiv.org/pdf/2507.02592" target="_blank" rel="noopener">https://arxiv.org/pdf/2507.02592</a> — long-horizon web-агент.</li>
 <li><strong>Recursive Language Models (RLM)</strong> — arXiv 2512.24601 (MIT CSAIL). <a href="https://arxiv.org/abs/2512.24601" target="_blank" rel="noopener">https://arxiv.org/abs/2512.24601</a> —
-   context-as-environment (см. урок 4).</li>
+   контекст-как-среда (см. урок 4).</li>
 <li><strong>Oolong</strong> — arXiv 2511.02817. <a href="https://arxiv.org/abs/2511.02817" target="_blank" rel="noopener">https://arxiv.org/abs/2511.02817</a> — frontier-модели &lt;50% при 128K (уроки 4, 6).</li>
 <li><strong>AgentPRM</strong> — arXiv 2511.08325. <a href="https://arxiv.org/abs/2511.08325" target="_blank" rel="noopener">https://arxiv.org/abs/2511.08325</a> — process reward models для агентов.</li>
 <li><strong>NVIDIA — «Small Language Models are the Future of Agentic AI»</strong> — arXiv 2506.02153.
-   <a href="https://arxiv.org/pdf/2506.02153" target="_blank" rel="noopener">https://arxiv.org/pdf/2506.02153</a> — cost-tiered fleets.</li>
+   <a href="https://arxiv.org/pdf/2506.02153" target="_blank" rel="noopener">https://arxiv.org/pdf/2506.02153</a> — ценово-ярусные парки.</li>
 <li><strong>The Containment Gap</strong> — arXiv 2606.12797. <a href="https://arxiv.org/abs/2606.12797" target="_blank" rel="noopener">https://arxiv.org/abs/2606.12797</a> — memory poisoning,
    сохраняющий общую accuracy (мост к урокам 6, 7, 10).</li>
 <li><strong>MCP Specification 2025-11-25</strong> — <a href="https://modelcontextprotocol.io/specification/2025-11-25" target="_blank" rel="noopener">https://modelcontextprotocol.io/specification/2025-11-25</a> (урок 11).</li>
 <li><strong>A2A v1.0</strong> — <a href="https://a2a-protocol.org/latest/announcing-1.0/" target="_blank" rel="noopener">https://a2a-protocol.org/latest/announcing-1.0/</a> + Linux Foundation (урок 11).</li>
 <li><strong>tau-bench</strong> (2406.12045) + <strong>τ²-bench</strong> update (2506.07982); <strong>WebArena</strong> (2307.13854); <strong>SWE-bench
-    Verified</strong>; <strong>BrowseComp</strong> — бенчмарки (уроки 6, 13). <a href="https://arxiv.org/abs/2406.12045" target="_blank" rel="noopener">https://arxiv.org/abs/2406.12045</a> · <a href="https://arxiv.org/abs/2506.07982" target="_blank" rel="noopener">https://arxiv.org/abs/2506.07982</a></li>
+     Verified</strong>; <strong>BrowseComp</strong> — бенчмарки (уроки 6, 13). <a href="https://arxiv.org/abs/2406.12045" target="_blank" rel="noopener">https://arxiv.org/abs/2406.12045</a> · <a href="https://arxiv.org/abs/2506.07982" target="_blank" rel="noopener">https://arxiv.org/abs/2506.07982</a></li>
 <li><strong>OpenTelemetry GenAI conventions</strong> + <strong>OpenAI Agents SDK tracing</strong> + <strong>LangGraph interrupts</strong> — уроки 9, 12.</li>
 <li><strong>Anthropic — «Building Effective Agents»</strong> — <a href="https://www.anthropic.com/research/building-effective-agents" target="_blank" rel="noopener">https://www.anthropic.com/research/building-effective-agents</a>
-    (start simple, усложнять по необходимости; уроки 2, 11, 13).</li>
+     (start simple, усложнять по необходимости; уроки 2, 11, 13).</li>
 </ol>
 <blockquote class="quarantine">
 <p><strong>Осторожно (НЕ пересверено в gate этого этапа — поданы с датой и флагом зрелости, в core не ставлю):</strong>
@@ -839,17 +854,17 @@ LLMail-Inject (2506.09956). <em>(AgentDojo убран отсюда — он </em
 <h3>Замыкание курса</h3>
 <p>Курс прошёл деривацию от «что такое автономия» (этап 1) до сборки L8+ blueprint и его экономики (этап 13).
 Каждый этап давал примитив с контрактом интерфейса и инвариантом. Этап 14 добавил последнее, без чего
-blueprint молча устаревает: <strong>протокол сканирования фронта</strong> — навык оценивать новое по рубрике, привязывать
-к ядру и решать, меняет ли оно архитектуру. Snapshot протухнет к 2026-09-23; протокол — нет.</p>
+blueprint молча устаревает: <strong>протокол сканирования переднего края</strong> — навык оценивать новое по рубрике, привязывать
+к ядру и решать, меняет ли оно архитектуру. Снимок протухнет к 2026-09-23; протокол — нет.</p>
 <p><em>Эпистемическая заметка: этот этап подчиняется recency-правилу — всё датировано (2026-06-23) и помечено
-зрелостью; frontier snapshot подан как заведомо устаревающий. Verification gate подтвердил всю core-линию
+зрелостью; снимок переднего края подан как заведомо устаревающий. Verification gate подтвердил всю core-линию
 (Search-R1, WebSailor, RLM, OOLONG, AgentPRM, NVIDIA SLM, Containment Gap, MCP/A2A — 5/5 выборочно
 проверенных + ранее верифицированные), несверенные цитаты явно отделены в §9. Парадокс этапа: самое
 «рискованное на галлюцинации» досье оказалось одним из самых точных — потому что GPT следовал recency-правилу
 и цитировал реальные arXiv с датами.</em></p>
     </div>
     <nav class="pager">
-      <a class="pg-prev" href="lesson-13.html"><span class="pk">← Урок 13</span>Экономика и production readiness (capstone)</a>
+      <a class="pg-prev" href="lesson-13.html"><span class="pk">← Урок 13</span>Экономика и готовность к производству</a>
       <a class="pg-next" href="index.html"><span class="pk">→</span>К началу</a>
     </nav>
     <footer id="footer">
