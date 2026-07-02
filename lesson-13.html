@@ -397,46 +397,129 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 </ul>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>0. Зачем этот урок <span class="srole srole-context">КОНТЕКСТ</span></h3>
-<p>Двенадцать этапов мы собирали примитивы. Урок 1 задал вопрос: <strong>чем работающая в проде L8-система
-отличается от демо?</strong> Теперь, имея весь опорный стержень, мы отвечаем — через <strong>экономику</strong> (сколько на самом деле
-стоит агент) и <strong>готовность к промышленной эксплуатации</strong> (что должно присутствовать, чтобы запускать). Это итоговый проект: здесь
-опорный стержень становится единым проектом, а не набором тем.</p>
+<h3>1. Разбор темы: экономика агентов, промышленная эксплуатация и что отличает прод от демо <span class="srole srole-example">ПРИМЕР</span></h3>
+<h4>Что это за область</h4>
+<p>Экономика агентных систем — это дисциплина измерения настоящей стоимости автономного агента в промышленной эксплуатации. В отличие от наивного подхода «стоимость = model_price × steps», реальная стоимость включает три компонента: <strong>стоимость вывода (inference)</strong>, <strong>стоимость верификации (verification)</strong> и <strong>стоимость отказа (failure)</strong>. Игнорирование второго и третьего компонентов — корень большинства провалов при переходе от демо к проду.</p>
+<p>Двенадцать этапов курса собирали примитивы. Урок 1 задал вопрос: <strong>чем работающая в проде L8-система отличается от демо?</strong> Теперь, имея весь опорный стержень, мы отвечаем — через <strong>экономику</strong> (сколько на самом деле стоит агент) и <strong>готовность к промышленной эксплуатации</strong> (что должно присутствовать, чтобы запускать). Это итоговый проект: здесь опорный стержень становится единым проектом, а не набором тем.</p>
+<h4>Ключевые понятия</h4>
+<p><strong>Три компонента настоящей стоимости:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Формула</th>
+<th>Что входит</th>
+<th>Доминирует когда</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Стоимость вывода (inference)</strong></td>
+<td>model_price × steps (мультиагент ×15)</td>
+<td>Токены модели</td>
+<td>Агент редко ошибается, мало шагов</td>
+</tr>
+<tr>
+<td><strong>Стоимость верификации (verification)</strong></td>
+<td>evals + verifier + HITL-латентность</td>
+<td>Прогоны pass^k, верификатор, время оператора</td>
+<td>Высокая автономия, много шагов</td>
+</tr>
+<tr>
+<td><strong>Стоимость отказа (failure)</strong></td>
+<td>P(fail) × cost_of_failure_per_incident</td>
+<td>Ожидаемый ущерб от ошибки × частота</td>
+<td>Высокая стоимость ошибки</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Метрика: стоимость успешной задачи (cost-per-successful-task)</strong> = (вывод + верификация + отказ) / success_rate. Это правильная удельная метрика — в отличие от cost-per-task, которая игнорирует, что неудачные задачи тоже стоят денег (и иногда — очень много).</p>
+<p><strong>Закон Верификатора (Verifier's Law, Jason Wei, 2025):</strong> лёгкость обучить ИИ задаче пропорциональна её верифицируемости. Где проверка дешева (код — компилятор проверит, математика — есть ответ), там прогресс быстр. Где дорога (юридический анализ, медицинская диагностика) — застой.</p>
+<p><strong>Экономический потолок автономии:</strong> уровень L8+ достижим только для задач с дешёвой верификацией. Для задач с дорогой верификацией — L4–L6 с человеком в цикле. «Последние 5% надёжности даются как первые 95%» — довести агента с 95% до 99.9% может стоить как первые 95%, потому что каждая десятая ошибка — редкий сценарий.</p>
+<h4>Производственная готовность (production readiness)</h4>
+<p><strong>Демо = опорный стержень с дырами.</strong> Прод-готовность требует, чтобы каждый примитив опорного стержня присутствовал со своим инвариантом: lifecycle+idempotency (урок 3), context-budget (урок 4), policy+Rule of Two (уроки 5, 10), verifier+eval-suite+pass^k (урок 6), memory write-gate (урок 7), retrieval grounding (урок 8), trace+replay (урок 9), HITL+RACI+fallback (урок 12), kill-switch + rollback, FMEA, SLO, CostModel. Любая дыра — это не прод, а демо.</p>
+<h4>Эмпирическая база</h4>
+<div class="table-essence"><span class="te-label">ОХВАТ ТАБЛИЦЫ</span> Факт · Источник · Значение для экономики · 95% корпоративных GenAI-пилотов не дают ROI · MIT (2025) и ещё 2</div>
+<table>
+<thead>
+<tr>
+<th>Факт</th>
+<th>Источник</th>
+<th>Значение для экономики</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>95% корпоративных GenAI-пилотов не дают ROI</strong></td>
+<td>MIT (2025)</td>
+<td>Разрыв демо—прод — системная закономерность</td>
+</tr>
+<tr>
+<td><strong>&gt;40% агентных проектов отменят к 2027</strong></td>
+<td>Gartner (2025)</td>
+<td>Стоимость, неясная ценность, риски</td>
+</tr>
+<tr>
+<td><strong>Агенты решают 14% (WebArena) — &lt;50% (tau-bench) задач</strong></td>
+<td>Бенчмарки</td>
+<td>Надёжность далека от прод-уровня</td>
+</tr>
+<tr>
+<td><strong>Мультиагент стоит ~15× токенов</strong></td>
+<td>Anthropic (2025)</td>
+<td>Мультиагентность — не amplifier, а trade-off</td>
+</tr>
+<tr>
+<td><strong>Amazon Q: ~6.3 млн потерянных заказов</strong></td>
+<td>Wharton Accountable AI Lab</td>
+<td>Стоимость отказа доминирует над стоимостью вывода</td>
+</tr>
+<tr>
+<td><strong>Step Finance: $27M</strong></td>
+<td>Урок 5</td>
+<td>Стоимость отказа реальна и крупна</td>
+</tr>
+</tbody>
+</table>
 <p>Две мысли, которые урок должен оставить:</p>
 <div class="callout cl-key"><div class="cl-head">КЛЮЧЕВАЯ МЫСЛЬ</div><p>
-<strong>(1)</strong> Настоящая цена агента — <strong>не стоимость вывода (cost-of-inference)</strong>, а <code>стоимость вывода + стоимость верификации (cost-of-verification) +
-стоимость отказа (cost-of-failure)</code>. Дешёвый агент, который дорого ошибается (Amazon Q: 6.3 млн потерянных заказов), —
-экономически отрицателен. Считать надо <strong>стоимость успешной задачи (cost-per-successful-task)</strong>, не стоимость задачи (cost-per-task).
-<strong>(2)</strong> Узкое место масштабирования — <strong>верифицируемость</strong>, а не интеллект. «Последние 5% надёжности
-даются как первые 95%». Поэтому 95% пилотов не доходят до окупаемости инвестиций (MIT) и 40% агентных проектов отменят
-(Gartner): они умирают в разрыве «демо→прод», и разрыв этот — экономический и верификационный.
+<strong>(1)</strong> Настоящая цена агента — <strong>не стоимость вывода (cost-of-inference)</strong>, а <code>стоимость вывода + стоимость верификации (cost-of-verification) + стоимость отказа (cost-of-failure)</code>. Дешёвый агент, который дорого ошибается (Amazon Q: 6.3 млн потерянных заказов), — экономически отрицателен. Считать надо <strong>стоимость успешной задачи (cost-per-successful-task)</strong>, не стоимость задачи (cost-per-task).
+<strong>(2)</strong> Узкое место масштабирования — <strong>верифицируемость</strong>, а не интеллект. «Последние 5% надёжности даются как первые 95%». Поэтому 95% пилотов не доходят до окупаемости инвестиций (MIT) и 40% агентных проектов отменят (Gartner): они умирают в разрыве «демо—прод», и разрыв этот — экономический и верификационный.
 </p></div>
+<h4>Границы темы: что в этом уроке, а что нет</h4>
+<p><strong>Входит в урок:</strong>
+- Трёхкомпонентная модель стоимости (вывод + верификация + отказ)
+- Метрика cost-per-successful-task против cost-per-task
+- Чеклист production-readiness: каждый примитив spine со своим инвариантом
+- Экономический потолок автономии (Verifier's Law)
+- Итоговая сборка: blueprint как ответ на вопрос урока 1</p>
+<p><strong>Не входит (рассмотрено в других уроках):</strong>
+- Детальный разбор каждого примитива spine (уроки 2–12)
+- Фреймворки vs платформы как бизнес-решение (упомянуто в карте решений)
+- Сканирование горизонта и обновление blueprint (урок 14)</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>1. Конкретная проблема: когда дешёвый вывод оказывается дороже всего</h3>
+<h3>2. Конкретная проблема: когда дешёвый вывод оказывается дороже всего</h3>
 <p>Декабрь 2025. Внутренний ИИ-агент Amazon (Amazon Q) должен был помогать операторам клиентского сервиса. Он был <strong>дёшев в выводе</strong> — копейки за запрос. На демо работал отлично: вежливо отвечал, давал советы, находил информацию.</p>
 <p>Но агент <strong>не написал плохой код</strong> — он дал <strong>уверенно неверный совет</strong>, неправильно поняв <strong>устаревшую внутреннюю документацию</strong>. Результат: каскад ошибок, <strong>~6.3 млн потерянных заказов</strong> и многочасовой простой клиентского сервиса.</p>
 <p><em>Источники: Wharton Accountable AI Lab; vectara/awesome-agent-failures (case study).</em></p>
 <p>Попробуйте сами: посчитайте стоимость одного запроса к Amazon Q — центы. А теперь стоимость 6.3 млн потерянных заказов. Насколько дешёвым должен быть вывод, чтобы покрыть такой убыток?</p>
 <p>Ключевое для этого этапа: агент был <strong>дёшев в выводе</strong> и <strong>отлично работал на демо</strong>. Катастрофа пришла не от стоимости токенов, а от <strong>стоимости отказа</strong> при масштабе. И это не единичный случай — это <strong>системная закономерность</strong>:</p>
 <ul>
-<li><strong>95% корпоративных GenAI-пилотов не дают ROI</strong> (MIT, урок 12) — умирают в разрыве демо→прод.</li>
+<li><strong>95% корпоративных GenAI-пилотов не дают ROI</strong> (MIT, урок 12) — умирают в разрыве демо—прод.</li>
 <li><strong>&gt;40% агентных проектов отменят к 2027</strong> (Gartner, урок 11) — стоимость, неясная ценность, риски.</li>
 <li>На реалистичных бенчмарках агенты решают <strong>14%</strong> (WebArena) — <strong>&lt;50%</strong> (tau-bench) задач (урок 6).</li>
-<li>Мультиагент стоит <strong>≈15× токенов</strong> (Anthropic, уроки 2, 11).</li>
+<li>Мультиагент стоит <strong>~15× токенов</strong> (Anthropic, уроки 2, 11).</li>
 <li>Стоимость отказа реальна и крупна: Air Canada (юр. ответственность, урок 12), Step Finance ($27M, урок 5), Replit (удаление прод-БД, урок 1).</li>
 </ul>
 <p>Отсюда центральный тезис урока (и ответ на вопрос урока 1):</p>
 <div class="callout cl-thesis"><div class="cl-head">ТЕЗИС</div><p>
-Прод отличается от демо не качеством модели, а тем, что в проде доминируют <strong>стоимость отказа</strong> и
-<strong>стоимость верификации</strong>, а не стоимость вывода. L8-система — это не «умный агент», а <strong>проверяемая,
-экономически положительная, безопасно откатываемая</strong> система, где каждый примитив опорного стержня присутствует со
-своим инвариантом. Узкое место — верифицируемость, и она же ставит экономический потолок автономии.
+Прод отличается от демо не качеством модели, а тем, что в проде доминируют <strong>стоимость отказа</strong> и <strong>стоимость верификации</strong>, а не стоимость вывода. L8-система — это не «умный агент», а <strong>проверяемая, экономически положительная, безопасно откатываемая</strong> система, где каждый примитив опорного стержня присутствует со своим инвариантом. Узкое место — верифицируемость, и она же ставит экономический потолок автономии.
 </p></div>
 <p>Проблема ясна. Теперь разберём экономику — по компоненту за раз.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>2. Первый компонент: наивная модель стоимости (почему она опасна) <span class="srole srole-context">КОНТЕКСТ</span></h3>
+<h3>3. Первый компонент: наивная модель стоимости (почему она опасна) <span class="srole srole-context">КОНТЕКСТ</span></h3>
 <p>Вернёмся к Amazon Q. Команда считала: «запрос стоит $0.02, 10M запросов = $200K». Это дёшево. Но они забыли учесть стоимость 6.3 млн потерянных заказов.</p>
 <h4>Что такое наивная модель</h4>
 <pre><code>cost ≈ model_price × steps          # «дешёвая модель + мало шагов = дёшево»
@@ -448,7 +531,7 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <p>Чтобы понять настоящую цену, нужно добавить второй и третий компоненты.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>3. Второй компонент: стоимость верификации</h3>
+<h3>4. Второй компонент: стоимость верификации</h3>
 <p>После инцидента Amazon Q вы, естественно, добавляете верификацию. Каждый совет агента проверяется: соответствует ли документации, не устарела ли, нет ли противоречий.</p>
 <h4>Что такое стоимость верификации</h4>
 <p>Это всё, что нужно, чтобы <strong>убедиться, что агент прав</strong>:</p>
@@ -464,7 +547,7 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <p>Это и есть причина, почему 95% пилотов не доходят до прода: <strong>верификация съедает всю экономию от автоматизации</strong>.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>4. Третий компонент: стоимость отказа</h3>
+<h3>5. Третий компонент: стоимость отказа</h3>
 <p>Но даже верификация не закрывает всё. Представьте: вы проверили 99% шагов. 1% проскочил — и это ошибка, которая стоит $1M.</p>
 <h4>Что такое стоимость отказа</h4>
 <p>Ожидаемая стоимость ошибки × частота ошибок. Формула:</p>
@@ -487,10 +570,10 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <p>На тесте выше: <code>cost_per_successful_task</code> для дешёвого-ненадёжного (inference=0.01, failure=5.0, success=50%) = $10.02 за успех. Для дорогого-надёжного (inference=0.10, failure=0.1, success=95%) = $0.26 за успех. Разница — 38×.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>5. Четвёртый компонент: production-readiness — весь опорный стержень <span class="srole srole-core">ОСНОВНОЕ</span></h3>
+<h3>6. Четвёртый компонент: production-readiness — весь опорный стержень <span class="srole srole-core">ОСНОВНОЕ</span></h3>
 <p>Экономика посчитана. Но Amazon Q прошёл бы любую экономическую модель — он был дёшев на демо. Проблема была в том, что <strong>система была не готова к промышленной эксплуатации</strong>.</p>
 <h4>Решение: чеклист готовности</h4>
-<p>Урок 1 спросил, чем прод отличается от демо. Ответ — <strong>чеклист</strong>: прод-готовность = каждый примитив опорного стержня присутствует <strong>со своим инвариантом</strong>, плюс аварийное отключение (kill-switch)/откат (rollback), FMEA, SLO, модель стоимости.</p>
+<p>Урок 1 спросил, чем прод отличается от демо. Ответ — <strong>чеклист</strong>: прод-готовность = каждый примитив опорного стержня присутствует <strong>со своим инвариантом</strong>, плюс kill-switch/rollback, FMEA, SLO, модель стоимости.</p>
 <pre><code class="language-python">class ProductionReadinessGate(Protocol):
     def check(self, system) -&gt; list[&quot;Gap&quot;]:
         ...
@@ -510,7 +593,7 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <p>Демо выглядит так же, как прод — на демо. Только в проде вскрываются дыры.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>6. Пятый компонент: верифицируемость как экономический потолок</h3>
+<h3>7. Пятый компонент: верифицируемость как экономический потолок</h3>
 <p>Теперь — самое фундаментальное ограничение, которое объясняет, почему 95% пилотов не дают ROI.</p>
 <h4>Проблема: «последние 5% как первые 95%»</h4>
 <p>Довести агента с 50% до 95% надёжности — сложно, но возможно. Довести с 95% до 99.9% — может стоить как первые 95%. Потому что каждая десятая ошибка — редкий сценарий, который нужно найти, воспроизвести, исправить и проверить.</p>
@@ -523,7 +606,7 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <p>Отсюда <strong>экономический потолок автономии</strong> (ось B, урок 1): уровень L8+ достижим только для задач с дешёвой верификацией. Для задач с дорогой верификацией — L4–L6 с человеком в цикле.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>7. Сводка: карта решений и экономика <span class="srole srole-tool">ИНСТРУМЕНТ</span></h3>
+<h3>8. Сводка: карта решений и экономика <span class="srole srole-tool">ИНСТРУМЕНТ</span></h3>
 <p>Теперь, когда каждый компонент построен, сведём их в таблицу:</p>
 <div class="table-essence"><span class="te-label">ОХВАТ ТАБЛИЦЫ</span> Решение · Когда · Цена · Надёжность · Один вызов LLM и ещё 1</div>
 <table>
@@ -551,7 +634,7 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <tr>
 <td><strong>Мультиагент</strong></td>
 <td>параллельная широта, разделение зон</td>
-<td>≈15× токенов + координация (37% отказов)</td>
+<td>~15× токенов + координация (37% отказов)</td>
 <td>выше на правильной задаче, новый класс отказов</td>
 </tr>
 <tr>
@@ -598,19 +681,18 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 <p><strong>Метрика: стоимость успешной задачи = (вывод + верификация + отказ) / success_rate</strong></p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>8. Режимы отказа — на что обратить внимание <span class="srole srole-core">ОСНОВНОЕ</span></h3>
+<h3>9. Режимы отказа — на что обратить внимание <span class="srole srole-core">ОСНОВНОЕ</span></h3>
 <p><strong>Уверенно-неверно в масштабе.</strong> Агент уверен, но не прав (Amazon Q, 6.3M заказов). Противоядие: верификатор (6) + decay/происхождение памяти (7) + заземление поиска (8).</p>
 <p><strong>Стоимость отказа проигнорирована.</strong> Дёшев в выводе, дорог в ошибке. Противоядие: cost-per-successful-task, а не cost-per-task.</p>
-<p><strong>Разрыв верификации.</strong> Нельзя проверить в масштабе → тихий брак. Противоядие: evals/pass^k (6), HITL на критичном (12).</p>
+<p><strong>Разрыв верификации.</strong> Нельзя проверить в масштабе — тихий брак. Противоядие: evals/pass^k (6), HITL на критичном (12).</p>
 <p><strong>Нет kill-switch/rollback.</strong> Нечем остановить/откатить (Replit, Step Finance). Противоядие: стоп-критерий (3), policy (5), компенсация (3).</p>
-<p><strong>Обрыв демо→прод.</strong> Опорный стержень с дырами выдан за готовый. Противоядие: production-readiness gate.</p>
+<p><strong>Обрыв демо—прод.</strong> Опорный стержень с дырами выдан за готовый. Противоядие: production-readiness gate.</p>
 <p><strong>Нет подотчётности/аудита.</strong> «Виноват агент» (Air Canada). Противоядие: RACI + аудиторский след (9, 12).</p>
 <p>На что обратить внимание: Amazon Q покрывает строки 1 и 5 — уверенно-неверно при дырявой готовности. Ошибка была не в том, что агент «недостаточно умён», а в том, что <strong>не было верификатора фактов и проверки свежести данных</strong>.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>9. Опорный стержень <span class="srole srole-core">ОСНОВНОЕ</span></h3>
-<p>Итоговый проект — здесь опорный стержень собирается целиком. Каждый примитив со своим инвариантом + сквозные контракты +
-экономический слой.</p>
+<h3>10. Опорный стержень <span class="srole srole-core">ОСНОВНОЕ</span></h3>
+<p>Итоговый проект — здесь опорный стержень собирается целиком. Каждый примитив со своим инвариантом + сквозные контракты + экономический слой.</p>
 <pre><code class="language-python"># === L8+ REFERENCE BLUEPRINT (сборка уроков 2–13) ===
 #
 # Поток задачи (урок 2):
@@ -625,15 +707,15 @@ a.lcard .expand-hint{display:inline-block;margin:14px 0 0 40px;font-family:var(-
 #   evals (6)                   : pass^k, trajectory, cost-aware, judge bias-control
 #   memory (7)                  : write-gate + trust + conflict без overwrite
 #   retrieval (8)               : Evidence + source-grounding (ground() против citation-mismatch)
-#   security (10)               : threat model + Rule of Two (≤2 из {untrusted, sensitive, egress})
+#   security (10)               : threat model + Rule of Two (&lt;=2 из {untrusted, sensitive, egress})
 #   multi-agent (11)            : role boundaries, MCP(верт.)/A2A(гориз.), Rule of Two на субагента
 #   HITL (12)                   : escalation + RACI(accountable=human) + анти-fatigue
 
 @dataclass
 class CostModel:
-    inference: float            # model_price × steps (фреймворк §2.1); мультиагент ×15
+    inference: float            # model_price x steps (фреймворк §3.1); мультиагент x15
     verification: float         # evals + verifier + HITL-латентность (растёт с автономией)
-    expected_failure: float     # P(fail) × cost_of_failure_per_incident
+    expected_failure: float     # P(fail) x cost_of_failure_per_incident
 
     def cost_per_successful_task(self, success_rate: float) -&gt; float:
         total = self.inference + self.verification + self.expected_failure
@@ -648,14 +730,11 @@ class ProductionReadinessGate(Protocol):
         #  trace+replay(9), HITL+RACI+fallback(12), kill-switch + rollback, FMEA, SLO, CostModel.
         # Любая дыра -&gt; НЕ production-ready (это «демо», урок 1).
 </code></pre>
-<p><strong>Контракт итогового проекта:</strong> это и есть собранная система — ответ на вопрос урока 1. Экономика (стоимость успешной задачи)
-и уровень готовности — финальные проверки перед запуском.</p>
+<p><strong>Контракт итогового проекта:</strong> это и есть собранная система — ответ на вопрос урока 1. Экономика (стоимость успешной задачи) и уровень готовности — финальные проверки перед запуском.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>10. Практикум <span class="srole srole-tool">ПРАКТИКУМ</span></h3>
-<p><strong>Задача.</strong> Реализовать (а) стоимость успешной задачи с учётом верификации и отказов; (б) уровень готовности,
-блокирующий развёртывание при дырах в опорном стержне. Доказать: дешёвый-ненадёжный агент проигрывает дорогому-надёжному;
-без аварийного отключения/верификатора система не готова к промышленной эксплуатации.</p>
+<h3>11. Практикум <span class="srole srole-tool">ПРАКТИКУМ</span></h3>
+<p><strong>Задача.</strong> Реализовать (а) стоимость успешной задачи с учётом верификации и отказов; (б) уровень готовности, блокирующий развёртывание при дырах в опорном стержне. Доказать: дешёвый-ненадёжный агент проигрывает дорогому-надёжному; без kill-switch/верификатора система не готова к промышленной эксплуатации.</p>
 <p><strong>Скелет</strong> (<code>production.py</code>):</p>
 <pre><code class="language-python">def cost_per_successful_task(cm: CostModel, success_rate: float) -&gt; float:
     total = cm.inference + cm.verification + cm.expected_failure
@@ -691,38 +770,27 @@ def test_missing_verifier_blocks_deploy():
 def test_full_spine_is_production_ready():
     assert is_production_ready(System(has_all=True)) is True
 </code></pre>
-<p><strong>Эталон.</strong> Главные мысли: (1) <code>cost_per_successful_task</code> делит на долю успеха и включает отказ —
-<code>test_cheap_unreliable_loses</code> показывает, почему дешёвый вывод ≠ дешёвая система; (2)
-<code>test_cost_of_failure_can_flip_roi_negative</code> — Amazon-Q-класс: дорогой провал делает автоматизацию
-убыточной; (3) уровень готовности = весь опорный стержень присутствует, иначе это демо (<code>test_missing_*</code> — ответ уроку 1).</p>
-<p><strong>Расширение.</strong> Добавь таблицу анализа режимов отказа: для каждого примитива — режим отказа × последствие × вероятность ×
-смягчение; уровень требует, чтобы все отказы высокой тяжести имели смягчение. Это превращает готовность в
-доказуемый артефакт.</p>
+<p><strong>Эталон.</strong> Главные мысли: (1) <code>cost_per_successful_task</code> делит на долю успеха и включает отказ — <code>test_cheap_unreliable_loses</code> показывает, почему дешёвый вывод не равно дешёвая система; (2) <code>test_cost_of_failure_can_flip_roi_negative</code> — Amazon-Q-класс: дорогой провал делает автоматизацию убыточной; (3) уровень готовности = весь опорный стержень присутствует, иначе это демо (<code>test_missing_*</code> — ответ уроку 1).</p>
+<p><strong>Расширение.</strong> Добавь таблицу анализа режимов отказа: для каждого примитива — режим отказа × последствие × вероятность × смягчение; уровень требует, чтобы все отказы высокой тяжести имели смягчение. Это превращает готовность в доказуемый артефакт.</p>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<h3>11. Вопросы на суждение <span class="srole srole-check">ПРОВЕРКА</span></h3>
+<h3>12. Вопросы на суждение <span class="srole srole-check">ПРОВЕРКА</span></h3>
 <ol>
-<li>Агент дёшев ($0.02/задача), но ошибается в 10% и каждая ошибка стоит дорого (Amazon-Q-класс). По §2 —
-   как посчитать настоящую цену и почему стоимость задачи вводит в заблуждение?</li>
-<li>Почему 95% пилотов не дают окупаемости и 40% проектов отменят (§1)? Где именно демо превращается в провал — и
-   какой компонент стоимости это ловит?</li>
-<li>Тебя просят «довести агента с 95% до 99.9% надёжности — это же всего 5%». Почему это может стоить как
-   первые 95% (§2.2) и как это ограничивает автономию экономически (связь с осью B урока 1)?</li>
-<li>Система прошла демо и красиво выглядит. Какие пункты чеклиста готовности (§5) ты проверишь, прежде чем
-   пустить в прод? Какой минимальный набор делает её «не демо»?</li>
-<li>Финансовый агент: SLO 99% «достаточно»? Как стоимость отказа × объём меняет ответ по сравнению с
-   агентом-суммаризатором логов (§3.1)?</li>
-<li><strong>Открытый вопрос</strong> (§3.1): если верификация в масштабе недостижима, какие задачи в принципе нельзя
-   доверять автономному агенту при любой цене? Где проходит экономическая граница автоматизации?</li>
+<li>Агент дёшев ($0.02/задача), но ошибается в 10% и каждая ошибка стоит дорого (Amazon-Q-класс). По §3 — как посчитать настоящую цену и почему стоимость задачи вводит в заблуждение?</li>
+<li>Почему 95% пилотов не дают окупаемости и 40% проектов отменят (§2)? Где именно демо превращается в провал — и какой компонент стоимости это ловит?</li>
+<li>Тебя просят «довести агента с 95% до 99.9% надёжности — это же всего 5%». Почему это может стоить как первые 95% (§7) и как это ограничивает автономию экономически (связь с осью B урока 1)?</li>
+<li>Система прошла демо и красиво выглядит. Какие пункты чеклиста готовности (§6) ты проверишь, прежде чем пустить в прод? Какой минимальный набор делает её «не демо»?</li>
+<li>Финансовый агент: SLO 99% «достаточно»? Как стоимость отказа × объём меняет ответ по сравнению с агентом-суммаризатором логов (§8)?</li>
+<li><strong>Открытый вопрос</strong> (§7): если верификация в масштабе недостижима, какие задачи в принципе нельзя доверять автономному агенту при любой цене? Где проходит экономическая граница автоматизации?</li>
 </ol>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-<details class="ref-collapse" open><summary><h3>12. Глоссарий <span class="srole srole-ref">СПРАВКА</span></h3></summary>
+<details class="ref-collapse" open><summary><h3>13. Глоссарий <span class="srole srole-ref">СПРАВКА</span></h3></summary>
 <ul>
 <li><strong>Стоимость вывода, верификации и отказов</strong> — три компонента настоящей цены: токены × шаги / проверка (оценки + человек в контуре) / вероятность отказа × ущерб. Доминирует не первый.</li>
 <li><strong>Стоимость успешной задачи</strong> — общая стоимость / доля успеха; правильная удельная метрика (не стоимость задачи).</li>
-<li><strong>Стоимость ≈ модель × шаги</strong> — фреймворк оценки вывода (не измерение); мультиагент ×15.</li>
-<li><strong>Готовность к промышленной эксплуатации</strong> — весь опорный стержень присутствует со своими инвариантами + аварийное отключение + откат + анализ режимов отказа + целевые уровни обслуживания + модель стоимости. Демо = опорный стержень с дырами (ответ уроку 1).</li>
+<li><strong>Стоимость ~ модель × шаги</strong> — фреймворк оценки вывода (не измерение); мультиагент ×15.</li>
+<li><strong>Готовность к промышленной эксплуатации</strong> — весь опорный стержень присутствует со своими инвариантами + kill-switch + rollback + FMEA + SLO + CostModel. Демо = опорный стержень с дырами (ответ уроку 1).</li>
 <li><strong>Аварийное отключение, откат, компенсация</strong> — «красная кнопка» + откат (анти Replit/Step Finance).</li>
 <li><strong>Анализ режимов отказа</strong> — таблица режимов отказа × последствие × вероятность × смягчение.</li>
 <li><strong>Целевые уровни обслуживания</strong> — целевые уровни (доля успеха, задержка, частота вмешательства) по критичности.</li>
@@ -734,45 +802,24 @@ def test_full_spine_is_production_ready():
 </ul>
 <hr />
 <div class="section-break"><span class="sb-dot"></span></div>
-</details><details class="ref-collapse"><summary><h3>13. Первоисточники <span class="srole srole-ref">СПРАВКА</span></h3></summary>
+</details><details class="ref-collapse"><summary><h3>14. Первоисточники <span class="srole srole-ref">СПРАВКА</span></h3></summary>
 <ol>
-<li><strong>Amazon Q retail outages</strong> — Wharton Accountable AI Lab + vectara/awesome-agent-failures (case study):
-   уверенно-неверно из устаревшей документации → ~6.3 млн потерянных заказов, многочасовой простой.
-   <a href="https://ai-analytics.wharton.upenn.edu/wharton-accountable-ai-lab/governing-ai-agents-what-the-amazon-outage-reveals-about-enterprise-risk/" target="_blank" rel="noopener">https://ai-analytics.wharton.upenn.edu/wharton-accountable-ai-lab/governing-ai-agents-what-the-amazon-outage-reveals-about-enterprise-risk/</a>
-   · <a href="https://github.com/vectara/awesome-agent-failures" target="_blank" rel="noopener">https://github.com/vectara/awesome-agent-failures</a> — разбор инцидента + каталог режимов отказа.</li>
-<li><strong>Mata v. Avianca, Inc.</strong>, 678 F.Supp.3d 443 (S.D.N.Y. 2023) — санкции за фейковые ChatGPT-цитаты.
-   <a href="https://www.law.berkeley.edu/wp-content/uploads/archive/2025/12/Mata-v-Avianca-Inc.pdf" target="_blank" rel="noopener">https://www.law.berkeley.edu/wp-content/uploads/archive/2025/12/Mata-v-Avianca-Inc.pdf</a> — стоимость отказа (юр.).</li>
-<li><strong>Anthropic — «How we built our multi-agent research system»</strong> (≈15× токенов) — уроки 2, 11.
-   <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank" rel="noopener">https://www.anthropic.com/engineering/multi-agent-research-system</a></li>
-<li><strong>MIT — «95% of enterprise GenAI pilots fail to deliver ROI»</strong> (2025) — урок 12.
-   <a href="https://fortune.com/2025/08/18/mit-report-95-percent-generative-ai-pilots-at-companies-failing-cfo/" target="_blank" rel="noopener">https://fortune.com/2025/08/18/mit-report-95-percent-generative-ai-pilots-at-companies-failing-cfo/</a></li>
-<li><strong>Gartner — «Over 40% of Agentic AI Projects Will Be Canceled by End of 2027»</strong> — урок 11.
-   <a href="https://www.gartner.com/en/newsroom/press-releases/2025-06-25-gartner-predicts-over-40-percent-of-agentic-ai-projects-will-be-canceled-by-end-of-2027" target="_blank" rel="noopener">https://www.gartner.com/en/newsroom/press-releases/2025-06-25-gartner-predicts-over-40-percent-of-agentic-ai-projects-will-be-canceled-by-end-of-2027</a></li>
-<li><strong>tau-bench / WebArena</strong> (разрыв демо-прод, pass^k) — урок 6. <a href="https://arxiv.org/abs/2406.12045" target="_blank" rel="noopener">https://arxiv.org/abs/2406.12045</a> ·
-   <a href="https://arxiv.org/abs/2307.13854" target="_blank" rel="noopener">https://arxiv.org/abs/2307.13854</a></li>
-<li><strong>Кейсы стоимости отказа</strong> (верифицированы ранее): Air Canada (урок 12), Step Finance $27M (урок 5),
-   Replit (уроки 1, 3).</li>
-<li><strong>Jason Wei — «Asymmetry of verification and verifier's law»</strong> (2025), jasonwei.net — имя тезиса §2.2
-   (верифицируемость как потолок).</li>
-<li><strong>Dell'Acqua et al. — «Navigating the Jagged Technological Frontier»</strong> (HBS + BCG, 2023). SSRN 4573321:
-   <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4573321" target="_blank" rel="noopener">https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4573321</a> — где ИИ помогает vs вредит (§3.1).</li>
+<li><strong>Amazon Q retail outages</strong> — Wharton Accountable AI Lab + vectara/awesome-agent-failures (case study): уверенно-неверно из устаревшей документации — ~6.3 млн потерянных заказов, многочасовой простой. <a href="https://ai-analytics.wharton.upenn.edu/wharton-accountable-ai-lab/governing-ai-agents-what-the-amazon-outage-reveals-about-enterprise-risk/" target="_blank" rel="noopener">https://ai-analytics.wharton.upenn.edu/wharton-accountable-ai-lab/governing-ai-agents-what-the-amazon-outage-reveals-about-enterprise-risk/</a> · <a href="https://github.com/vectara/awesome-agent-failures" target="_blank" rel="noopener">https://github.com/vectara/awesome-agent-failures</a> — разбор инцидента + каталог режимов отказа.</li>
+<li><strong>Mata v. Avianca, Inc.</strong>, 678 F.Supp.3d 443 (S.D.N.Y. 2023) — санкции за фейковые ChatGPT-цитаты. <a href="https://www.law.berkeley.edu/wp-content/uploads/archive/2025/12/Mata-v-Avianca-Inc.pdf" target="_blank" rel="noopener">https://www.law.berkeley.edu/wp-content/uploads/archive/2025/12/Mata-v-Avianca-Inc.pdf</a> — стоимость отказа (юр.).</li>
+<li><strong>Anthropic — «How we built our multi-agent research system»</strong> (~15× токенов) — уроки 2, 11. <a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank" rel="noopener">https://www.anthropic.com/engineering/multi-agent-research-system</a></li>
+<li><strong>MIT — «95% of enterprise GenAI pilots fail to deliver ROI»</strong> (2025) — урок 12. <a href="https://fortune.com/2025/08/18/mit-report-95-percent-generative-ai-pilots-at-companies-failing-cfo/" target="_blank" rel="noopener">https://fortune.com/2025/08/18/mit-report-95-percent-generative-ai-pilots-at-companies-failing-cfo/</a></li>
+<li><strong>Gartner — «Over 40% of Agentic AI Projects Will Be Canceled by End of 2027»</strong> — урок 11. <a href="https://www.gartner.com/en/newsroom/press-releases/2025-06-25-gartner-predicts-over-40-percent-of-agentic-ai-projects-will-be-canceled-by-end-of-2027" target="_blank" rel="noopener">https://www.gartner.com/en/newsroom/press-releases/2025-06-25-gartner-predicts-over-40-percent-of-agentic-ai-projects-will-be-canceled-by-end-of-2027</a></li>
+<li><strong>tau-bench / WebArena</strong> (разрыв демо-прод, pass^k) — урок 6. <a href="https://arxiv.org/abs/2406.12045" target="_blank" rel="noopener">https://arxiv.org/abs/2406.12045</a> · <a href="https://arxiv.org/abs/2307.13854" target="_blank" rel="noopener">https://arxiv.org/abs/2307.13854</a></li>
+<li><strong>Кейсы стоимости отказа</strong> (верифицированы ранее): Air Canada (урок 12), Step Finance $27M (урок 5), Replit (уроки 1, 3).</li>
+<li><strong>Jason Wei — «Asymmetry of verification and verifier's law»</strong> (2025), jasonwei.net — имя тезиса §7 (верифицируемость как потолок).</li>
+<li><strong>Dell'Acqua et al. — «Navigating the Jagged Technological Frontier»</strong> (HBS + BCG, 2023). SSRN 4573321: <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4573321" target="_blank" rel="noopener">https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4573321</a> — где ИИ помогает vs вредит (§3.1).</li>
 </ol>
 <blockquote class="quarantine">
-<p><strong>Карантин / правки:</strong> «$6.3M loss» → на деле 6.3 млн ЗАКАЗОВ (Amazon Q), не долларов; ChatDev «Microsoft,
-33%» → Tsinghua/OpenBMB, число не подтверждено; «PocketOS Cursor стер бэкап за 9с» — не верифицировано;
-«$47K loop за 11 дней» — единичный блог, иллюстративно. <strong>Оценки практиков (не факт, поданы как
-иллюстрация/фреймворк):</strong> «$0.05–0.50/задача», «$636–1996/мес», «2.4 req $0.018 / 8.2 шагов 18с», «LLM-API
-60–80% стоимости», «72% buy vs build», «debug 3–5×». «cost ≈ model × steps» используется как фреймворк.</p>
+<p><strong>Карантин / правки:</strong> «$6.3M loss» — на деле 6.3 млн ЗАКАЗОВ (Amazon Q), не долларов; ChatDev «Microsoft, 33%» — Tsinghua/OpenBMB, число не подтверждено; «PocketOS Cursor стер бэкап за 9с» — не верифицировано; «$47K loop за 11 дней» — единичный блог, иллюстративно. <strong>Оценки практиков (не факт, поданы как иллюстрация/фреймворк):</strong> «$0.05–0.50/задача», «$636–1996/мес», «2.4 req $0.018 / 8.2 шагов 18с», «LLM-API 60–80% стоимости», «72% buy vs build», «debug 3–5×». «cost ~ model × steps» используется как фреймворк.</p>
 </blockquote>
 <hr />
 <h3>Замыкание курса (этапы 1–13)</h3>
-<p>Курс прошёл полную деривацию: автономия = права+надзор (1) → примитивы оркестратора (2) → надёжный жизненный цикл
-(3) → инженерия контекста (4) → права и правила (5) → измеримость оценок (6) → память (7) → поиск (8) →
-наблюдаемость (9) → безопасность (10) → мультиагентность (11) → человек в контуре (12) → экономика и сборка
-(13). Каждый этап давал примитив с контрактом интерфейса и инвариантом «что ломается без него». Итоговый проект
-собрал их в L8+ проект, где <strong>прод отличается от демо</strong> наличием всех инвариантов + положительной
-удельной экономикой + проходимым уровнем готовности. Остаётся этап 14 — <strong>как не отстать от фронта</strong>, не переписывая
-это ядро каждый квартал.</p></details>
+<p>Курс прошёл полную деривацию: автономия = права+надзор (1) — примитивы оркестратора (2) — надёжный жизненный цикл (3) — инженерия контекста (4) — права и правила (5) — измеримость оценок (6) — память (7) — поиск (8) — наблюдаемость (9) — безопасность (10) — мультиагентность (11) — человек в контуре (12) — экономика и сборка (13). Каждый этап давал примитив с контрактом интерфейса и инвариантом «что ломается без него». Итоговый проект собрал их в L8+ проект, где <strong>прод отличается от демо</strong> наличием всех инвариантов + положительной удельной экономикой + проходимым уровнем готовности. Остаётся этап 14 — <strong>как не отстать от фронта</strong>, не переписывая это ядро каждый квартал.</p></details>
     </div>
     <nav class="pager">
       <a class="pg-prev" href="lesson-12.html"><span class="pk">← Урок 12</span>Человек в цикле и модель эксплуатации</a>
